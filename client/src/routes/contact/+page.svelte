@@ -49,7 +49,7 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-linear-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
+<section class="bg-linear-to-br from-emerald-50 to-blue-50 py-16 sm:py-20">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -67,7 +67,7 @@
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-teal-100 p-4 text-teal-600">
+				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
 					<Phone class="h-6 w-6" />
 				</div>
 				<h3 class="mb-2 font-semibold text-gray-900">Phone</h3>
@@ -76,7 +76,7 @@
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-teal-100 p-4 text-teal-600">
+				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
 					<Mail class="h-6 w-6" />
 				</div>
 				<h3 class="mb-2 font-semibold text-gray-900">Email</h3>
@@ -85,7 +85,7 @@
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-teal-100 p-4 text-teal-600">
+				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
 					<MapPin class="h-6 w-6" />
 				</div>
 				<h3 class="mb-2 font-semibold text-gray-900">Location</h3>
@@ -94,7 +94,7 @@
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-teal-100 p-4 text-teal-600">
+				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
 					<Clock class="h-6 w-6" />
 				</div>
 				<h3 class="mb-2 font-semibold text-gray-900">Availability</h3>
@@ -104,14 +104,14 @@
 		</div>
 
 		<div class="mt-16 max-w-2xl mx-auto">
-			<div class="rounded-xl border border-teal-200 bg-teal-50 p-8 text-center">
+			<div class="rounded-xl border border-emerald-200 bg-emerald-50 p-8 text-center">
 				<h3 class="text-xl font-semibold text-gray-900 mb-3">Ready to Book?</h3>
 				<p class="text-gray-600 mb-6">
 					Skip the wait and schedule your appointment online in just a few minutes.
 				</p>
 				<a
 					href="/booking"
-					class="inline-flex items-center justify-center rounded-lg bg-teal-600 px-8 py-3 text-base font-medium text-white hover:bg-teal-700 transition-colors"
+					class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-8 py-3 text-base font-medium text-white hover:bg-emerald-700 transition-colors"
 				>
 					Book an Appointment
 				</a>
@@ -161,7 +161,7 @@
 			<div class="mt-12 text-center">
 				<p class="text-gray-600">
 					Still have questions?
-					<a href="mailto:info@sesihealthcare.com" class="text-teal-600 hover:text-teal-700 font-medium">
+					<a href="mailto:info@sesihealthcare.com" class="text-emerald-600 hover:text-emerald-700 font-medium">
 						Contact us directly
 					</a>
 				</p>

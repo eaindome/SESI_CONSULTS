@@ -41,7 +41,7 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
+<section class="bg-gradient-to-br from-emerald-50 to-blue-50 py-16 sm:py-20">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -59,15 +59,15 @@
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
 			{#each team as member}
-				<div class="rounded-xl border border-gray-200 bg-white p-8 hover:border-teal-200 hover:shadow-lg transition-all">
+				<div class="rounded-xl border border-gray-200 bg-white p-8 hover:border-emerald-200 hover:shadow-lg transition-all">
 					<!-- Avatar Placeholder -->
-					<div class="mb-6 h-32 w-32 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 mx-auto flex items-center justify-center">
+					<div class="mb-6 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 mx-auto flex items-center justify-center">
 						<span class="text-4xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
 					</div>
 
 					<div class="text-center mb-6">
 						<h3 class="text-2xl font-semibold text-gray-900 mb-1">{member.name}</h3>
-						<p class="text-teal-600 font-medium mb-1">{member.role}</p>
+						<p class="text-emerald-600 font-medium mb-1">{member.role}</p>
 						<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
 						<p class="text-sm text-gray-500">{member.experience}</p>
 					</div>
@@ -78,7 +78,7 @@
 						<p class="text-sm font-medium text-gray-900 mb-3 text-center">Specialties:</p>
 						<div class="flex flex-wrap gap-2 justify-center">
 							{#each member.specialties as specialty}
-								<span class="inline-flex items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700">
+								<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
 									{specialty}
 								</span>
 							{/each}
@@ -101,7 +101,7 @@
 			</p>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
 				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-teal-100 p-2 text-teal-600">
+					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
@@ -113,7 +113,7 @@
 				</div>
 
 				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-teal-100 p-2 text-teal-600">
+					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 						</svg>
@@ -125,7 +125,7 @@
 				</div>
 
 				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-teal-100 p-2 text-teal-600">
+					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
 						</svg>
@@ -141,19 +141,19 @@
 </section>
 
 <!-- CTA -->
-<section class="bg-teal-600 py-16">
+<section class="bg-emerald-600 py-16">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-2xl text-center">
 			<h2 class="text-3xl font-bold text-white sm:text-4xl">
 				Ready to Experience Quality Care?
 			</h2>
-			<p class="mt-4 text-lg text-teal-50">
+			<p class="mt-4 text-lg text-emerald-50">
 				Book an appointment with our professional team today.
 			</p>
 			<div class="mt-8">
 				<a
 					href="/booking"
-					class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-medium text-teal-600 hover:bg-teal-50 transition-colors"
+					class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-medium text-emerald-600 hover:bg-emerald-50 transition-colors"
 				>
 					Book an Appointment
 				</a>

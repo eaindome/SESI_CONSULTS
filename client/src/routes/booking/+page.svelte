@@ -110,7 +110,7 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-linear-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
+<section class="bg-linear-to-br from-emerald-50 to-blue-50 py-16 sm:py-20">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -128,14 +128,14 @@
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-2xl">
 			{#if submitSuccess}
-				<div class="mb-8 rounded-lg border border-teal-200 bg-teal-50 p-6">
+				<div class="mb-8 rounded-lg border border-emerald-200 bg-emerald-50 p-6">
 					<div class="flex items-start">
-						<svg class="h-6 w-6 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg class="h-6 w-6 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
 						<div class="ml-3">
-							<h3 class="font-semibold text-teal-900">Booking Submitted Successfully!</h3>
-							<p class="mt-2 text-sm text-teal-700">
+							<h3 class="font-semibold text-emerald-900">Booking Submitted Successfully!</h3>
+							<p class="mt-2 text-sm text-emerald-700">
 								We've received your appointment request. Our team will contact you shortly to confirm the details.
 							</p>
 						</div>
@@ -161,14 +161,14 @@
 				<!-- Service Selection -->
 				<div>
 					<label for="service" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-						<FileText class="mr-2 h-4 w-4 text-teal-600" />
+						<FileText class="mr-2 h-4 w-4 text-emerald-600" />
 						Select Service
 					</label>
 					<select
 						id="service"
 						bind:value={selectedService}
 						required
-						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 					>
 						<option value="">Choose a service...</option>
 						{#each services as service}
@@ -181,7 +181,7 @@
 				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
 					<div>
 						<label for="date" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<Calendar class="mr-2 h-4 w-4 text-teal-600" />
+							<Calendar class="mr-2 h-4 w-4 text-emerald-600" />
 							Date
 						</label>
 						<input
@@ -190,20 +190,20 @@
 							bind:value={appointmentDate}
 							min={today}
 							required
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 						/>
 					</div>
 
 					<div>
 						<label for="time" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<Clock class="mr-2 h-4 w-4 text-teal-600" />
+							<Clock class="mr-2 h-4 w-4 text-emerald-600" />
 							Time
 						</label>
 						<select
 							id="time"
 							bind:value={appointmentTime}
 							required
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 						>
 							<option value="">Select time...</option>
 							{#each timeSlots as slot}
@@ -219,7 +219,7 @@
 
 					<div>
 						<label for="name" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<User class="mr-2 h-4 w-4 text-teal-600" />
+							<User class="mr-2 h-4 w-4 text-emerald-600" />
 							Full Name
 						</label>
 						<input
@@ -228,14 +228,14 @@
 							bind:value={fullName}
 							required
 							placeholder="John Doe"
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 						/>
 					</div>
 
 					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
 						<div>
 							<label for="email" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-								<Mail class="mr-2 h-4 w-4 text-teal-600" />
+								<Mail class="mr-2 h-4 w-4 text-emerald-600" />
 								Email
 							</label>
 							<input
@@ -244,13 +244,13 @@
 								bind:value={email}
 								required
 								placeholder="john@example.com"
-								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 							/>
 						</div>
 
 						<div>
 							<label for="phone" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-								<Phone class="mr-2 h-4 w-4 text-teal-600" />
+								<Phone class="mr-2 h-4 w-4 text-emerald-600" />
 								Phone Number
 							</label>
 							<input
@@ -259,14 +259,14 @@
 								bind:value={phone}
 								required
 								placeholder="+234 XXX XXX XXXX"
-								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 							/>
 						</div>
 					</div>
 
 					<div>
 						<label for="address" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<MapPin class="mr-2 h-4 w-4 text-teal-600" />
+							<MapPin class="mr-2 h-4 w-4 text-emerald-600" />
 							Home Address
 						</label>
 						<textarea
@@ -275,7 +275,7 @@
 							required
 							rows="2"
 							placeholder="123 Street Name, Area, Accra"
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 						></textarea>
 					</div>
 				</div>
@@ -283,7 +283,7 @@
 				<!-- Additional Notes -->
 				<div>
 					<label for="notes" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-						<FileText class="mr-2 h-4 w-4 text-teal-600" />
+						<FileText class="mr-2 h-4 w-4 text-emerald-600" />
 						Additional Notes (Optional)
 					</label>
 					<textarea
@@ -291,7 +291,7 @@
 						bind:value={notes}
 						rows="4"
 						placeholder="Any specific requirements or information we should know..."
-						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
 					></textarea>
 				</div>
 
@@ -300,7 +300,7 @@
 					<button
 						type="submit"
 						disabled={isSubmitting}
-						class="w-full rounded-lg bg-teal-600 px-8 py-4 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+						class="w-full rounded-lg bg-emerald-600 px-8 py-4 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
 					>
 						{isSubmitting ? 'Submitting...' : 'Book Appointment'}
 					</button>
@@ -320,19 +320,19 @@
 			<h3 class="text-xl font-semibold text-gray-900 mb-4">What Happens Next?</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
 				<div>
-					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-teal-100 h-10 w-10 text-teal-600 font-bold">
+					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-emerald-100 h-10 w-10 text-emerald-600 font-bold">
 						1
 					</div>
 					<p class="text-gray-600">We receive your booking request</p>
 				</div>
 				<div>
-					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-teal-100 h-10 w-10 text-teal-600 font-bold">
+					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-emerald-100 h-10 w-10 text-emerald-600 font-bold">
 						2
 					</div>
 					<p class="text-gray-600">Our team contacts you to confirm details</p>
 				</div>
 				<div>
-					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-teal-100 h-10 w-10 text-teal-600 font-bold">
+					<div class="mb-2 inline-flex items-center justify-center rounded-full bg-emerald-100 h-10 w-10 text-emerald-600 font-bold">
 						3
 					</div>
 					<p class="text-gray-600">Your nurse arrives at the scheduled time</p>
