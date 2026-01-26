@@ -49,7 +49,7 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
+<section class="bg-linear-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -141,7 +141,7 @@
 						>
 							<span class="font-medium text-gray-900">{faq.question}</span>
 							<svg
-								class="h-5 w-5 flex-shrink-0 text-gray-500 transition-transform {openFaq === index ? 'rotate-180' : ''}"
+								class="h-5 w-5 shrink-0 text-gray-500 transition-transform {openFaq === index ? 'rotate-180' : ''}"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"

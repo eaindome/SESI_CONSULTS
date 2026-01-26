@@ -23,7 +23,7 @@
 			<!-- Brand -->
 			<div class="lg:col-span-2">
 				<div class="flex items-center space-x-2 mb-4">
-					<div class="h-8 w-8 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+					<div class="h-8 w-8 rounded-lg bg-linear-to-br from-teal-500 to-teal-600 flex items-center justify-center">
 						<span class="text-white font-bold text-lg">S</span>
 					</div>
 					<span class="font-semibold text-lg text-gray-900">SESI Healthcare</span>
@@ -34,15 +34,15 @@
 				</p>
 				<div class="space-y-3 text-sm text-gray-600">
 					<div class="flex items-start space-x-2">
-						<MapPin class="h-4 w-4 mt-0.5 text-teal-600 flex-shrink-0" />
+						<MapPin class="h-4 w-4 mt-0.5 text-teal-600 shrink-0" />
 						<span>Accra, Ghana</span>
 					</div>
 					<div class="flex items-center space-x-2">
-						<Phone class="h-4 w-4 text-teal-600 flex-shrink-0" />
+						<Phone class="h-4 w-4 text-teal-600 shrink-0" />
 						<span>+233 XXX XXX XXXX</span>
 					</div>
 					<div class="flex items-center space-x-2">
-						<Mail class="h-4 w-4 text-teal-600 flex-shrink-0" />
+						<Mail class="h-4 w-4 text-teal-600 shrink-0" />
 						<span>info@sesihealthcare.com</span>
 					</div>
 				</div>

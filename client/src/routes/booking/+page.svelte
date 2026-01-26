@@ -110,7 +110,7 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
+<section class="bg-linear-to-br from-teal-50 to-blue-50 py-16 sm:py-20">
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-3xl text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -130,7 +130,7 @@
 			{#if submitSuccess}
 				<div class="mb-8 rounded-lg border border-teal-200 bg-teal-50 p-6">
 					<div class="flex items-start">
-						<svg class="h-6 w-6 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg class="h-6 w-6 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
 						<div class="ml-3">
@@ -146,7 +146,7 @@
 			{#if submitError}
 				<div class="mb-8 rounded-lg border border-red-200 bg-red-50 p-6">
 					<div class="flex items-start">
-						<svg class="h-6 w-6 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg class="h-6 w-6 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
 						<div class="ml-3">
