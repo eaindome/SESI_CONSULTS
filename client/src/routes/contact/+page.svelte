@@ -49,71 +49,92 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-linear-to-br from-emerald-50 to-blue-50 py-16 sm:py-20">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+	<!-- Animated floating shapes -->
+	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
+	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+
+	<!-- Decorative circles -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+
+	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
-			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-				Get in Touch
+			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
+				Contact Us
+			</div>
+			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
+				We're Here to <br/>Help You
 			</h1>
-			<p class="mt-6 text-lg text-gray-600">
-				Have questions? We're here to help you get the care you need.
+			<p class="text-xl text-emerald-50 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
+				Have questions about our services? Reach out to our team and we'll get back to you promptly.
 			</p>
 		</div>
+	</div>
+
+	<!-- Bottom wave separator -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+			<path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 32C840 27 960 21 1080 21.3C1200 21 1320 27 1380 29.3L1440 32V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="white"/>
+		</svg>
 	</div>
 </section>
 
 <!-- Contact Info -->
-<section class="py-16 bg-white">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
+<section class="py-24 bg-white">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
+		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
-					<Phone class="h-6 w-6" />
+				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+					<Phone class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-semibold text-gray-900">Phone</h3>
+				<h3 class="mb-2 font-bold text-gray-900">Phone</h3>
 				<p class="text-gray-600">+234 XXX XXX XXXX</p>
 				<p class="text-sm text-gray-500 mt-1">Mon-Sun, 24/7</p>
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
-					<Mail class="h-6 w-6" />
+				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+					<Mail class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-semibold text-gray-900">Email</h3>
+				<h3 class="mb-2 font-bold text-gray-900">Email</h3>
 				<p class="text-gray-600">info@sesihealthcare.com</p>
 				<p class="text-sm text-gray-500 mt-1">We reply within 24 hours</p>
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
-					<MapPin class="h-6 w-6" />
+				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+					<MapPin class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-semibold text-gray-900">Location</h3>
+				<h3 class="mb-2 font-bold text-gray-900">Location</h3>
 				<p class="text-gray-600">Accra, Ghana</p>
 				<p class="text-sm text-gray-500 mt-1">Serving Accra & environs</p>
 			</div>
 
 			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-full bg-emerald-100 p-4 text-emerald-600">
-					<Clock class="h-6 w-6" />
+				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+					<Clock class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-semibold text-gray-900">Availability</h3>
+				<h3 class="mb-2 font-bold text-gray-900">Availability</h3>
 				<p class="text-gray-600">24/7 Service</p>
 				<p class="text-sm text-gray-500 mt-1">Including holidays</p>
 			</div>
 		</div>
 
-		<div class="mt-16 max-w-2xl mx-auto">
-			<div class="rounded-xl border border-emerald-200 bg-emerald-50 p-8 text-center">
-				<h3 class="text-xl font-semibold text-gray-900 mb-3">Ready to Book?</h3>
-				<p class="text-gray-600 mb-6">
+		<div class="mt-20 max-w-3xl mx-auto">
+			<div class="rounded-2xl bg-emerald-600 p-10 text-center">
+				<h3 class="text-2xl font-bold text-white mb-4">Ready to Book?</h3>
+				<p class="text-emerald-50 mb-8 text-lg">
 					Skip the wait and schedule your appointment online in just a few minutes.
 				</p>
 				<a
 					href="/booking"
-					class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-8 py-3 text-base font-medium text-white hover:bg-emerald-700 transition-colors"
+					class="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 hover:bg-gray-50 transition-all duration-300 shadow-lg"
 				>
 					Book an Appointment
+					<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+					</svg>
 				</a>
 			</div>
 		</div>
@@ -121,12 +142,12 @@
 </section>
 
 <!-- FAQs Section -->
-<section id="faqs" class="py-16 bg-gray-50">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section id="faqs" class="py-24 bg-gray-50">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl">
-			<div class="text-center mb-12">
-				<h2 class="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
-				<p class="mt-4 text-lg text-gray-600">
+			<div class="text-center mb-16">
+				<h2 class="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+				<p class="text-xl text-gray-600">
 					Find answers to common questions about our services
 				</p>
 			</div>

@@ -26,16 +26,34 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-gray-50 py-24 sm:py-32">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
+<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+	<!-- Animated floating shapes -->
+	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
+	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+
+	<!-- Decorative circles -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+
+	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
-			<h1 class="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-6">
-				About SESI Healthcare
+			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
+				Our Story
+			</div>
+			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
+				Compassionate Care,<br/>Exceptional Service
 			</h1>
-			<p class="text-xl text-gray-600 leading-relaxed">
+			<p class="text-xl text-emerald-50 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
 				Dedicated to bringing professional healthcare to the comfort of your home
 			</p>
 		</div>
+	</div>
+
+	<!-- Bottom wave separator -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+			<path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 32C840 27 960 21 1080 21.3C1200 21 1320 27 1380 29.3L1440 32V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="white"/>
+		</svg>
 	</div>
 </section>
 

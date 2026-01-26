@@ -41,44 +41,62 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-emerald-50 to-blue-50 py-16 sm:py-20">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+	<!-- Animated floating shapes -->
+	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
+	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+
+	<!-- Decorative circles -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+
+	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
-			<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-				Meet Our Care Team
+			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
+				Our Team
+			</div>
+			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
+				Meet the Professionals <br/>Behind Your Care
 			</h1>
-			<p class="mt-6 text-lg text-gray-600">
+			<p class="text-xl text-emerald-50 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
 				Experienced, licensed professionals dedicated to your health and well-being
 			</p>
 		</div>
 	</div>
+
+	<!-- Bottom wave separator -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+			<path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 32C840 27 960 21 1080 21.3C1200 21 1320 27 1380 29.3L1440 32V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="white"/>
+		</svg>
+	</div>
 </section>
 
 <!-- Team Grid -->
-<section class="py-16 bg-white">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
+<section class="py-24 bg-white">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
+		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-6xl mx-auto">
 			{#each team as member}
-				<div class="rounded-xl border border-gray-200 bg-white p-8 hover:border-emerald-200 hover:shadow-lg transition-all">
+				<div class="rounded-2xl bg-white p-8 shadow-sm hover:shadow-lg transition-all border border-gray-100">
 					<!-- Avatar Placeholder -->
-					<div class="mb-6 h-32 w-32 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 mx-auto flex items-center justify-center">
+					<div class="mb-6 h-32 w-32 rounded-full bg-emerald-600 mx-auto flex items-center justify-center">
 						<span class="text-4xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
 					</div>
 
 					<div class="text-center mb-6">
-						<h3 class="text-2xl font-semibold text-gray-900 mb-1">{member.name}</h3>
+						<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
 						<p class="text-emerald-600 font-medium mb-1">{member.role}</p>
 						<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
 						<p class="text-sm text-gray-500">{member.experience}</p>
 					</div>
 
-					<p class="text-gray-600 text-center mb-6">{member.description}</p>
+					<p class="text-gray-600 text-center mb-6 leading-relaxed">{member.description}</p>
 
 					<div>
-						<p class="text-sm font-medium text-gray-900 mb-3 text-center">Specialties:</p>
+						<p class="text-sm font-semibold text-gray-900 mb-3 text-center uppercase tracking-wide">Specialties</p>
 						<div class="flex flex-wrap gap-2 justify-center">
 							{#each member.specialties as specialty}
-								<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+								<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
 									{specialty}
 								</span>
 							{/each}
@@ -91,47 +109,47 @@
 </section>
 
 <!-- Qualifications Section -->
-<section class="py-16 bg-gray-50">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="mx-auto max-w-3xl text-center">
-			<h2 class="text-3xl font-bold text-gray-900 mb-6">Our Standards</h2>
-			<p class="text-lg text-gray-600 mb-8">
+<section class="py-24 bg-gray-50">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
+		<div class="mx-auto max-w-4xl text-center">
+			<h2 class="text-4xl font-bold text-gray-900 mb-4">Our Standards</h2>
+			<p class="text-xl text-gray-600 mb-12">
 				Every member of our team meets rigorous professional standards to ensure you receive
 				the highest quality care.
 			</p>
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
-						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<div class="bg-white rounded-2xl p-8 shadow-sm">
+					<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-3 text-emerald-600">
+						<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
 					</div>
-					<h3 class="font-semibold text-gray-900 mb-2">Licensed & Certified</h3>
-					<p class="text-sm text-gray-600">
+					<h3 class="font-bold text-gray-900 mb-3">Licensed & Certified</h3>
+					<p class="text-gray-600 leading-relaxed">
 						All nurses are registered and hold current licenses with relevant certifications.
 					</p>
 				</div>
 
-				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
-						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="bg-white rounded-2xl p-8 shadow-sm">
+					<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-3 text-emerald-600">
+						<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 						</svg>
 					</div>
-					<h3 class="font-semibold text-gray-900 mb-2">Background Checked</h3>
-					<p class="text-sm text-gray-600">
+					<h3 class="font-bold text-gray-900 mb-3">Background Checked</h3>
+					<p class="text-gray-600 leading-relaxed">
 						Comprehensive background checks and verification of all credentials.
 					</p>
 				</div>
 
-				<div class="bg-white rounded-lg p-6 border border-gray-200">
-					<div class="mb-3 inline-flex items-center justify-center rounded-lg bg-emerald-100 p-2 text-emerald-600">
-						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="bg-white rounded-2xl p-8 shadow-sm">
+					<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-3 text-emerald-600">
+						<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
 						</svg>
 					</div>
-					<h3 class="font-semibold text-gray-900 mb-2">Ongoing Training</h3>
-					<p class="text-sm text-gray-600">
+					<h3 class="font-bold text-gray-900 mb-3">Ongoing Training</h3>
+					<p class="text-gray-600 leading-relaxed">
 						Regular continuing education to stay current with best practices and protocols.
 					</p>
 				</div>
@@ -141,23 +159,24 @@
 </section>
 
 <!-- CTA -->
-<section class="bg-emerald-600 py-16">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="mx-auto max-w-2xl text-center">
-			<h2 class="text-3xl font-bold text-white sm:text-4xl">
+<section class="bg-emerald-600 py-24">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
+		<div class="mx-auto max-w-3xl text-center">
+			<h2 class="text-4xl font-bold text-white sm:text-5xl mb-6">
 				Ready to Experience Quality Care?
 			</h2>
-			<p class="mt-4 text-lg text-emerald-50">
+			<p class="text-xl text-emerald-50 mb-10 leading-relaxed">
 				Book an appointment with our professional team today.
 			</p>
-			<div class="mt-8">
-				<a
-					href="/booking"
-					class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-medium text-emerald-600 hover:bg-emerald-50 transition-colors"
-				>
-					Book an Appointment
-				</a>
-			</div>
+			<a
+				href="/booking"
+				class="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 hover:bg-gray-50 transition-all duration-300 shadow-lg"
+			>
+				Book an Appointment
+				<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+				</svg>
+			</a>
 		</div>
 	</div>
 </section>
