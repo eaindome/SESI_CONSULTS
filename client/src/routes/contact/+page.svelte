@@ -96,7 +96,7 @@
 				</div>
 				<div>
 					<h3 class="mb-2 font-bold text-gray-900 text-lg">Phone</h3>
-					<p class="text-gray-600 mb-1">+234 XXX XXX XXXX</p>
+					<p class="text-gray-600 mb-1">+233 XXX XXX XXXX</p>
 					<p class="text-sm text-gray-500">Mon-Sun, 24/7</p>
 				</div>
 			</div>

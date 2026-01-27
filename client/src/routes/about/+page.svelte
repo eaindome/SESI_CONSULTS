@@ -104,54 +104,36 @@
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-2 max-w-6xl mx-auto">
 			<div class="bg-white rounded-2xl p-10 shadow-sm">
-				<div class="mb-6 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
-					<Target class="h-8 w-8" />
+				<div class="flex gap-4 items-start">
+					<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
+						<Target class="h-7 w-7" />
+					</div>
+					<div>
+						<h2 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
+						<p class="text-lg text-gray-600 leading-relaxed">
+							To deliver exceptional home healthcare services that empower patients to maintain their
+							independence and quality of life while receiving professional medical care in a familiar,
+							comfortable environment.
+						</p>
+					</div>
 				</div>
-				<h2 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
-				<p class="text-lg text-gray-600 leading-relaxed">
-					To deliver exceptional home healthcare services that empower patients to maintain their
-					independence and quality of life while receiving professional medical care in a familiar,
-					comfortable environment.
-				</p>
 			</div>
 
 			<div class="bg-white rounded-2xl p-10 shadow-sm">
-				<div class="mb-6 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
-					<Eye class="h-8 w-8" />
-				</div>
-				<h2 class="text-2xl font-bold text-gray-900 mb-4">Our Vision</h2>
-				<p class="text-lg text-gray-600 leading-relaxed">
-					To be the most trusted name in home healthcare, known for our commitment to excellence,
-					compassion, and innovation in delivering patient-centered care that makes a real
-					difference in people's lives.
-				</p>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- Values -->
-<section class="py-24 bg-white">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-			<p class="text-xl text-gray-600">
-				The principles that guide everything we do
-			</p>
-		</div>
-
-		<div class="grid grid-cols-1 gap-10 md:grid-cols-3 max-w-5xl mx-auto">
-			{#each values as value}
 				<div class="flex gap-4 items-start">
-					<div class="shrink-0 rounded-full bg-emerald-600 p-4 text-white">
-						<svelte:component this={value.icon} class="h-7 w-7" />
+					<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
+						<Eye class="h-7 w-7" />
 					</div>
 					<div>
-						<h3 class="mb-3 text-xl font-bold text-gray-900">{value.title}</h3>
-						<p class="text-gray-600 leading-relaxed">{value.description}</p>
+						<h2 class="text-2xl font-bold text-gray-900 mb-4">Our Vision</h2>
+						<p class="text-lg text-gray-600 leading-relaxed">
+							To be the most trusted name in home healthcare, known for our commitment to excellence,
+							compassion, and innovation in delivering patient-centered care that makes a real
+							difference in people's lives.
+						</p>
 					</div>
 				</div>
-			{/each}
+			</div>
 		</div>
 	</div>
 </section>

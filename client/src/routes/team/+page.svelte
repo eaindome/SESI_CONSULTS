@@ -6,7 +6,8 @@
 			credentials: 'RN, BSN',
 			experience: '12+ years experience',
 			specialties: ['General Nursing', 'Chronic Disease Management', 'Post-Operative Care'],
-			description: 'Dedicated healthcare professional with extensive experience in home healthcare and patient-centered care.'
+			description: 'Dedicated healthcare professional with extensive experience in home healthcare and patient-centered care.',
+			image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop&q=80'
 		},
 		{
 			name: 'Nurse Chukwu',
@@ -14,7 +15,8 @@
 			credentials: 'RN',
 			experience: '8+ years experience',
 			specialties: ['Maternal Care', 'Newborn Care', 'Elderly Care'],
-			description: 'Compassionate nurse specializing in maternal and child health with a gentle approach to care.'
+			description: 'Compassionate nurse specializing in maternal and child health with a gentle approach to care.',
+			image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=600&fit=crop&q=80'
 		},
 		{
 			name: 'Sister Okafor',
@@ -22,7 +24,8 @@
 			credentials: 'RN, Certified Wound Care Specialist',
 			experience: '10+ years experience',
 			specialties: ['Wound Care', 'Post-Surgical Care', 'IV Therapy'],
-			description: 'Expert in wound management and post-surgical care with a focus on promoting healing and comfort.'
+			description: 'Expert in wound management and post-surgical care with a focus on promoting healing and comfort.',
+			image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=600&h=600&fit=crop&q=80'
 		},
 		{
 			name: 'Nurse Mohammed',
@@ -30,7 +33,8 @@
 			credentials: 'RN, Diabetes Educator',
 			experience: '7+ years experience',
 			specialties: ['Diabetes Management', 'Health Education', 'Medication Management'],
-			description: 'Skilled in chronic disease management and patient education, helping patients achieve better health outcomes.'
+			description: 'Skilled in chronic disease management and patient education, helping patients achieve better health outcomes.',
+			image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop&q=80'
 		}
 	];
 </script>
@@ -83,29 +87,42 @@
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-6xl mx-auto">
 			{#each team as member}
-				<div class="rounded-2xl bg-white p-8 shadow-sm hover:shadow-lg transition-all border border-gray-100">
-					<!-- Avatar Placeholder -->
-					<div class="mb-6 h-32 w-32 rounded-full bg-emerald-600 mx-auto flex items-center justify-center">
-						<span class="text-4xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
-					</div>
+				<div class="rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100">
+					<!-- Team Member Image -->
+					{#if member.image}
+						<div class="h-80 overflow-hidden bg-gray-100">
+							<img
+								src={member.image}
+								alt={member.name}
+								class="w-full h-full object-cover"
+							/>
+						</div>
+					{:else}
+						<div class="h-80 bg-emerald-600 flex items-center justify-center">
+							<span class="text-8xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
+						</div>
+					{/if}
 
-					<div class="text-center mb-6">
-						<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-						<p class="text-emerald-600 font-medium mb-1">{member.role}</p>
-						<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
-						<p class="text-sm text-gray-500">{member.experience}</p>
-					</div>
+					<!-- Team Member Info -->
+					<div class="p-8">
+						<div class="mb-6">
+							<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
+							<p class="text-emerald-600 font-semibold mb-1">{member.role}</p>
+							<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
+							<p class="text-sm text-gray-500">{member.experience}</p>
+						</div>
 
-					<p class="text-gray-600 text-center mb-6 leading-relaxed">{member.description}</p>
+						<p class="text-gray-600 mb-6 leading-relaxed">{member.description}</p>
 
-					<div>
-						<p class="text-sm font-semibold text-gray-900 mb-3 text-center uppercase tracking-wide">Specialties</p>
-						<div class="flex flex-wrap gap-2 justify-center">
-							{#each member.specialties as specialty}
-								<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-									{specialty}
-								</span>
-							{/each}
+						<div>
+							<p class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">Specialties</p>
+							<div class="flex flex-wrap gap-2">
+								{#each member.specialties as specialty}
+									<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
+										{specialty}
+									</span>
+								{/each}
+							</div>
 						</div>
 					</div>
 				</div>

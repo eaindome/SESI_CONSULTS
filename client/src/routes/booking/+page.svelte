@@ -148,15 +148,17 @@
 </section>
 
 <!-- Booking Form -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-gradient-to-b from-white to-gray-50/50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-2xl">
 			{#if submitSuccess}
-				<div class="mb-8 rounded-lg border border-emerald-200 bg-emerald-50 p-6">
+				<div class="mb-8 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 shadow-lg shadow-emerald-100/50 animate-fade-in">
 					<div class="flex items-start">
-						<svg class="h-6 w-6 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
+						<div class="shrink-0 rounded-full bg-emerald-600 p-1">
+							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+							</svg>
+						</div>
 						<div class="ml-3">
 							<h3 class="font-semibold text-emerald-900">Booking Submitted Successfully!</h3>
 							<p class="mt-2 text-sm text-emerald-700">
@@ -168,11 +170,13 @@
 			{/if}
 
 			{#if submitError}
-				<div class="mb-8 rounded-lg border border-red-200 bg-red-50 p-6">
+				<div class="mb-8 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-orange-50 p-6 shadow-lg shadow-red-100/50 animate-fade-in">
 					<div class="flex items-start">
-						<svg class="h-6 w-6 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
+						<div class="shrink-0 rounded-full bg-red-600 p-1">
+							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+							</svg>
+						</div>
 						<div class="ml-3">
 							<h3 class="font-semibold text-red-900">Error</h3>
 							<p class="mt-2 text-sm text-red-700">{submitError}</p>
@@ -181,158 +185,200 @@
 				</div>
 			{/if}
 
-			<form onsubmit={handleSubmit} class="space-y-8">
-				<!-- Service Selection -->
-				<div>
-					<label for="service" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-						<FileText class="mr-2 h-4 w-4 text-emerald-600" />
-						Select Service
-					</label>
-					<select
-						id="service"
-						bind:value={selectedService}
-						required
-						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-					>
-						<option value="">Choose a service...</option>
-						{#each services as service}
-							<option value={service}>{service}</option>
-						{/each}
-					</select>
-				</div>
+			<!-- Form Card with enhanced styling -->
+			<div class="relative">
+				<!-- Decorative gradient border -->
+				<div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-20"></div>
 
-				<!-- Date & Time -->
-				<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-					<div>
-						<label for="date" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<Calendar class="mr-2 h-4 w-4 text-emerald-600" />
-							Date
-						</label>
-						<input
-							type="date"
-							id="date"
-							bind:value={appointmentDate}
-							min={today}
-							required
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-						/>
-					</div>
-
-					<div>
-						<label for="time" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<Clock class="mr-2 h-4 w-4 text-emerald-600" />
-							Time
+				<form onsubmit={handleSubmit} class="relative bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 space-y-8">
+					<!-- Service Selection -->
+					<div class="group">
+						<label for="service" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+							<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+								<FileText class="h-4 w-4 text-emerald-600" />
+							</div>
+							Select Service
 						</label>
 						<select
-							id="time"
-							bind:value={appointmentTime}
+							id="service"
+							bind:value={selectedService}
 							required
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+							class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
 						>
-							<option value="">Select time...</option>
-							{#each timeSlots as slot}
-								<option value={slot}>{slot}</option>
+							<option value="">Choose a service...</option>
+							{#each services as service}
+								<option value={service}>{service}</option>
 							{/each}
 						</select>
 					</div>
-				</div>
 
-				<!-- Contact Details -->
-				<div class="space-y-6">
-					<h3 class="text-lg font-semibold text-gray-900">Contact Information</h3>
-
-					<div>
-						<label for="name" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<User class="mr-2 h-4 w-4 text-emerald-600" />
-							Full Name
-						</label>
-						<input
-							type="text"
-							id="name"
-							bind:value={fullName}
-							required
-							placeholder="John Doe"
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-						/>
-					</div>
-
+					<!-- Date & Time -->
 					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-						<div>
-							<label for="email" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-								<Mail class="mr-2 h-4 w-4 text-emerald-600" />
-								Email
+						<div class="group">
+							<label for="date" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+									<Calendar class="h-4 w-4 text-emerald-600" />
+								</div>
+								Date
 							</label>
 							<input
-								type="email"
-								id="email"
-								bind:value={email}
+								type="date"
+								id="date"
+								bind:value={appointmentDate}
+								min={today}
 								required
-								placeholder="john@example.com"
-								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+								class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
 							/>
 						</div>
 
-						<div>
-							<label for="phone" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-								<Phone class="mr-2 h-4 w-4 text-emerald-600" />
-								Phone Number
+						<div class="group">
+							<label for="time" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+									<Clock class="h-4 w-4 text-emerald-600" />
+								</div>
+								Time
 							</label>
-							<input
-								type="tel"
-								id="phone"
-								bind:value={phone}
+							<select
+								id="time"
+								bind:value={appointmentTime}
 								required
-								placeholder="+234 XXX XXX XXXX"
-								class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-							/>
+								class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+							>
+								<option value="">Select time...</option>
+								{#each timeSlots as slot}
+									<option value={slot}>{slot}</option>
+								{/each}
+							</select>
 						</div>
 					</div>
 
-					<div>
-						<label for="address" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-							<MapPin class="mr-2 h-4 w-4 text-emerald-600" />
-							Home Address
+					<!-- Contact Details Section -->
+					<div class="pt-4 pb-2 border-t-2 border-gray-100">
+						<div class="flex items-center mb-6">
+							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+							<h3 class="text-lg font-bold text-gray-900 px-4">Contact Information</h3>
+							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+						</div>
+
+						<div class="space-y-6">
+							<div class="group">
+								<label for="name" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+										<User class="h-4 w-4 text-emerald-600" />
+									</div>
+									Full Name
+								</label>
+								<input
+									type="text"
+									id="name"
+									bind:value={fullName}
+									required
+									placeholder="John Doe"
+									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								/>
+							</div>
+
+							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+								<div class="group">
+									<label for="email" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+											<Mail class="h-4 w-4 text-emerald-600" />
+										</div>
+										Email
+									</label>
+									<input
+										type="email"
+										id="email"
+										bind:value={email}
+										required
+										placeholder="john@example.com"
+										class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+									/>
+								</div>
+
+								<div class="group">
+									<label for="phone" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+											<Phone class="h-4 w-4 text-emerald-600" />
+										</div>
+										Phone Number
+									</label>
+									<input
+										type="tel"
+										id="phone"
+										bind:value={phone}
+										required
+										placeholder="+233 XXX XXX XXXX"
+										class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+									/>
+								</div>
+							</div>
+
+							<div class="group">
+								<label for="address" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+										<MapPin class="h-4 w-4 text-emerald-600" />
+									</div>
+									Home Address
+								</label>
+								<textarea
+									id="address"
+									bind:value={address}
+									required
+									rows="2"
+									placeholder="123 Street Name, Area, Accra"
+									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300 resize-none"
+								></textarea>
+							</div>
+						</div>
+					</div>
+
+					<!-- Additional Notes -->
+					<div class="group">
+						<label for="notes" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
+							<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
+								<FileText class="h-4 w-4 text-emerald-600" />
+							</div>
+							Additional Notes <span class="text-gray-500 font-normal ml-1">(Optional)</span>
 						</label>
 						<textarea
-							id="address"
-							bind:value={address}
-							required
-							rows="2"
-							placeholder="123 Street Name, Area, Accra"
-							class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+							id="notes"
+							bind:value={notes}
+							rows="4"
+							placeholder="Any specific requirements or information we should know..."
+							class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300 resize-none"
 						></textarea>
 					</div>
-				</div>
 
-				<!-- Additional Notes -->
-				<div>
-					<label for="notes" class="mb-2 flex items-center text-sm font-medium text-gray-900">
-						<FileText class="mr-2 h-4 w-4 text-emerald-600" />
-						Additional Notes (Optional)
-					</label>
-					<textarea
-						id="notes"
-						bind:value={notes}
-						rows="4"
-						placeholder="Any specific requirements or information we should know..."
-						class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-					></textarea>
-				</div>
-
-				<!-- Submit Button -->
-				<div class="pt-4">
-					<button
-						type="submit"
-						disabled={isSubmitting}
-						class="w-full rounded-lg bg-emerald-600 px-8 py-4 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-					>
-						{isSubmitting ? 'Submitting...' : 'Book Appointment'}
-					</button>
-					<p class="mt-4 text-center text-sm text-gray-500">
-						By submitting, you agree to our terms of service and privacy policy.
-					</p>
-				</div>
-			</form>
+					<!-- Submit Button -->
+					<div class="pt-6">
+						<button
+							type="submit"
+							disabled={isSubmitting}
+							class="group relative w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 transition-all duration-200 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-500/50 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none overflow-hidden"
+						>
+							<span class="relative z-10 flex items-center justify-center gap-2">
+								{#if isSubmitting}
+									<svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+										<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+									</svg>
+									Submitting...
+								{:else}
+									Book Appointment
+									<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+									</svg>
+								{/if}
+							</span>
+							<div class="absolute inset-0 bg-gradient-to-r from-emerald-700 to-teal-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
+						</button>
+						<p class="mt-4 text-center text-sm text-gray-500">
+							By submitting, you agree to our terms of service and privacy policy.
+						</p>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </section>
