@@ -40,7 +40,7 @@
 			class="w-full h-full object-cover"
 		/>
 		<!-- Dark overlay for text contrast -->
-		<div class="absolute inset-0 bg-gradient-to-r from-gray-900/85 via-gray-900/75 to-gray-900/70"></div>
+		<div class="absolute inset-0 bg-linear-to-r from-gray-900/85 via-gray-900/75 to-gray-900/70"></div>
 	</div>
 
 	<div class="relative z-10 container mx-auto px-6 py-32 sm:px-8 lg:px-12 lg:py-40">
@@ -84,14 +84,16 @@
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
+		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-5xl mx-auto">
 			{#each features as feature}
-				<div class="group text-center">
-					<div class="mb-6 inline-flex items-center justify-center rounded-2xl bg-emerald-100 p-5 text-emerald-600 transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110">
+				<div class="flex gap-5 items-start group">
+					<div class="shrink-0 rounded-2xl bg-emerald-100 p-5 text-emerald-600 transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white">
 						<svelte:component this={feature.icon} class="h-8 w-8" />
 					</div>
-					<h3 class="mb-3 text-xl font-bold text-gray-900">{feature.title}</h3>
-					<p class="text-gray-600 leading-relaxed">{feature.description}</p>
+					<div>
+						<h3 class="mb-3 text-xl font-bold text-gray-900">{feature.title}</h3>
+						<p class="text-gray-600 leading-relaxed">{feature.description}</p>
+					</div>
 				</div>
 			{/each}
 		</div>

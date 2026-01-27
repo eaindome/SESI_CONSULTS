@@ -84,13 +84,19 @@
 
 <!-- Hero Section -->
 <section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
-	<!-- Animated floating shapes -->
-	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
-	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+	<!-- Decorative circles - varied sizes and positions -->
+	<div class="absolute top-10 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-40 right-40 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-10 left-20 w-80 h-80 bg-white/8 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-32 left-40 w-56 h-56 bg-emerald-300/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/2 left-10 w-72 h-72 bg-teal-300/8 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/3 right-1/2 w-48 h-48 bg-white/12 rounded-full blur-3xl"></div>
 
-	<!-- Decorative circles -->
-	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
-	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+	<!-- Small accent dots -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full"></div>
+	<div class="absolute top-2/3 right-1/3 w-2.5 h-2.5 bg-white/30 rounded-full"></div>
+	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-200/40 rounded-full"></div>
 
 	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
@@ -167,35 +173,41 @@
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 gap-12 md:grid-cols-3 max-w-5xl mx-auto">
-			<div class="text-center">
-				<div class="mb-6 inline-flex items-center justify-center rounded-full bg-emerald-600 h-16 w-16 text-white text-2xl font-bold">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+			<div class="flex gap-4 items-start">
+				<div class="flex-shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
 					1
 				</div>
-				<h3 class="mb-3 text-xl font-bold text-gray-900">Book Online</h3>
-				<p class="text-gray-600 leading-relaxed">
-					Choose your service and select a convenient date and time through our easy-to-use booking system.
-				</p>
+				<div>
+					<h3 class="mb-2 text-xl font-bold text-gray-900">Book Online</h3>
+					<p class="text-gray-600 leading-relaxed">
+						Choose your service and select a convenient date and time through our easy-to-use booking system.
+					</p>
+				</div>
 			</div>
 
-			<div class="text-center">
-				<div class="mb-6 inline-flex items-center justify-center rounded-full bg-emerald-600 h-16 w-16 text-white text-2xl font-bold">
+			<div class="flex gap-4 items-start">
+				<div class="flex-shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
 					2
 				</div>
-				<h3 class="mb-3 text-xl font-bold text-gray-900">We Confirm</h3>
-				<p class="text-gray-600 leading-relaxed">
-					Our team will confirm your appointment and send you details about your assigned healthcare professional.
-				</p>
+				<div>
+					<h3 class="mb-2 text-xl font-bold text-gray-900">We Confirm</h3>
+					<p class="text-gray-600 leading-relaxed">
+						Our team will confirm your appointment and send you details about your assigned healthcare professional.
+					</p>
+				</div>
 			</div>
 
-			<div class="text-center">
-				<div class="mb-6 inline-flex items-center justify-center rounded-full bg-emerald-600 h-16 w-16 text-white text-2xl font-bold">
+			<div class="flex gap-4 items-start">
+				<div class="flex-shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
 					3
 				</div>
-				<h3 class="mb-3 text-xl font-bold text-gray-900">Receive Care</h3>
-				<p class="text-gray-600 leading-relaxed">
-					Your nurse arrives at your home at the scheduled time to provide professional, compassionate care.
-				</p>
+				<div>
+					<h3 class="mb-2 text-xl font-bold text-gray-900">Receive Care</h3>
+					<p class="text-gray-600 leading-relaxed">
+						Your nurse arrives at your home at the scheduled time to provide professional, compassionate care.
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>

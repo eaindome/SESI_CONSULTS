@@ -26,14 +26,20 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
-	<!-- Animated floating shapes -->
-	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
-	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+<section class="relative overflow-hidden bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+	<!-- Decorative circles - varied sizes and positions -->
+	<div class="absolute top-10 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-40 right-40 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-10 left-20 w-80 h-80 bg-white/8 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-32 left-40 w-56 h-56 bg-emerald-300/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/2 left-10 w-72 h-72 bg-teal-300/8 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/3 right-1/2 w-48 h-48 bg-white/12 rounded-full blur-3xl"></div>
 
-	<!-- Decorative circles -->
-	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
-	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+	<!-- Small accent dots -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full"></div>
+	<div class="absolute top-2/3 right-1/3 w-2.5 h-2.5 bg-white/30 rounded-full"></div>
+	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-200/40 rounded-full"></div>
 
 	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
@@ -134,14 +140,16 @@
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 gap-12 md:grid-cols-3 max-w-5xl mx-auto">
+		<div class="grid grid-cols-1 gap-10 md:grid-cols-3 max-w-5xl mx-auto">
 			{#each values as value}
-				<div class="text-center">
-					<div class="mb-6 inline-flex items-center justify-center rounded-full bg-emerald-600 p-5 text-white">
-						<svelte:component this={value.icon} class="h-8 w-8" />
+				<div class="flex gap-4 items-start">
+					<div class="shrink-0 rounded-full bg-emerald-600 p-4 text-white">
+						<svelte:component this={value.icon} class="h-7 w-7" />
 					</div>
-					<h3 class="mb-4 text-xl font-bold text-gray-900">{value.title}</h3>
-					<p class="text-gray-600 leading-relaxed">{value.description}</p>
+					<div>
+						<h3 class="mb-3 text-xl font-bold text-gray-900">{value.title}</h3>
+						<p class="text-gray-600 leading-relaxed">{value.description}</p>
+					</div>
 				</div>
 			{/each}
 		</div>

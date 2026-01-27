@@ -49,14 +49,20 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
-	<!-- Animated floating shapes -->
-	<div class="absolute top-20 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
-	<div class="absolute bottom-20 left-10 w-72 h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+<section class="relative overflow-hidden bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+	<!-- Decorative circles - varied sizes and positions -->
+	<!-- <div class="absolute top-10 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-40 right-40 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-10 left-20 w-80 h-80 bg-white/8 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-32 left-40 w-56 h-56 bg-emerald-300/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/2 left-10 w-72 h-72 bg-teal-300/8 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/3 right-1/2 w-48 h-48 bg-white/12 rounded-full blur-3xl"></div> -->
 
-	<!-- Decorative circles -->
-	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full animate-bounce" style="animation-duration: 3s;"></div>
-	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full animate-bounce" style="animation-duration: 4s; animation-delay: 0.5s;"></div>
+	<!-- Small accent dots -->
+	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full"></div>
+	<div class="absolute top-2/3 right-1/3 w-2.5 h-2.5 bg-white/30 rounded-full"></div>
+	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-200/40 rounded-full"></div>
 
 	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
@@ -83,41 +89,49 @@
 <!-- Contact Info -->
 <section class="py-24 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
-			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+			<div class="flex gap-4 items-start">
+				<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
 					<Phone class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-bold text-gray-900">Phone</h3>
-				<p class="text-gray-600">+234 XXX XXX XXXX</p>
-				<p class="text-sm text-gray-500 mt-1">Mon-Sun, 24/7</p>
+				<div>
+					<h3 class="mb-2 font-bold text-gray-900 text-lg">Phone</h3>
+					<p class="text-gray-600 mb-1">+234 XXX XXX XXXX</p>
+					<p class="text-sm text-gray-500">Mon-Sun, 24/7</p>
+				</div>
 			</div>
 
-			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+			<div class="flex gap-4 items-start">
+				<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
 					<Mail class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-bold text-gray-900">Email</h3>
-				<p class="text-gray-600">info@sesihealthcare.com</p>
-				<p class="text-sm text-gray-500 mt-1">We reply within 24 hours</p>
+				<div>
+					<h3 class="mb-2 font-bold text-gray-900 text-lg">Email</h3>
+					<p class="text-gray-600 mb-1">info@sesihealthcare.com</p>
+					<p class="text-sm text-gray-500">We reply within 24 hours</p>
+				</div>
 			</div>
 
-			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+			<div class="flex gap-4 items-start">
+				<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
 					<MapPin class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-bold text-gray-900">Location</h3>
-				<p class="text-gray-600">Accra, Ghana</p>
-				<p class="text-sm text-gray-500 mt-1">Serving Accra & environs</p>
+				<div>
+					<h3 class="mb-2 font-bold text-gray-900 text-lg">Location</h3>
+					<p class="text-gray-600 mb-1">Accra, Ghana</p>
+					<p class="text-sm text-gray-500">Serving Accra & environs</p>
+				</div>
 			</div>
 
-			<div class="text-center">
-				<div class="mb-4 inline-flex items-center justify-center rounded-xl bg-emerald-100 p-4 text-emerald-600">
+			<div class="flex gap-4 items-start">
+				<div class="shrink-0 rounded-xl bg-emerald-100 p-4 text-emerald-600">
 					<Clock class="h-7 w-7" />
 				</div>
-				<h3 class="mb-2 font-bold text-gray-900">Availability</h3>
-				<p class="text-gray-600">24/7 Service</p>
-				<p class="text-sm text-gray-500 mt-1">Including holidays</p>
+				<div>
+					<h3 class="mb-2 font-bold text-gray-900 text-lg">Availability</h3>
+					<p class="text-gray-600 mb-1">24/7 Service</p>
+					<p class="text-sm text-gray-500">Including holidays</p>
+				</div>
 			</div>
 		</div>
 
