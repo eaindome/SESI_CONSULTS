@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Calendar, Clock, User, Mail, Phone, MapPin, FileText } from '@lucide/svelte';
+	import { Hero } from '$lib';
 
 	// Form state
 	let selectedService = $state('');
@@ -15,6 +16,28 @@
 	let isSubmitting = $state(false);
 	let submitSuccess = $state(false);
 	let submitError = $state('');
+
+	// Field-level errors
+	let errors = $state({
+		service: '',
+		date: '',
+		time: '',
+		fullName: '',
+		email: '',
+		phone: '',
+		address: ''
+	});
+
+	// Touched fields (for showing errors only after user interaction)
+	let touched = $state({
+		service: false,
+		date: false,
+		time: false,
+		fullName: false,
+		email: false,
+		phone: false,
+		address: false
+	});
 
 	const services = [
 		'General Nursing Care',
@@ -34,11 +57,107 @@
 	// Get today's date in YYYY-MM-DD format
 	const today = new Date().toISOString().split('T')[0];
 
+	// Validation functions
+	function validateEmail(email: string): boolean {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	}
+
+	function validatePhone(phone: string): boolean {
+		// Ghana phone format: +233 XXX XXX XXXX or 0XX XXX XXXX
+		const cleanPhone = phone.replace(/\s/g, '');
+		return cleanPhone.length >= 10 && /^(\+233|0)[0-9]{9,10}$/.test(cleanPhone);
+	}
+
+	function formatPhoneNumber(value: string): string {
+		// Remove all non-digit characters except +
+		const cleaned = value.replace(/[^\d+]/g, '');
+
+		// Format: +233 XXX XXX XXXX
+		if (cleaned.startsWith('+233')) {
+			const numbers = cleaned.substring(4);
+			if (numbers.length <= 3) return `+233 ${numbers}`;
+			if (numbers.length <= 6) return `+233 ${numbers.slice(0, 3)} ${numbers.slice(3)}`;
+			return `+233 ${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6, 10)}`;
+		}
+		// Format: 0XX XXX XXXX
+		else if (cleaned.startsWith('0')) {
+			if (cleaned.length <= 3) return cleaned;
+			if (cleaned.length <= 6) return `${cleaned.slice(0, 3)} ${cleaned.slice(3)}`;
+			return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6, 10)}`;
+		}
+		return cleaned;
+	}
+
+	function validateField(field: string, value: string): string {
+		switch (field) {
+			case 'service':
+				return !value ? 'Please select a service' : '';
+			case 'date':
+				return !value ? 'Please select a date' : '';
+			case 'time':
+				return !value ? 'Please select a time' : '';
+			case 'fullName':
+				return !value ? 'Please enter your full name' : value.length < 3 ? 'Name must be at least 3 characters' : '';
+			case 'email':
+				return !value ? 'Please enter your email' : !validateEmail(value) ? 'Please enter a valid email address' : '';
+			case 'phone':
+				return !value ? 'Please enter your phone number' : !validatePhone(value) ? 'Please enter a valid Ghana phone number' : '';
+			case 'address':
+				return !value ? 'Please enter your home address' : value.length < 10 ? 'Please enter a complete address' : '';
+			default:
+				return '';
+		}
+	}
+
+	function handleBlur(field: string) {
+		touched[field] = true;
+		const value = { service: selectedService, date: appointmentDate, time: appointmentTime, fullName, email, phone, address }[field];
+		errors[field] = validateField(field, value);
+	}
+
+	function handlePhoneInput(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const formatted = formatPhoneNumber(input.value);
+		phone = formatted;
+		if (touched.phone) {
+			errors.phone = validateField('phone', formatted);
+		}
+	}
+
+	function handleEmailBlur() {
+		touched.email = true;
+		errors.email = validateField('email', email);
+	}
+
+	function validateAllFields(): boolean {
+		const fields = ['service', 'date', 'time', 'fullName', 'email', 'phone', 'address'];
+		let isValid = true;
+
+		fields.forEach(field => {
+			touched[field] = true;
+			const value = { service: selectedService, date: appointmentDate, time: appointmentTime, fullName, email, phone, address }[field];
+			const error = validateField(field, value);
+			errors[field] = error;
+			if (error) isValid = false;
+		});
+
+		return isValid;
+	}
+
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		isSubmitting = true;
 		submitError = '';
 		submitSuccess = false;
+
+		// Validate all fields
+		if (!validateAllFields()) {
+			submitError = 'Please fix the errors in the form before submitting.';
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			return;
+		}
+
+		isSubmitting = true;
 
 		try {
 			// Combine date and time
@@ -80,6 +199,26 @@
 			address = '';
 			notes = '';
 
+			// Reset errors and touched
+			errors = {
+				service: '',
+				date: '',
+				time: '',
+				fullName: '',
+				email: '',
+				phone: '',
+				address: ''
+			};
+			touched = {
+				service: false,
+				date: false,
+				time: false,
+				fullName: false,
+				email: false,
+				phone: false,
+				address: false
+			};
+
 			// Scroll to success message
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		} catch (error) {
@@ -109,43 +248,13 @@
 	<meta name="description" content="Schedule your home healthcare appointment online. Choose your service, date, and time." />
 </svelte:head>
 
-<!-- Hero Section -->
-<section class="relative overflow-hidden bg-linear-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
-	<!-- Decorative circles - varied sizes and positions -->
-	<div class="absolute top-10 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-	<div class="absolute top-40 right-40 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
-	<div class="absolute bottom-10 left-20 w-80 h-80 bg-white/8 rounded-full blur-3xl"></div>
-	<div class="absolute bottom-32 left-40 w-56 h-56 bg-emerald-300/10 rounded-full blur-3xl"></div>
-	<div class="absolute top-1/2 left-10 w-72 h-72 bg-teal-300/8 rounded-full blur-3xl"></div>
-	<div class="absolute top-1/3 right-1/2 w-48 h-48 bg-white/12 rounded-full blur-3xl"></div>
-
-	<!-- Small accent dots -->
-	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full"></div>
-	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full"></div>
-	<div class="absolute top-2/3 right-1/3 w-2.5 h-2.5 bg-white/30 rounded-full"></div>
-	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-200/40 rounded-full"></div>
-
-	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="mx-auto max-w-3xl text-center">
-			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
-				Book Now
-			</div>
-			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
-				Schedule Your <br/>Home Care Visit
-			</h1>
-			<p class="text-xl text-emerald-50 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
-				Choose a convenient time for professional healthcare delivered to your doorstep
-			</p>
-		</div>
-	</div>
-
-	<!-- Bottom wave separator -->
-	<div class="absolute bottom-0 left-0 right-0">
-		<svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-			<path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 32C840 27 960 21 1080 21.3C1200 21 1320 27 1380 29.3L1440 32V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="white"/>
-		</svg>
-	</div>
-</section>
+<Hero
+	title="Schedule Your <br/>Home Care Visit"
+	subtitle="Choose a convenient time for professional healthcare delivered to your doorstep"
+	badge="Book Now"
+	variant="gradient"
+	decorative={true}
+/>
 
 <!-- Booking Form -->
 <section class="py-24 bg-gradient-to-b from-white to-gray-50/50">
@@ -197,19 +306,31 @@
 							<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 								<FileText class="h-4 w-4 text-emerald-600" />
 							</div>
-							Select Service
+							Select Service <span class="text-red-500 ml-1" aria-label="required">*</span>
 						</label>
 						<select
 							id="service"
 							bind:value={selectedService}
+							onblur={() => handleBlur('service')}
 							required
-							class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+							aria-required="true"
+							aria-invalid={touched.service && errors.service ? 'true' : 'false'}
+							aria-describedby={errors.service ? 'service-error' : undefined}
+							class="w-full rounded-xl border-2 {touched.service && errors.service ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.service && errors.service ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 						>
 							<option value="">Choose a service...</option>
 							{#each services as service}
 								<option value={service}>{service}</option>
 							{/each}
 						</select>
+						{#if touched.service && errors.service}
+							<p id="service-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+								</svg>
+								{errors.service}
+							</p>
+						{/if}
 					</div>
 
 					<!-- Date & Time -->
@@ -219,16 +340,28 @@
 								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 									<Calendar class="h-4 w-4 text-emerald-600" />
 								</div>
-								Date
+								Date <span class="text-red-500 ml-1" aria-label="required">*</span>
 							</label>
 							<input
 								type="date"
 								id="date"
 								bind:value={appointmentDate}
+								onblur={() => handleBlur('date')}
 								min={today}
 								required
-								class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								aria-required="true"
+								aria-invalid={touched.date && errors.date ? 'true' : 'false'}
+								aria-describedby={errors.date ? 'date-error' : undefined}
+								class="w-full rounded-xl border-2 {touched.date && errors.date ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.date && errors.date ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 							/>
+							{#if touched.date && errors.date}
+								<p id="date-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+									</svg>
+									{errors.date}
+								</p>
+							{/if}
 						</div>
 
 						<div class="group">
@@ -236,19 +369,31 @@
 								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 									<Clock class="h-4 w-4 text-emerald-600" />
 								</div>
-								Time
+								Time <span class="text-red-500 ml-1" aria-label="required">*</span>
 							</label>
 							<select
 								id="time"
 								bind:value={appointmentTime}
+								onblur={() => handleBlur('time')}
 								required
-								class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								aria-required="true"
+								aria-invalid={touched.time && errors.time ? 'true' : 'false'}
+								aria-describedby={errors.time ? 'time-error' : undefined}
+								class="w-full rounded-xl border-2 {touched.time && errors.time ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.time && errors.time ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 							>
 								<option value="">Select time...</option>
 								{#each timeSlots as slot}
 									<option value={slot}>{slot}</option>
 								{/each}
 							</select>
+							{#if touched.time && errors.time}
+								<p id="time-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+									</svg>
+									{errors.time}
+								</p>
+							{/if}
 						</div>
 					</div>
 
@@ -266,16 +411,28 @@
 									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 										<User class="h-4 w-4 text-emerald-600" />
 									</div>
-									Full Name
+									Full Name <span class="text-red-500 ml-1" aria-label="required">*</span>
 								</label>
 								<input
 									type="text"
 									id="name"
 									bind:value={fullName}
+									onblur={() => handleBlur('fullName')}
 									required
+									aria-required="true"
+									aria-invalid={touched.fullName && errors.fullName ? 'true' : 'false'}
+									aria-describedby={errors.fullName ? 'name-error' : undefined}
 									placeholder="John Doe"
-									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+									class="w-full rounded-xl border-2 {touched.fullName && errors.fullName ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.fullName && errors.fullName ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 								/>
+								{#if touched.fullName && errors.fullName}
+									<p id="name-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+										<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+										</svg>
+										{errors.fullName}
+									</p>
+								{/if}
 							</div>
 
 							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -284,16 +441,28 @@
 										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 											<Mail class="h-4 w-4 text-emerald-600" />
 										</div>
-										Email
+										Email <span class="text-red-500 ml-1" aria-label="required">*</span>
 									</label>
 									<input
 										type="email"
 										id="email"
 										bind:value={email}
+										onblur={handleEmailBlur}
 										required
+										aria-required="true"
+										aria-invalid={touched.email && errors.email ? 'true' : 'false'}
+										aria-describedby={errors.email ? 'email-error' : undefined}
 										placeholder="john@example.com"
-										class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+										class="w-full rounded-xl border-2 {touched.email && errors.email ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.email && errors.email ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 									/>
+									{#if touched.email && errors.email}
+										<p id="email-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+											<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+											</svg>
+											{errors.email}
+										</p>
+									{/if}
 								</div>
 
 								<div class="group">
@@ -301,16 +470,29 @@
 										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 											<Phone class="h-4 w-4 text-emerald-600" />
 										</div>
-										Phone Number
+										Phone Number <span class="text-red-500 ml-1" aria-label="required">*</span>
 									</label>
 									<input
 										type="tel"
 										id="phone"
 										bind:value={phone}
+										oninput={handlePhoneInput}
+										onblur={() => handleBlur('phone')}
 										required
+										aria-required="true"
+										aria-invalid={touched.phone && errors.phone ? 'true' : 'false'}
+										aria-describedby={errors.phone ? 'phone-error' : undefined}
 										placeholder="+233 XXX XXX XXXX"
-										class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+										class="w-full rounded-xl border-2 {touched.phone && errors.phone ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.phone && errors.phone ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 									/>
+									{#if touched.phone && errors.phone}
+										<p id="phone-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+											<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+											</svg>
+											{errors.phone}
+										</p>
+									{/if}
 								</div>
 							</div>
 
@@ -319,16 +501,28 @@
 									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
 										<MapPin class="h-4 w-4 text-emerald-600" />
 									</div>
-									Home Address
+									Home Address <span class="text-red-500 ml-1" aria-label="required">*</span>
 								</label>
 								<textarea
 									id="address"
 									bind:value={address}
+									onblur={() => handleBlur('address')}
 									required
+									aria-required="true"
+									aria-invalid={touched.address && errors.address ? 'true' : 'false'}
+									aria-describedby={errors.address ? 'address-error' : undefined}
 									rows="2"
 									placeholder="123 Street Name, Area, Accra"
-									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300 resize-none"
+									class="w-full rounded-xl border-2 {touched.address && errors.address ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.address && errors.address ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300 resize-none"
 								></textarea>
+								{#if touched.address && errors.address}
+									<p id="address-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
+										<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+										</svg>
+										{errors.address}
+									</p>
+								{/if}
 							</div>
 						</div>
 					</div>
@@ -366,7 +560,7 @@
 									Submitting...
 								{:else}
 									Book Appointment
-									<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
 									</svg>
 								{/if}

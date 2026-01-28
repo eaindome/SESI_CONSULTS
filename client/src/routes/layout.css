@@ -212,4 +212,33 @@
   .image-overlay:hover::after {
     opacity: 0.7;
   }
+
+  /* Enhanced keyboard focus indicators */
+  /* Remove default focus ring and apply only on keyboard navigation */
+  *:focus {
+    outline: none;
+  }
+
+  /* Apply visible focus ring only for keyboard navigation */
+  *:focus-visible {
+    outline: 3px solid oklch(0.65 0.12 150);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  /* Specific focus styles for interactive elements */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid oklch(0.65 0.12 150);
+    outline-offset: 2px;
+  }
+
+  /* Input focus styles remain consistent */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    border-color: oklch(0.65 0.12 150);
+    box-shadow: 0 0 0 4px oklch(0.65 0.12 150 / 0.1);
+  }
 }

@@ -17,46 +17,46 @@
 	};
 </script>
 
-<footer class="border-t border-gray-200 bg-gray-50">
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 transition-colors">
 	<div class="container mx-auto px-6 py-16 sm:px-8 lg:px-12">
 		<div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
 			<!-- Brand -->
 			<div class="lg:col-span-2">
 				<div class="flex items-center space-x-3 mb-6">
-					<div class="h-10 w-10 rounded-xl bg-emerald-600 flex items-center justify-center">
+					<div class="h-10 w-10 rounded-xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center transition-colors">
 						<span class="text-white font-bold text-xl">S</span>
 					</div>
-					<span class="font-bold text-xl text-gray-900">SESI Healthcare</span>
+					<span class="font-bold text-xl text-gray-900 dark:text-white transition-colors">SESI Healthcare</span>
 				</div>
-				<p class="text-base text-gray-600 max-w-md mb-8 leading-relaxed">
+				<p class="text-base text-gray-600 dark:text-gray-400 max-w-md mb-8 leading-relaxed transition-colors">
 					Professional home healthcare services delivered with compassion and excellence.
 					Your health and comfort are our priority.
 				</p>
 				<div class="space-y-3">
 					<div class="flex items-start space-x-3">
-						<MapPin class="h-5 w-5 mt-0.5 text-emerald-600 shrink-0" />
-						<span class="text-gray-700">Accra, Ghana</span>
+						<MapPin class="h-5 w-5 mt-0.5 text-emerald-600 dark:text-emerald-400 shrink-0 transition-colors" />
+						<span class="text-gray-700 dark:text-gray-300 transition-colors">Accra, Ghana</span>
 					</div>
 					<div class="flex items-center space-x-3">
-						<Phone class="h-5 w-5 text-emerald-600 shrink-0" />
-						<span class="text-gray-700">+233 XXX XXX XXXX</span>
+						<Phone class="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 transition-colors" />
+						<span class="text-gray-700 dark:text-gray-300 transition-colors">+233 XXX XXX XXXX</span>
 					</div>
 					<div class="flex items-center space-x-3">
-						<Mail class="h-5 w-5 text-emerald-600 shrink-0" />
-						<span class="text-gray-700">info@sesihealthcare.com</span>
+						<Mail class="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 transition-colors" />
+						<span class="text-gray-700 dark:text-gray-300 transition-colors">info@sesihealthcare.com</span>
 					</div>
 				</div>
 			</div>
 
 			<!-- Company Links -->
 			<div>
-				<h3 class="font-bold text-gray-900 mb-6">Company</h3>
+				<h3 class="font-bold text-gray-900 dark:text-white mb-6 transition-colors">Company</h3>
 				<ul class="space-y-3">
 					{#each footerLinks.company as link}
 						<li>
 							<a
 								href={link.href}
-								class="text-base text-gray-600 hover:text-emerald-600 transition-colors"
+								class="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
 							>
 								{link.label}
 							</a>
@@ -67,13 +67,13 @@
 
 			<!-- Support Links -->
 			<div>
-				<h3 class="font-bold text-gray-900 mb-6">Support</h3>
+				<h3 class="font-bold text-gray-900 dark:text-white mb-6 transition-colors">Support</h3>
 				<ul class="space-y-3">
 					{#each footerLinks.support as link}
 						<li>
 							<a
 								href={link.href}
-								class="text-base text-gray-600 hover:text-emerald-600 transition-colors"
+								class="text-base text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
 							>
 								{link.label}
 							</a>
@@ -83,8 +83,8 @@
 			</div>
 		</div>
 
-		<div class="mt-16 border-t border-gray-200 pt-8">
-			<p class="text-sm text-gray-500 text-center">
+		<div class="mt-16 border-t border-gray-200 dark:border-gray-800 pt-8 transition-colors">
+			<p class="text-sm text-gray-500 dark:text-gray-400 text-center transition-colors">
 				&copy; {currentYear} SESI Healthcare. All rights reserved.
 			</p>
 		</div>

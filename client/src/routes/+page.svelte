@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Heart, Clock, Shield, Users } from '@lucide/svelte';
+	import { Hero } from '$lib';
 
 	const features = [
 		{
@@ -30,49 +31,31 @@
 	<meta name="description" content="Professional home healthcare services delivered with compassion. Book trusted nurses for in-home care." />
 </svelte:head>
 
-<!-- Hero Section -->
-<section class="relative overflow-hidden">
-	<!-- Background Image with Dark Overlay -->
-	<div class="absolute inset-0 z-0">
-		<img
-			src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1920&h=1080&fit=crop&q=80"
-			alt="African healthcare professional providing home care"
-			class="w-full h-full object-cover"
-		/>
-		<!-- Dark overlay for text contrast -->
-		<div class="absolute inset-0 bg-linear-to-r from-gray-900/85 via-gray-900/75 to-gray-900/70"></div>
+<Hero
+	title="Quality Healthcare in the <span class='text-emerald-400'>Comfort of Your Home</span>"
+	subtitle="Professional home nursing and healthcare services delivered with compassion and excellence. Your health and comfort are our priority."
+	variant="image"
+	imageUrl="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1920&h=1080&fit=crop&q=80"
+	decorative={false}
+>
+	<div class="flex flex-col sm:flex-row gap-4 justify-center">
+		<a
+			href="/booking"
+			class="group inline-flex items-center justify-center rounded-xl bg-emerald-600 px-10 py-4 text-lg font-semibold text-white hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+		>
+			Book an Appointment
+			<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+			</svg>
+		</a>
+		<a
+			href="/services"
+			class="inline-flex items-center justify-center rounded-xl border-2 border-white bg-white/10 backdrop-blur-sm px-10 py-4 text-lg font-semibold text-white hover:bg-white/20 transition-all duration-300"
+		>
+			View Services
+		</a>
 	</div>
-
-	<div class="relative z-10 container mx-auto px-6 py-32 sm:px-8 lg:px-12 lg:py-40">
-		<div class="max-w-3xl animate-fade-in-up">
-			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight mb-8">
-				Quality Healthcare in the
-				<span class="text-emerald-400">Comfort of Your Home</span>
-			</h1>
-			<p class="text-xl text-gray-100 sm:text-2xl leading-relaxed mb-12">
-				Professional home nursing and healthcare services delivered with compassion and excellence.
-				Your health and comfort are our priority.
-			</p>
-			<div class="flex flex-col sm:flex-row gap-4">
-				<a
-					href="/booking"
-					class="group inline-flex items-center justify-center rounded-xl bg-emerald-600 px-10 py-4 text-lg font-semibold text-white hover:bg-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-				>
-					Book an Appointment
-					<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-					</svg>
-				</a>
-				<a
-					href="/services"
-					class="inline-flex items-center justify-center rounded-xl border-2 border-white bg-white/10 backdrop-blur-sm px-10 py-4 text-lg font-semibold text-white hover:bg-white/20 transition-all duration-300"
-				>
-					View Services
-				</a>
-			</div>
-		</div>
-	</div>
-</section>
+</Hero>
 
 <!-- Features Section -->
 <section class="py-32 bg-white">
@@ -116,7 +99,7 @@
 					class="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 hover:bg-gray-50 transition-all duration-300 shadow-lg"
 				>
 					Book Now
-					<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
 					</svg>
 				</a>
