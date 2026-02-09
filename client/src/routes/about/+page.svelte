@@ -101,7 +101,7 @@
 						<h2 class="text-2xl font-bold text-gray-900 mb-4">Our Vision</h2>
 						<p class="text-lg text-gray-600 leading-relaxed">
 							To be the most trusted name in home healthcare, known for our commitment to excellence,
-							compassion, and innovation in delivering patient-centered care that makes a real
+							compassion, and innovation in delivering family-centered care that makes a real
 							difference in people's lives.
 						</p>
 					</div>

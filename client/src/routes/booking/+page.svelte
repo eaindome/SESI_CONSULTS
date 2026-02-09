@@ -12,6 +12,14 @@
 	let address = $state('');
 	let notes = $state('');
 
+	// Training-specific fields
+	let experienceLevel = $state('');
+	let preferredFormat = $state('');
+	let schedulingPreference = $state('');
+
+	// Derived state
+	const isTrainingService = $derived(selectedService.startsWith('Training -'));
+
 	// UI state
 	let isSubmitting = $state(false);
 	let submitSuccess = $state(false);
@@ -40,12 +48,34 @@
 	});
 
 	const services = [
-		'General Nursing Care',
-		'Injection Services',
-		'Post-Operative Care',
-		'Chronic Disease Management',
-		'Elderly Care',
-		'Maternal & Child Care'
+		// Wound Care Services
+		'Wound Care - Acute Wounds',
+		'Wound Care - Chronic Wounds',
+		'Wound Care - Burns',
+		'Wound Care - Post-Surgical',
+
+		// Home Care Services
+		'Home Care - General Nursing',
+		'Home Care - Injection Services',
+		'Home Care - Post-Operative Care',
+		'Home Care - Chronic Disease Management',
+		'Home Care - Elderly Care',
+		'Home Care - Maternal & Child Care',
+
+		// Consultations
+		'Consultation - General Health',
+		'Consultation - Follow-up',
+		'Consultation - Specialist (Orthopedics)',
+
+		// Training
+		'Training - Wound Care & Dressing',
+		'Training - Catheterization & IV Therapy',
+		'Training - Emergency & Trauma Care',
+		'Training - Patient Mobility & Transfer',
+		'Training - Post-Operative Care',
+		'Training - Pediatric Nursing',
+		'Training - Geriatric Care',
+		'Training - Medical Equipment Operation'
 	];
 
 	const timeSlots = [
@@ -110,7 +140,7 @@
 		}
 	}
 
-	function handleBlur(field: string) {
+	function handleBlur(field: keyof typeof touched) {
 		touched[field] = true;
 		const value = { service: selectedService, date: appointmentDate, time: appointmentTime, fullName, email, phone, address }[field];
 		errors[field] = validateField(field, value);
@@ -131,7 +161,7 @@
 	}
 
 	function validateAllFields(): boolean {
-		const fields = ['service', 'date', 'time', 'fullName', 'email', 'phone', 'address'];
+		const fields: (keyof typeof touched)[] = ['service', 'date', 'time', 'fullName', 'email', 'phone', 'address'];
 		let isValid = true;
 
 		fields.forEach(field => {
@@ -172,7 +202,14 @@
 					phone,
 					address
 				},
-				notes: notes || undefined
+				notes: notes || undefined,
+				...(isTrainingService && {
+					trainingDetails: {
+						experienceLevel: experienceLevel || undefined,
+						preferredFormat: preferredFormat || undefined,
+						schedulingPreference: schedulingPreference || undefined
+					}
+				})
 			};
 
 			// Replace with your actual API endpoint
@@ -198,6 +235,9 @@
 			phone = '';
 			address = '';
 			notes = '';
+			experienceLevel = '';
+			preferredFormat = '';
+			schedulingPreference = '';
 
 			// Reset errors and touched
 			errors = {
@@ -244,24 +284,24 @@
 </script>
 
 <svelte:head>
-	<title>Book an Appointment - SESI Healthcare</title>
-	<meta name="description" content="Schedule your home healthcare appointment online. Choose your service, date, and time." />
+	<title>Book a Service - SESI Healthcare</title>
+	<meta name="description" content="Book healthcare services, consultations, or training online. Choose your service, date, and time." />
 </svelte:head>
 
 <Hero
-	title="Schedule Your <br/>Home Care Visit"
-	subtitle="Choose a convenient time for professional healthcare delivered to your doorstep"
+	title="Book Your <br/>Healthcare Service"
+	subtitle="Schedule home care, consultations, or training sessions at your convenience"
 	badge="Book Now"
 	variant="gradient"
 	decorative={true}
 />
 
 <!-- Booking Form -->
-<section class="py-24 bg-gradient-to-b from-white to-gray-50/50">
+<section class="py-24 bg-linear-to-b from-white to-gray-50/50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-2xl">
 			{#if submitSuccess}
-				<div class="mb-8 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 shadow-lg shadow-emerald-100/50 animate-fade-in">
+				<div class="mb-8 rounded-xl border border-emerald-200 bg-linear-to-br from-emerald-50 to-teal-50 p-6 shadow-lg shadow-emerald-100/50 animate-fade-in">
 					<div class="flex items-start">
 						<div class="shrink-0 rounded-full bg-emerald-600 p-1">
 							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,7 +319,7 @@
 			{/if}
 
 			{#if submitError}
-				<div class="mb-8 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-orange-50 p-6 shadow-lg shadow-red-100/50 animate-fade-in">
+				<div class="mb-8 rounded-xl border border-red-200 bg-linear-to-br from-red-50 to-orange-50 p-6 shadow-lg shadow-red-100/50 animate-fade-in">
 					<div class="flex items-start">
 						<div class="shrink-0 rounded-full bg-red-600 p-1">
 							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -297,7 +337,7 @@
 			<!-- Form Card with enhanced styling -->
 			<div class="relative">
 				<!-- Decorative gradient border -->
-				<div class="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-20"></div>
+				<div class="absolute -inset-1 bg-linear-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-20"></div>
 
 				<form onsubmit={handleSubmit} class="relative bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 space-y-8">
 					<!-- Service Selection -->
@@ -332,6 +372,68 @@
 							</p>
 						{/if}
 					</div>
+
+					<!-- Training-specific fields -->
+					{#if isTrainingService}
+						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-xl border-2 border-emerald-100">
+							<div class="sm:col-span-2">
+								<p class="text-sm font-semibold text-emerald-900 mb-2">Training Details</p>
+							</div>
+
+							<!-- Experience Level -->
+							<div>
+								<label for="experience-level" class="mb-2 block text-sm font-semibold text-gray-900">
+									Experience Level
+								</label>
+								<select
+									id="experience-level"
+									bind:value={experienceLevel}
+									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								>
+									<option value="">Select level...</option>
+									<option value="student">Nursing Student (Pre-qualification)</option>
+									<option value="new">Newly Qualified Nurse (&lt; 1 year)</option>
+									<option value="experienced">Experienced Nurse (1-5 years)</option>
+									<option value="advanced">Advanced Training (5+ years)</option>
+								</select>
+							</div>
+
+							<!-- Preferred Format -->
+							<div>
+								<label for="format" class="mb-2 block text-sm font-semibold text-gray-900">
+									Preferred Format
+								</label>
+								<select
+									id="format"
+									bind:value={preferredFormat}
+									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								>
+									<option value="">Select format...</option>
+									<option value="one-on-one">One-on-One Training</option>
+									<option value="small-group">Small Group (2-5 participants)</option>
+									<option value="workshop">Workshop (6+ participants)</option>
+								</select>
+							</div>
+
+							<!-- Scheduling Preference -->
+							<div class="sm:col-span-2">
+								<label for="schedule-pref" class="mb-2 block text-sm font-semibold text-gray-900">
+									Scheduling Preference
+								</label>
+								<select
+									id="schedule-pref"
+									bind:value={schedulingPreference}
+									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
+								>
+									<option value="">Select preference...</option>
+									<option value="weekday-morning">Weekday Mornings</option>
+									<option value="weekday-afternoon">Weekday Afternoons</option>
+									<option value="weekday-evening">Weekday Evenings</option>
+									<option value="weekend">Weekend Sessions</option>
+								</select>
+							</div>
+						</div>
+					{/if}
 
 					<!-- Date & Time -->
 					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -400,9 +502,9 @@
 					<!-- Contact Details Section -->
 					<div class="pt-4 pb-2 border-t-2 border-gray-100">
 						<div class="flex items-center mb-6">
-							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+							<div class="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
 							<h3 class="text-lg font-bold text-gray-900 px-4">Contact Information</h3>
-							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+							<div class="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
 						</div>
 
 						<div class="space-y-6">
@@ -549,7 +651,7 @@
 						<button
 							type="submit"
 							disabled={isSubmitting}
-							class="group relative w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 transition-all duration-200 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-500/50 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none overflow-hidden"
+							class="group relative w-full rounded-xl bg-linear-to-r from-emerald-600 to-teal-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 transition-all duration-200 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-500/50 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none overflow-hidden"
 						>
 							<span class="relative z-10 flex items-center justify-center gap-2">
 								{#if isSubmitting}
@@ -565,7 +667,7 @@
 									</svg>
 								{/if}
 							</span>
-							<div class="absolute inset-0 bg-gradient-to-r from-emerald-700 to-teal-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
+							<div class="absolute inset-0 bg-linear-to-r from-emerald-700 to-teal-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
 						</button>
 						<p class="mt-4 text-center text-sm text-gray-500">
 							By submitting, you agree to our terms of service and privacy policy.

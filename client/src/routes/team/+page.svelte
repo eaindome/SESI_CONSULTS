@@ -3,40 +3,49 @@
 
 	const team = [
 		{
-			name: 'Sister Adebayo',
-			role: 'Senior Registered Nurse',
-			credentials: 'RN, BSN',
-			experience: '12+ years experience',
-			specialties: ['General Nursing', 'Chronic Disease Management', 'Post-Operative Care'],
-			description: 'Dedicated healthcare professional with extensive experience in home healthcare and patient-centered care.',
-			image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop&q=80'
-		},
-		{
-			name: 'Nurse Chukwu',
-			role: 'Registered Nurse',
+			name: 'Stephen EtornaM Salu',
+			role: 'Nursing Officer',
 			credentials: 'RN',
 			experience: '8+ years experience',
-			specialties: ['Maternal Care', 'Newborn Care', 'Elderly Care'],
-			description: 'Compassionate nurse specializing in maternal and child health with a gentle approach to care.',
+			specialties: ['Emergency Nursing', 'Critical Care', 'Trauma Management'],
+			description: 'Experienced emergency nursing specialist with extensive training in critical care and rapid response situations.',
+			image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=600&fit=crop&q=80'
+		},
+		{
+			name: 'Ebenezer Takyi',
+			role: 'Nursing Officer',
+			credentials: 'RN',
+			experience: '6+ years experience',
+			specialties: ['Orthopedic Nursing', 'Post-Surgical Care', 'Mobility Rehabilitation'],
+			description: 'Specialized in orthopedic care with focus on post-operative recovery and patient mobility improvement.',
+			image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop&q=80'
+		},
+		{
+			name: 'Esi Yacoba Ghartey',
+			role: 'Nursing Officer',
+			credentials: 'RN',
+			experience: '6+ years experience',
+			specialties: ['Paediatric Nursing', 'Child Health', 'Family-Centered Care'],
+			description: 'Compassionate pediatric specialist providing gentle, family-centered care for children of all ages.',
 			image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=600&fit=crop&q=80'
 		},
 		{
-			name: 'Sister Okafor',
-			role: 'Registered Nurse',
-			credentials: 'RN, Certified Wound Care Specialist',
-			experience: '10+ years experience',
-			specialties: ['Wound Care', 'Post-Surgical Care', 'IV Therapy'],
-			description: 'Expert in wound management and post-surgical care with a focus on promoting healing and comfort.',
-			image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=600&h=600&fit=crop&q=80'
+			name: 'Mame Esi Kesewah Eshun',
+			role: 'Senior Staff Nurse',
+			credentials: 'RN',
+			experience: '6+ years experience',
+			specialties: ['Theatre Nursing', 'Surgical Procedures', 'Sterile Technique'],
+			description: 'Senior theatre nurse with extensive surgical experience and expertise in perioperative care.',
+			image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop&q=80'
 		},
 		{
-			name: 'Nurse Mohammed',
-			role: 'Registered Nurse',
-			credentials: 'RN, Diabetes Educator',
-			experience: '7+ years experience',
-			specialties: ['Diabetes Management', 'Health Education', 'Medication Management'],
-			description: 'Skilled in chronic disease management and patient education, helping patients achieve better health outcomes.',
-			image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop&q=80'
+			name: 'Dr Salifu Nyagse',
+			role: 'Medical Officer',
+			credentials: 'MD, Orthopedics Surgery',
+			experience: '8+ years experience',
+			specialties: ['Orthopedic Surgery', 'Musculoskeletal Care', 'Surgical Consultation'],
+			description: 'Experienced orthopedic surgeon providing expert consultation and surgical care for musculoskeletal conditions.',
+			image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&h=600&fit=crop&q=80'
 		}
 	];
 </script>

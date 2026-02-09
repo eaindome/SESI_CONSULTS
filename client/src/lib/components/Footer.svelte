@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Mail, Phone, MapPin } from '@lucide/svelte';
+	import Logo from './Logo.svelte';
 
 	const currentYear = new Date().getFullYear();
 
@@ -22,11 +23,8 @@
 		<div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
 			<!-- Brand -->
 			<div class="lg:col-span-2">
-				<div class="flex items-center space-x-3 mb-6">
-					<div class="h-10 w-10 rounded-xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center transition-colors">
-						<span class="text-white font-bold text-xl">S</span>
-					</div>
-					<span class="font-bold text-xl text-gray-900 dark:text-white transition-colors">SESI Healthcare</span>
+				<div class="mb-6">
+					<Logo variant="symbol" size="md" />
 				</div>
 				<p class="text-base text-gray-600 dark:text-gray-400 max-w-md mb-8 leading-relaxed transition-colors">
 					Professional home healthcare services delivered with compassion and excellence.
