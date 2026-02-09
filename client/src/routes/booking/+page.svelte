@@ -1,186 +1,120 @@
 <script lang="ts">
-	import { Calendar, Clock, User, Mail, Phone, MapPin, FileText } from '@lucide/svelte';
-	import { Hero } from '$lib';
+	import { Calendar, Clock, User, Mail, Phone, MapPin, FileText, ArrowRight, CheckCircle2 } from '@lucide/svelte';
+	import { Hero, Button, Alert, Card, FormField, Input, Select, Textarea } from '$lib';
+	import { ALL_SERVICES, TIME_SLOTS, EXPERIENCE_LEVELS, TRAINING_FORMATS, SCHEDULING_PREFERENCES, BOOKING_SUCCESS_STEPS } from '$lib/constants';
+	import { validateEmail, validatePhone, formatPhoneNumber, validateRequired, validateMinLength, validateSelect, convertTo24Hour, getTodayDate } from '$lib/utils/validation';
+	import type { BookingFormData, BookingPayload } from '$lib/types/forms';
 
 	// Form state
-	let selectedService = $state('');
-	let appointmentDate = $state('');
-	let appointmentTime = $state('');
-	let fullName = $state('');
-	let email = $state('');
-	let phone = $state('');
-	let address = $state('');
-	let notes = $state('');
+	let formData = $state<BookingFormData>({
+		service: '',
+		appointmentDate: '',
+		appointmentTime: '',
+		fullName: '',
+		email: '',
+		phone: '',
+		address: '',
+		notes: '',
+		experienceLevel: '',
+		preferredFormat: '',
+		schedulingPreference: ''
+	});
 
-	// Training-specific fields
-	let experienceLevel = $state('');
-	let preferredFormat = $state('');
-	let schedulingPreference = $state('');
-
-	// Derived state
-	const isTrainingService = $derived(selectedService.startsWith('Training -'));
-
-	// UI state
-	let isSubmitting = $state(false);
-	let submitSuccess = $state(false);
-	let submitError = $state('');
-
-	// Field-level errors
+	// Validation state
 	let errors = $state({
 		service: '',
-		date: '',
-		time: '',
+		appointmentDate: '',
+		appointmentTime: '',
 		fullName: '',
 		email: '',
 		phone: '',
 		address: ''
 	});
 
-	// Touched fields (for showing errors only after user interaction)
 	let touched = $state({
 		service: false,
-		date: false,
-		time: false,
+		appointmentDate: false,
+		appointmentTime: false,
 		fullName: false,
 		email: false,
 		phone: false,
 		address: false
 	});
 
-	const services = [
-		// Wound Care Services
-		'Wound Care - Acute Wounds',
-		'Wound Care - Chronic Wounds',
-		'Wound Care - Burns',
-		'Wound Care - Post-Surgical',
+	// UI state
+	let isSubmitting = $state(false);
+	let submitSuccess = $state(false);
+	let submitError = $state('');
 
-		// Home Care Services
-		'Home Care - General Nursing',
-		'Home Care - Injection Services',
-		'Home Care - Post-Operative Care',
-		'Home Care - Chronic Disease Management',
-		'Home Care - Elderly Care',
-		'Home Care - Maternal & Child Care',
+	// Derived state
+	const isTrainingService = $derived(formData.service.startsWith('Training -'));
+	const today = getTodayDate();
 
-		// Consultations
-		'Consultation - General Health',
-		'Consultation - Follow-up',
-		'Consultation - Specialist (Orthopedics)',
-
-		// Training
-		'Training - Wound Care & Dressing',
-		'Training - Catheterization & IV Therapy',
-		'Training - Emergency & Trauma Care',
-		'Training - Patient Mobility & Transfer',
-		'Training - Post-Operative Care',
-		'Training - Pediatric Nursing',
-		'Training - Geriatric Care',
-		'Training - Medical Equipment Operation'
-	];
-
-	const timeSlots = [
-		'08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
-		'12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
-		'04:00 PM', '05:00 PM', '06:00 PM'
-	];
-
-	// Get today's date in YYYY-MM-DD format
-	const today = new Date().toISOString().split('T')[0];
-
-	// Validation functions
-	function validateEmail(email: string): boolean {
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return emailRegex.test(email);
-	}
-
-	function validatePhone(phone: string): boolean {
-		// Ghana phone format: +233 XXX XXX XXXX or 0XX XXX XXXX
-		const cleanPhone = phone.replace(/\s/g, '');
-		return cleanPhone.length >= 10 && /^(\+233|0)[0-9]{9,10}$/.test(cleanPhone);
-	}
-
-	function formatPhoneNumber(value: string): string {
-		// Remove all non-digit characters except +
-		const cleaned = value.replace(/[^\d+]/g, '');
-
-		// Format: +233 XXX XXX XXXX
-		if (cleaned.startsWith('+233')) {
-			const numbers = cleaned.substring(4);
-			if (numbers.length <= 3) return `+233 ${numbers}`;
-			if (numbers.length <= 6) return `+233 ${numbers.slice(0, 3)} ${numbers.slice(3)}`;
-			return `+233 ${numbers.slice(0, 3)} ${numbers.slice(3, 6)} ${numbers.slice(6, 10)}`;
-		}
-		// Format: 0XX XXX XXXX
-		else if (cleaned.startsWith('0')) {
-			if (cleaned.length <= 3) return cleaned;
-			if (cleaned.length <= 6) return `${cleaned.slice(0, 3)} ${cleaned.slice(3)}`;
-			return `${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6, 10)}`;
-		}
-		return cleaned;
-	}
-
-	function validateField(field: string, value: string): string {
+	// Validation handlers
+	function validateField(field: keyof typeof errors): void {
 		switch (field) {
 			case 'service':
-				return !value ? 'Please select a service' : '';
-			case 'date':
-				return !value ? 'Please select a date' : '';
-			case 'time':
-				return !value ? 'Please select a time' : '';
+				const serviceResult = validateSelect(formData.service, 'a service');
+				errors.service = serviceResult.error || '';
+				break;
+			case 'appointmentDate':
+				const dateResult = validateRequired(formData.appointmentDate, 'appointment date');
+				errors.appointmentDate = dateResult.error || '';
+				break;
+			case 'appointmentTime':
+				const timeResult = validateSelect(formData.appointmentTime, 'a time');
+				errors.appointmentTime = timeResult.error || '';
+				break;
 			case 'fullName':
-				return !value ? 'Please enter your full name' : value.length < 3 ? 'Name must be at least 3 characters' : '';
+				const nameResult = validateMinLength(formData.fullName, 3, 'Full name');
+				errors.fullName = nameResult.error || '';
+				break;
 			case 'email':
-				return !value ? 'Please enter your email' : !validateEmail(value) ? 'Please enter a valid email address' : '';
+				const emailResult = validateEmail(formData.email);
+				errors.email = emailResult.error || '';
+				break;
 			case 'phone':
-				return !value ? 'Please enter your phone number' : !validatePhone(value) ? 'Please enter a valid Ghana phone number' : '';
+				const phoneResult = validatePhone(formData.phone);
+				errors.phone = phoneResult.error || '';
+				break;
 			case 'address':
-				return !value ? 'Please enter your home address' : value.length < 10 ? 'Please enter a complete address' : '';
-			default:
-				return '';
+				const addressResult = validateMinLength(formData.address, 10, 'Home address');
+				errors.address = addressResult.error || '';
+				break;
 		}
 	}
 
-	function handleBlur(field: keyof typeof touched) {
+	function handleBlur(field: keyof typeof touched): void {
 		touched[field] = true;
-		const value = { service: selectedService, date: appointmentDate, time: appointmentTime, fullName, email, phone, address }[field];
-		errors[field] = validateField(field, value);
+		validateField(field);
 	}
 
-	function handlePhoneInput(e: Event) {
+	function handlePhoneInput(e: Event): void {
 		const input = e.target as HTMLInputElement;
-		const formatted = formatPhoneNumber(input.value);
-		phone = formatted;
+		formData.phone = formatPhoneNumber(input.value);
 		if (touched.phone) {
-			errors.phone = validateField('phone', formatted);
+			validateField('phone');
 		}
-	}
-
-	function handleEmailBlur() {
-		touched.email = true;
-		errors.email = validateField('email', email);
 	}
 
 	function validateAllFields(): boolean {
-		const fields: (keyof typeof touched)[] = ['service', 'date', 'time', 'fullName', 'email', 'phone', 'address'];
+		const fields: (keyof typeof errors)[] = ['service', 'appointmentDate', 'appointmentTime', 'fullName', 'email', 'phone', 'address'];
 		let isValid = true;
 
 		fields.forEach(field => {
 			touched[field] = true;
-			const value = { service: selectedService, date: appointmentDate, time: appointmentTime, fullName, email, phone, address }[field];
-			const error = validateField(field, value);
-			errors[field] = error;
-			if (error) isValid = false;
+			validateField(field);
+			if (errors[field]) isValid = false;
 		});
 
 		return isValid;
 	}
 
-	async function handleSubmit(e: Event) {
+	async function handleSubmit(e: Event): Promise<void> {
 		e.preventDefault();
 		submitError = '';
 		submitSuccess = false;
 
-		// Validate all fields
 		if (!validateAllFields()) {
 			submitError = 'Please fix the errors in the form before submitting.';
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,34 +124,30 @@
 		isSubmitting = true;
 
 		try {
-			// Combine date and time
-			const dateTime = new Date(`${appointmentDate}T${convertTo24Hour(appointmentTime)}`);
+			const dateTime = new Date(`${formData.appointmentDate}T${convertTo24Hour(formData.appointmentTime)}`);
 
-			const bookingData = {
-				service: selectedService,
+			const bookingData: BookingPayload = {
+				service: formData.service,
 				dateTime: dateTime.toISOString(),
 				contactDetails: {
-					name: fullName,
-					email,
-					phone,
-					address
+					name: formData.fullName,
+					email: formData.email,
+					phone: formData.phone,
+					address: formData.address
 				},
-				notes: notes || undefined,
+				notes: formData.notes || undefined,
 				...(isTrainingService && {
 					trainingDetails: {
-						experienceLevel: experienceLevel || undefined,
-						preferredFormat: preferredFormat || undefined,
-						schedulingPreference: schedulingPreference || undefined
+						experienceLevel: formData.experienceLevel || undefined,
+						preferredFormat: formData.preferredFormat || undefined,
+						schedulingPreference: formData.schedulingPreference || undefined
 					}
 				})
 			};
 
-			// Replace with your actual API endpoint
 			const response = await fetch('/api/bookings', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(bookingData)
 			});
 
@@ -226,40 +156,7 @@
 			}
 
 			submitSuccess = true;
-			// Reset form
-			selectedService = '';
-			appointmentDate = '';
-			appointmentTime = '';
-			fullName = '';
-			email = '';
-			phone = '';
-			address = '';
-			notes = '';
-			experienceLevel = '';
-			preferredFormat = '';
-			schedulingPreference = '';
-
-			// Reset errors and touched
-			errors = {
-				service: '',
-				date: '',
-				time: '',
-				fullName: '',
-				email: '',
-				phone: '',
-				address: ''
-			};
-			touched = {
-				service: false,
-				date: false,
-				time: false,
-				fullName: false,
-				email: false,
-				phone: false,
-				address: false
-			};
-
-			// Scroll to success message
+			resetForm();
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		} catch (error) {
 			submitError = 'Unable to submit booking. Please try again or contact us directly.';
@@ -269,17 +166,40 @@
 		}
 	}
 
-	function convertTo24Hour(time12: string): string {
-		const [time, period] = time12.split(' ');
-		let [hours, minutes] = time.split(':');
+	function resetForm(): void {
+		formData = {
+			service: '',
+			appointmentDate: '',
+			appointmentTime: '',
+			fullName: '',
+			email: '',
+			phone: '',
+			address: '',
+			notes: '',
+			experienceLevel: '',
+			preferredFormat: '',
+			schedulingPreference: ''
+		};
 
-		if (period === 'PM' && hours !== '12') {
-			hours = String(Number(hours) + 12);
-		} else if (period === 'AM' && hours === '12') {
-			hours = '00';
-		}
+		errors = {
+			service: '',
+			appointmentDate: '',
+			appointmentTime: '',
+			fullName: '',
+			email: '',
+			phone: '',
+			address: ''
+		};
 
-		return `${hours.padStart(2, '0')}:${minutes}:00`;
+		touched = {
+			service: false,
+			appointmentDate: false,
+			appointmentTime: false,
+			fullName: false,
+			email: false,
+			phone: false,
+			address: false
+		};
 	}
 </script>
 
@@ -297,411 +217,381 @@
 />
 
 <!-- Booking Form -->
-<section class="py-24 bg-linear-to-b from-white to-gray-50/50">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="mx-auto max-w-2xl">
+<section class="relative py-28 overflow-hidden">
+	<!-- Premium gradient background -->
+	<div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-emerald-50/30"></div>
+
+	<!-- Decorative elements -->
+	<div class="absolute top-20 right-10 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-20"></div>
+	<div class="absolute bottom-20 left-10 w-96 h-96 bg-teal-100 rounded-full blur-3xl opacity-20"></div>
+
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+		<div class="mx-auto max-w-3xl">
 			{#if submitSuccess}
-				<div class="mb-8 rounded-xl border border-emerald-200 bg-linear-to-br from-emerald-50 to-teal-50 p-6 shadow-lg shadow-emerald-100/50 animate-fade-in">
-					<div class="flex items-start">
-						<div class="shrink-0 rounded-full bg-emerald-600 p-1">
-							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-							</svg>
-						</div>
-						<div class="ml-3">
-							<h3 class="font-semibold text-emerald-900">Booking Submitted Successfully!</h3>
-							<p class="mt-2 text-sm text-emerald-700">
-								We've received your appointment request. Our team will contact you shortly to confirm the details.
-							</p>
-						</div>
-					</div>
-				</div>
+				<Alert
+					variant="success"
+					title="Booking Submitted Successfully!"
+					message="We've received your appointment request. Our team will contact you shortly to confirm the details."
+					class="mb-10 animate-scale-in"
+				/>
 			{/if}
 
 			{#if submitError}
-				<div class="mb-8 rounded-xl border border-red-200 bg-linear-to-br from-red-50 to-orange-50 p-6 shadow-lg shadow-red-100/50 animate-fade-in">
-					<div class="flex items-start">
-						<div class="shrink-0 rounded-full bg-red-600 p-1">
-							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-							</svg>
-						</div>
-						<div class="ml-3">
-							<h3 class="font-semibold text-red-900">Error</h3>
-							<p class="mt-2 text-sm text-red-700">{submitError}</p>
-						</div>
-					</div>
-				</div>
+				<Alert
+					variant="error"
+					title="Submission Error"
+					message={submitError}
+					class="mb-10 animate-scale-in"
+				/>
 			{/if}
 
-			<!-- Form Card with enhanced styling -->
-			<div class="relative">
-				<!-- Decorative gradient border -->
-				<div class="absolute -inset-1 bg-linear-to-r from-emerald-600 to-teal-600 rounded-2xl blur opacity-20"></div>
+			<!-- Enhanced Form Card -->
+			<div class="relative group">
+				<!-- Animated gradient glow -->
+				<div class="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 rounded-3xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-gradient bg-[length:200%_200%]"></div>
 
-				<form onsubmit={handleSubmit} class="relative bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 space-y-8">
-					<!-- Service Selection -->
-					<div class="group">
-						<label for="service" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-							<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-								<FileText class="h-4 w-4 text-emerald-600" />
+				<div class="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-100/50 overflow-hidden">
+					<!-- Form header with icon -->
+					<div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-10 py-8">
+						<div class="flex items-center gap-4">
+							<div class="bg-white/20 backdrop-blur-sm rounded-2xl p-4">
+								<Calendar class="h-8 w-8 text-white" />
 							</div>
-							Select Service <span class="text-red-500 ml-1" aria-label="required">*</span>
-						</label>
-						<select
-							id="service"
-							bind:value={selectedService}
-							onblur={() => handleBlur('service')}
-							required
-							aria-required="true"
-							aria-invalid={touched.service && errors.service ? 'true' : 'false'}
-							aria-describedby={errors.service ? 'service-error' : undefined}
-							class="w-full rounded-xl border-2 {touched.service && errors.service ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.service && errors.service ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
-						>
-							<option value="">Choose a service...</option>
-							{#each services as service}
-								<option value={service}>{service}</option>
-							{/each}
-						</select>
-						{#if touched.service && errors.service}
-							<p id="service-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-								<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-								</svg>
-								{errors.service}
-							</p>
-						{/if}
+							<div>
+								<h2 class="text-3xl font-bold text-white">Appointment Details</h2>
+								<p class="text-emerald-50 mt-1">Fill in your information below to book your service</p>
+							</div>
+						</div>
 					</div>
 
-					<!-- Training-specific fields -->
-					{#if isTrainingService}
-						<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-xl border-2 border-emerald-100">
-							<div class="sm:col-span-2">
-								<p class="text-sm font-semibold text-emerald-900 mb-2">Training Details</p>
-							</div>
-
-							<!-- Experience Level -->
-							<div>
-								<label for="experience-level" class="mb-2 block text-sm font-semibold text-gray-900">
-									Experience Level
-								</label>
-								<select
-									id="experience-level"
-									bind:value={experienceLevel}
-									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
-								>
-									<option value="">Select level...</option>
-									<option value="student">Nursing Student (Pre-qualification)</option>
-									<option value="new">Newly Qualified Nurse (&lt; 1 year)</option>
-									<option value="experienced">Experienced Nurse (1-5 years)</option>
-									<option value="advanced">Advanced Training (5+ years)</option>
-								</select>
-							</div>
-
-							<!-- Preferred Format -->
-							<div>
-								<label for="format" class="mb-2 block text-sm font-semibold text-gray-900">
-									Preferred Format
-								</label>
-								<select
-									id="format"
-									bind:value={preferredFormat}
-									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
-								>
-									<option value="">Select format...</option>
-									<option value="one-on-one">One-on-One Training</option>
-									<option value="small-group">Small Group (2-5 participants)</option>
-									<option value="workshop">Workshop (6+ participants)</option>
-								</select>
-							</div>
-
-							<!-- Scheduling Preference -->
-							<div class="sm:col-span-2">
-								<label for="schedule-pref" class="mb-2 block text-sm font-semibold text-gray-900">
-									Scheduling Preference
-								</label>
-								<select
-									id="schedule-pref"
-									bind:value={schedulingPreference}
-									class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300"
-								>
-									<option value="">Select preference...</option>
-									<option value="weekday-morning">Weekday Mornings</option>
-									<option value="weekday-afternoon">Weekday Afternoons</option>
-									<option value="weekday-evening">Weekday Evenings</option>
-									<option value="weekend">Weekend Sessions</option>
-								</select>
-							</div>
-						</div>
-					{/if}
-
-					<!-- Date & Time -->
-					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-						<div class="group">
-							<label for="date" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-									<Calendar class="h-4 w-4 text-emerald-600" />
-								</div>
-								Date <span class="text-red-500 ml-1" aria-label="required">*</span>
-							</label>
-							<input
-								type="date"
-								id="date"
-								bind:value={appointmentDate}
-								onblur={() => handleBlur('date')}
-								min={today}
+					<form onsubmit={handleSubmit} class="p-10 space-y-10">
+						<!-- Service Selection - Prominent -->
+						<div class="space-y-4">
+							<FormField
+								label="Select Service"
+								id="service"
+								icon={FileText}
 								required
-								aria-required="true"
-								aria-invalid={touched.date && errors.date ? 'true' : 'false'}
-								aria-describedby={errors.date ? 'date-error' : undefined}
-								class="w-full rounded-xl border-2 {touched.date && errors.date ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.date && errors.date ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
-							/>
-							{#if touched.date && errors.date}
-								<p id="date-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-									</svg>
-									{errors.date}
-								</p>
-							{/if}
-						</div>
-
-						<div class="group">
-							<label for="time" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-								<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-									<Clock class="h-4 w-4 text-emerald-600" />
-								</div>
-								Time <span class="text-red-500 ml-1" aria-label="required">*</span>
-							</label>
-							<select
-								id="time"
-								bind:value={appointmentTime}
-								onblur={() => handleBlur('time')}
-								required
-								aria-required="true"
-								aria-invalid={touched.time && errors.time ? 'true' : 'false'}
-								aria-describedby={errors.time ? 'time-error' : undefined}
-								class="w-full rounded-xl border-2 {touched.time && errors.time ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.time && errors.time ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
+								error={touched.service ? errors.service : ''}
+								valid={touched.service && !errors.service && !!formData.service}
+								showValidIcon
+								class="mb-0"
 							>
-								<option value="">Select time...</option>
-								{#each timeSlots as slot}
-									<option value={slot}>{slot}</option>
-								{/each}
-							</select>
-							{#if touched.time && errors.time}
-								<p id="time-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-										<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-									</svg>
-									{errors.time}
-								</p>
-							{/if}
-						</div>
-					</div>
-
-					<!-- Contact Details Section -->
-					<div class="pt-4 pb-2 border-t-2 border-gray-100">
-						<div class="flex items-center mb-6">
-							<div class="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
-							<h3 class="text-lg font-bold text-gray-900 px-4">Contact Information</h3>
-							<div class="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
-						</div>
-
-						<div class="space-y-6">
-							<div class="group">
-								<label for="name" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-										<User class="h-4 w-4 text-emerald-600" />
-									</div>
-									Full Name <span class="text-red-500 ml-1" aria-label="required">*</span>
-								</label>
-								<input
-									type="text"
-									id="name"
-									bind:value={fullName}
-									onblur={() => handleBlur('fullName')}
+								<Select
+									id="service"
+									bind:value={formData.service}
 									required
-									aria-required="true"
-									aria-invalid={touched.fullName && errors.fullName ? 'true' : 'false'}
-									aria-describedby={errors.fullName ? 'name-error' : undefined}
-									placeholder="John Doe"
-									class="w-full rounded-xl border-2 {touched.fullName && errors.fullName ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.fullName && errors.fullName ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
-								/>
-								{#if touched.fullName && errors.fullName}
-									<p id="name-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-										<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-										</svg>
-										{errors.fullName}
-									</p>
-								{/if}
-							</div>
+									error={touched.service && !!errors.service}
+									placeholder="Choose the service you need..."
+									onblur={() => handleBlur('service')}
+									class="text-lg py-4"
+								>
+									{#each ALL_SERVICES as service}
+										<option value={service}>{service}</option>
+									{/each}
+								</Select>
+							</FormField>
+						</div>
 
-							<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-								<div class="group">
-									<label for="email" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-											<Mail class="h-4 w-4 text-emerald-600" />
+						<!-- Training-specific fields - Enhanced -->
+						{#if isTrainingService}
+							<div class="relative animate-fade-in-up">
+								<div class="absolute -inset-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl blur-sm opacity-50"></div>
+								<div class="relative bg-gradient-to-br from-emerald-50/80 to-teal-50/80 backdrop-blur-sm p-8 rounded-2xl border-2 border-emerald-200 space-y-6">
+									<div class="flex items-center gap-3 mb-4">
+										<div class="bg-emerald-600 rounded-xl p-2">
+											<FileText class="h-5 w-5 text-white" />
 										</div>
-										Email <span class="text-red-500 ml-1" aria-label="required">*</span>
-									</label>
-									<input
+										<h3 class="text-lg font-bold text-emerald-900">Training Preferences</h3>
+										<span class="text-sm text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">Optional</span>
+									</div>
+
+									<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+										<FormField label="Experience Level" id="experience-level">
+											<Select id="experience-level" bind:value={formData.experienceLevel}>
+												{#each EXPERIENCE_LEVELS as level}
+													<option value={level.value}>{level.label}</option>
+												{/each}
+											</Select>
+										</FormField>
+
+										<FormField label="Preferred Format" id="format">
+											<Select id="format" bind:value={formData.preferredFormat}>
+												{#each TRAINING_FORMATS as format}
+													<option value={format.value}>{format.label}</option>
+												{/each}
+											</Select>
+										</FormField>
+									</div>
+
+									<FormField label="Scheduling Preference" id="schedule-pref">
+										<Select id="schedule-pref" bind:value={formData.schedulingPreference}>
+											{#each SCHEDULING_PREFERENCES as pref}
+												<option value={pref.value}>{pref.label}</option>
+											{/each}
+										</Select>
+									</FormField>
+								</div>
+							</div>
+						{/if}
+
+						<!-- Date & Time - Side by side with icons -->
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<FormField
+								label="Appointment Date"
+								id="date"
+								icon={Calendar}
+								required
+								error={touched.appointmentDate ? errors.appointmentDate : ''}
+								valid={touched.appointmentDate && !errors.appointmentDate && !!formData.appointmentDate}
+								showValidIcon
+							>
+								<Input
+									type="date"
+									id="date"
+									bind:value={formData.appointmentDate}
+									min={today}
+									required
+									error={touched.appointmentDate && !!errors.appointmentDate}
+									onblur={() => handleBlur('appointmentDate')}
+									class="text-base"
+								/>
+							</FormField>
+
+							<FormField
+								label="Preferred Time"
+								id="time"
+								icon={Clock}
+								required
+								error={touched.appointmentTime ? errors.appointmentTime : ''}
+								valid={touched.appointmentTime && !errors.appointmentTime && !!formData.appointmentTime}
+								showValidIcon
+							>
+								<Select
+									id="time"
+									bind:value={formData.appointmentTime}
+									required
+									error={touched.appointmentTime && !!errors.appointmentTime}
+									placeholder="Select your preferred time..."
+									onblur={() => handleBlur('appointmentTime')}
+								>
+									{#each TIME_SLOTS as slot}
+										<option value={slot}>{slot}</option>
+									{/each}
+								</Select>
+							</FormField>
+						</div>
+
+						<!-- Visual separator -->
+						<div class="relative py-6">
+							<div class="absolute inset-0 flex items-center" aria-hidden="true">
+								<div class="w-full border-t-2 border-gray-200"></div>
+							</div>
+							<div class="relative flex justify-center">
+								<span class="bg-white px-6 text-base font-semibold text-gray-900 flex items-center gap-2">
+									<User class="h-5 w-5 text-emerald-600" />
+									Your Contact Information
+								</span>
+							</div>
+						</div>
+
+						<!-- Contact fields - Better spacing -->
+						<div class="space-y-6">
+							<FormField
+								label="Full Name"
+								id="name"
+								icon={User}
+								required
+								error={touched.fullName ? errors.fullName : ''}
+								valid={touched.fullName && !errors.fullName && !!formData.fullName}
+								showValidIcon
+							>
+								<Input
+									id="name"
+									bind:value={formData.fullName}
+									placeholder="John Doe"
+									required
+									autocomplete="name"
+									error={touched.fullName && !!errors.fullName}
+									onblur={() => handleBlur('fullName')}
+								/>
+							</FormField>
+
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+								<FormField
+									label="Email Address"
+									id="email"
+									icon={Mail}
+									required
+									hint="We'll send confirmation to this email"
+									error={touched.email ? errors.email : ''}
+									valid={touched.email && !errors.email && !!formData.email}
+									showValidIcon
+								>
+									<Input
 										type="email"
 										id="email"
-										bind:value={email}
-										onblur={handleEmailBlur}
-										required
-										aria-required="true"
-										aria-invalid={touched.email && errors.email ? 'true' : 'false'}
-										aria-describedby={errors.email ? 'email-error' : undefined}
+										bind:value={formData.email}
 										placeholder="john@example.com"
-										class="w-full rounded-xl border-2 {touched.email && errors.email ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.email && errors.email ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
+										required
+										autocomplete="email"
+										error={touched.email && !!errors.email}
+										onblur={() => handleBlur('email')}
 									/>
-									{#if touched.email && errors.email}
-										<p id="email-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-											<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-											</svg>
-											{errors.email}
-										</p>
-									{/if}
-								</div>
+								</FormField>
 
-								<div class="group">
-									<label for="phone" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-										<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-											<Phone class="h-4 w-4 text-emerald-600" />
-										</div>
-										Phone Number <span class="text-red-500 ml-1" aria-label="required">*</span>
-									</label>
-									<input
+								<FormField
+									label="Phone Number"
+									id="phone"
+									icon={Phone}
+									required
+									hint="Format: +233 XXX XXX XXXX"
+									error={touched.phone ? errors.phone : ''}
+									valid={touched.phone && !errors.phone && !!formData.phone}
+									showValidIcon
+								>
+									<Input
 										type="tel"
 										id="phone"
-										bind:value={phone}
+										bind:value={formData.phone}
+										placeholder="+233 XXX XXX XXXX"
+										required
+										autocomplete="tel"
+										error={touched.phone && !!errors.phone}
 										oninput={handlePhoneInput}
 										onblur={() => handleBlur('phone')}
-										required
-										aria-required="true"
-										aria-invalid={touched.phone && errors.phone ? 'true' : 'false'}
-										aria-describedby={errors.phone ? 'phone-error' : undefined}
-										placeholder="+233 XXX XXX XXXX"
-										class="w-full rounded-xl border-2 {touched.phone && errors.phone ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.phone && errors.phone ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300"
 									/>
-									{#if touched.phone && errors.phone}
-										<p id="phone-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-											<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-											</svg>
-											{errors.phone}
-										</p>
-									{/if}
-								</div>
+								</FormField>
 							</div>
 
-							<div class="group">
-								<label for="address" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-									<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-										<MapPin class="h-4 w-4 text-emerald-600" />
-									</div>
-									Home Address <span class="text-red-500 ml-1" aria-label="required">*</span>
-								</label>
-								<textarea
+							<FormField
+								label="Home Address"
+								id="address"
+								icon={MapPin}
+								required
+								hint="Full address including area and city"
+								error={touched.address ? errors.address : ''}
+								valid={touched.address && !errors.address && !!formData.address}
+								showValidIcon
+							>
+								<Textarea
 									id="address"
-									bind:value={address}
-									onblur={() => handleBlur('address')}
-									required
-									aria-required="true"
-									aria-invalid={touched.address && errors.address ? 'true' : 'false'}
-									aria-describedby={errors.address ? 'address-error' : undefined}
-									rows="2"
+									bind:value={formData.address}
 									placeholder="123 Street Name, Area, Accra"
-									class="w-full rounded-xl border-2 {touched.address && errors.address ? 'border-red-500' : 'border-gray-200'} bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 {touched.address && errors.address ? 'focus:ring-red-500/10' : 'focus:ring-emerald-500/10'} hover:border-gray-300 resize-none"
-								></textarea>
-								{#if touched.address && errors.address}
-									<p id="address-error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
-										<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-										</svg>
-										{errors.address}
-									</p>
-								{/if}
-							</div>
+									required
+									rows={3}
+									error={touched.address && !!errors.address}
+									onblur={() => handleBlur('address')}
+								/>
+							</FormField>
 						</div>
-					</div>
 
-					<!-- Additional Notes -->
-					<div class="group">
-						<label for="notes" class="mb-2 flex items-center text-sm font-semibold text-gray-900">
-							<div class="p-1.5 rounded-lg bg-emerald-100 mr-2 group-focus-within:bg-emerald-200 transition-colors">
-								<FileText class="h-4 w-4 text-emerald-600" />
-							</div>
-							Additional Notes <span class="text-gray-500 font-normal ml-1">(Optional)</span>
-						</label>
-						<textarea
+						<!-- Additional Notes - Subtle -->
+						<FormField
+							label="Additional Notes"
 							id="notes"
-							bind:value={notes}
-							rows="4"
-							placeholder="Any specific requirements or information we should know..."
-							class="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 hover:border-gray-300 resize-none"
-						></textarea>
-					</div>
-
-					<!-- Submit Button -->
-					<div class="pt-6">
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							class="group relative w-full rounded-xl bg-linear-to-r from-emerald-600 to-teal-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/30 transition-all duration-200 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-500/50 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none overflow-hidden"
+							icon={FileText}
 						>
-							<span class="relative z-10 flex items-center justify-center gap-2">
-								{#if isSubmitting}
-									<svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-										<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-									</svg>
-									Submitting...
-								{:else}
-									Book Appointment
-									<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-									</svg>
-								{/if}
-							</span>
-							<div class="absolute inset-0 bg-linear-to-r from-emerald-700 to-teal-700 opacity-0 transition-opacity group-hover:opacity-100"></div>
-						</button>
-						<p class="mt-4 text-center text-sm text-gray-500">
-							By submitting, you agree to our terms of service and privacy policy.
-						</p>
-					</div>
-				</form>
+							{#snippet children()}
+								<Textarea
+									id="notes"
+									bind:value={formData.notes}
+									placeholder="Any specific requirements, medical conditions, or special requests we should know about..."
+									rows={4}
+									class="bg-gray-50 border-gray-200 focus:bg-white"
+								/>
+							{/snippet}
+						</FormField>
+
+						<!-- Submit Button - Prominent -->
+						<div class="pt-8">
+							<Button
+								type="submit"
+								variant="primary"
+								size="lg"
+								disabled={isSubmitting}
+								loading={isSubmitting}
+								class="w-full text-lg py-5 shadow-2xl shadow-emerald-600/30 hover:shadow-emerald-600/50"
+							>
+								{#snippet children()}
+									{#if !isSubmitting}
+										<CheckCircle2 class="h-6 w-6" />
+										Complete Booking
+									{:else}
+										Processing Your Request...
+									{/if}
+								{/snippet}
+								{#snippet icon()}
+									{#if !isSubmitting}
+										<ArrowRight class="h-6 w-6 transition-transform group-hover:translate-x-2" />
+									{/if}
+								{/snippet}
+							</Button>
+							<p class="mt-5 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
+								<svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+								</svg>
+								Your information is secure and will only be used for appointment confirmation
+							</p>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- Info Section -->
-<section class="py-20 bg-gray-50">
+<!-- Enhanced Info Section -->
+<section class="py-24 bg-gradient-to-b from-white to-gray-50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="mx-auto max-w-3xl">
-			<h3 class="text-2xl font-bold text-gray-900 mb-10 text-center">What Happens Next?</h3>
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-				<div class="flex gap-3 items-start">
-					<div class="shrink-0 rounded-full bg-emerald-600 h-10 w-10 flex items-center justify-center text-white font-bold">
-						1
+		<div class="mx-auto max-w-4xl">
+			<div class="text-center mb-16">
+				<h3 class="text-4xl font-bold text-gray-900 mb-4">What Happens Next?</h3>
+				<p class="text-xl text-gray-600">Our simple 3-step booking process</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				{#each BOOKING_SUCCESS_STEPS as { step, description }, index}
+					<div class="relative group">
+						<!-- Connection line (hidden on last item) -->
+						{#if index < BOOKING_SUCCESS_STEPS.length - 1}
+							<div class="hidden md:block absolute top-14 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-emerald-300 to-transparent"></div>
+						{/if}
+
+						<div class="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
+							<div class="flex flex-col items-center text-center">
+								<div class="relative mb-6">
+									<div class="absolute inset-0 bg-emerald-600 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+									<div class="relative bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full h-16 w-16 flex items-center justify-center text-white font-bold text-2xl shadow-lg group-hover:scale-110 transition-transform">
+										{step}
+									</div>
+								</div>
+								<p class="text-gray-700 leading-relaxed font-medium">{description}</p>
+							</div>
+						</div>
 					</div>
-					<p class="text-gray-600 pt-1.5">We receive your booking request</p>
+				{/each}
+			</div>
+
+			<!-- Trust indicators -->
+			<div class="mt-16 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-600">
+				<div class="flex items-center gap-2">
+					<svg class="h-5 w-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+					</svg>
+					<span class="font-medium">Licensed Professionals</span>
 				</div>
-				<div class="flex gap-3 items-start">
-					<div class="shrink-0 rounded-full bg-emerald-600 h-10 w-10 flex items-center justify-center text-white font-bold">
-						2
-					</div>
-					<p class="text-gray-600 pt-1.5">Our team contacts you to confirm details</p>
+				<div class="flex items-center gap-2">
+					<svg class="h-5 w-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+					</svg>
+					<span class="font-medium">24/7 Support</span>
 				</div>
-				<div class="flex gap-3 items-start">
-					<div class="shrink-0 rounded-full bg-emerald-600 h-10 w-10 flex items-center justify-center text-white font-bold">
-						3
-					</div>
-					<p class="text-gray-600 pt-1.5">Your nurse arrives at the scheduled time</p>
+				<div class="flex items-center gap-2">
+					<svg class="h-5 w-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+					</svg>
+					<span class="font-medium">Secure & Confidential</span>
 				</div>
 			</div>
 		</div>

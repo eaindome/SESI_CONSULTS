@@ -1,217 +1,300 @@
 <script lang="ts">
-	import { Stethoscope, Syringe, Heart, Activity, Baby, Users2 } from '@lucide/svelte';
-	import { Hero } from '$lib';
+	import { Home as HomeIcon, Calendar, Clock, User, Mail, Phone, MapPin, FileText, ArrowRight, CheckCircle2, CheckCircle, Heart } from '@lucide/svelte';
+	import { Hero, Button, Alert, FormField, Input, Select, Textarea } from '$lib';
+	import { validateEmail, validatePhone, formatPhoneNumber, validateRequired, validateMinLength, validateSelect, convertTo24Hour, getTodayDate } from '$lib/utils/validation';
+	import type { BookingPayload } from '$lib/types/forms';
 
-	const services = [
-		{
-			icon: Stethoscope,
-			name: 'General Nursing Care',
-			description: 'Comprehensive nursing care including vital signs monitoring, medication administration, and health assessments.',
-			features: [
-				'Vital signs monitoring',
-				'Medication management',
-				'Health status assessments',
-				'Care plan coordination'
-			],
-			image: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&h=600&fit=crop&q=80'
-		},
-		{
-			icon: Syringe,
-			name: 'Injection Services',
-			description: 'Professional administration of injections and intravenous medications in the comfort of your home.',
-			features: [
-				'Intramuscular injections',
-				'Subcutaneous injections',
-				'IV therapy administration',
-				'Insulin administration'
-			],
-			image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&h=600&fit=crop&q=80'
-		},
-		{
-			icon: Activity,
-			name: 'Post-Operative Care',
-			description: 'Specialized care for patients recovering from surgery, ensuring safe and comfortable recovery at home.',
-			features: [
-				'Surgical site monitoring',
-				'Pain management support',
-				'Mobility assistance',
-				'Recovery progress tracking'
-			],
-			image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=600&fit=crop&q=80'
-		},
-		{
-			icon: Heart,
-			name: 'Chronic Disease Management',
-			description: 'Ongoing care and support for patients with chronic conditions such as diabetes, hypertension, and heart disease.',
-			features: [
-				'Regular health monitoring',
-				'Medication adherence support',
-				'Lifestyle coaching',
-				'Symptom management'
-			],
-			image: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&h=600&fit=crop&q=80'
-		},
-		{
-			icon: Users2,
-			name: 'Elderly Care',
-			description: 'Compassionate care for elderly patients, focusing on maintaining independence and quality of life.',
-			features: [
-				'Daily living assistance',
-				'Fall prevention',
-				'Medication reminders',
-				'Companionship and support'
-			],
-			image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=600&fit=crop&q=80'
-		},
-		{
-			icon: Baby,
-			name: 'Maternal & Child Care',
-			description: 'Specialized care for new mothers and infants, including postnatal support and newborn care.',
-			features: [
-				'Postnatal mother care',
-				'Newborn care guidance',
-				'Breastfeeding support',
-				'Health monitoring'
-			],
-			image: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=800&h=600&fit=crop&q=80'
-		}
+	const HOME_CARE_SERVICES = [
+		'General Nursing',
+		'Injection Services',
+		'Post-Operative Care',
+		'Chronic Disease Management',
+		'Elderly Care',
+		'Maternal & Child Care'
 	];
+
+	const TIME_SLOTS = [
+		'08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+		'12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
+		'04:00 PM', '05:00 PM', '06:00 PM'
+	];
+
+	const features = [
+		{ title: 'Personalized Care Plans', description: 'Customized nursing care tailored to your specific needs' },
+		{ title: 'Experienced Nurses', description: 'Certified and compassionate healthcare professionals' },
+		{ title: 'Flexible Scheduling', description: 'Care on your schedule, from daily visits to 24/7 support' },
+		{ title: 'Family Involvement', description: 'We keep your loved ones informed and involved' }
+	];
+
+	let formData = $state({
+		serviceType: '',
+		appointmentDate: '',
+		appointmentTime: '',
+		fullName: '',
+		email: '',
+		phone: '',
+		address: '',
+		notes: ''
+	});
+
+	let errors = $state({
+		serviceType: '',
+		appointmentDate: '',
+		appointmentTime: '',
+		fullName: '',
+		email: '',
+		phone: '',
+		address: ''
+	});
+
+	let touched = $state({
+		serviceType: false,
+		appointmentDate: false,
+		appointmentTime: false,
+		fullName: false,
+		email: false,
+		phone: false,
+		address: false
+	});
+
+	let isSubmitting = $state(false);
+	let submitSuccess = $state(false);
+	let submitError = $state('');
+
+	const today = getTodayDate();
+
+	function validateField(field: keyof typeof errors): void {
+		switch (field) {
+			case 'serviceType':
+				errors.serviceType = validateSelect(formData.serviceType, 'a service').error || '';
+				break;
+			case 'appointmentDate':
+				errors.appointmentDate = validateRequired(formData.appointmentDate, 'appointment date').error || '';
+				break;
+			case 'appointmentTime':
+				errors.appointmentTime = validateSelect(formData.appointmentTime, 'a time').error || '';
+				break;
+			case 'fullName':
+				errors.fullName = validateMinLength(formData.fullName, 3, 'Full name').error || '';
+				break;
+			case 'email':
+				errors.email = validateEmail(formData.email).error || '';
+				break;
+			case 'phone':
+				errors.phone = validatePhone(formData.phone).error || '';
+				break;
+			case 'address':
+				errors.address = validateMinLength(formData.address, 10, 'Home address').error || '';
+				break;
+		}
+	}
+
+	function handleBlur(field: keyof typeof touched): void {
+		touched[field] = true;
+		validateField(field);
+	}
+
+	function handlePhoneInput(e: Event): void {
+		const input = e.target as HTMLInputElement;
+		formData.phone = formatPhoneNumber(input.value);
+		if (touched.phone) validateField('phone');
+	}
+
+	function validateAllFields(): boolean {
+		const fields: (keyof typeof errors)[] = ['serviceType', 'appointmentDate', 'appointmentTime', 'fullName', 'email', 'phone', 'address'];
+		let isValid = true;
+		fields.forEach(field => {
+			touched[field] = true;
+			validateField(field);
+			if (errors[field]) isValid = false;
+		});
+		return isValid;
+	}
+
+	async function handleSubmit(e: Event): Promise<void> {
+		e.preventDefault();
+		submitError = '';
+		submitSuccess = false;
+
+		if (!validateAllFields()) {
+			submitError = 'Please fix the errors in the form before submitting.';
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			return;
+		}
+
+		isSubmitting = true;
+
+		try {
+			const dateTime = new Date(`${formData.appointmentDate}T${convertTo24Hour(formData.appointmentTime)}`);
+
+			const bookingData: BookingPayload = {
+				service: `Home Care - ${formData.serviceType}`,
+				dateTime: dateTime.toISOString(),
+				contactDetails: {
+					name: formData.fullName,
+					email: formData.email,
+					phone: formData.phone,
+					address: formData.address
+				},
+				notes: formData.notes || undefined
+			};
+
+			const response = await fetch('/api/bookings', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(bookingData)
+			});
+
+			if (!response.ok) throw new Error('Failed to submit booking');
+
+			submitSuccess = true;
+			formData = { serviceType: '', appointmentDate: '', appointmentTime: '', fullName: '', email: '', phone: '', address: '', notes: '' };
+			errors = { serviceType: '', appointmentDate: '', appointmentTime: '', fullName: '', email: '', phone: '', address: '' };
+			touched = { serviceType: false, appointmentDate: false, appointmentTime: false, fullName: false, email: false, phone: false, address: false };
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		} catch (error) {
+			submitError = 'Unable to submit booking. Please try again or contact us directly.';
+			console.error('Booking error:', error);
+		} finally {
+			isSubmitting = false;
+		}
+	}
 </script>
 
 <svelte:head>
 	<title>Home Care Services - SESI Healthcare</title>
-	<meta name="description" content="Comprehensive home healthcare services including nursing care, injections, post-operative care, and more." />
+	<meta name="description" content="Professional home nursing services including general care, injections, post-operative care, and chronic disease management." />
 </svelte:head>
 
 <Hero
-	title="Professional Home <br/>Care Services"
-	subtitle="Quality healthcare delivered in the comfort and safety of your home by our experienced nursing team."
+	title="Professional<br/><span class='text-blue-400'>Home Care Services</span>"
+	subtitle="Comprehensive nursing care delivered in the comfort of your home"
 	badge="Home Care"
 	variant="gradient"
 	decorative={true}
 />
 
-<!-- Services Grid -->
-<section class="py-24 bg-white">
+<section class="py-20 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-4">Our Home Care Services</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto">
-				From routine care to specialized nursing - we bring professional healthcare to your doorstep
-			</p>
-		</div>
-
-		<div class="grid grid-cols-1 gap-12 lg:grid-cols-2 max-w-7xl mx-auto">
-			{#each services as service}
-				<div class="group rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
-					<!-- Service Image -->
-					<div class="relative h-64 overflow-hidden">
-						<img
-							src={service.image}
-							alt="Healthcare professional providing {service.name.toLowerCase()} services to a patient"
-							loading="lazy"
-							decoding="async"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-						/>
-						<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-						<div class="absolute bottom-4 left-4 inline-flex items-center justify-center rounded-xl bg-emerald-600 p-3" aria-hidden="true">
-							<svelte:component this={service.icon} class="h-6 w-6 text-white" />
-						</div>
+		<div class="max-w-7xl mx-auto">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+				<div>
+					<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-semibold text-sm mb-6">
+						<HomeIcon class="h-4 w-4" />
+						Home Care
 					</div>
+					<h2 class="text-4xl font-bold text-gray-900 mb-6">Comprehensive Home Nursing Services</h2>
+					<p class="text-xl text-gray-600 mb-8 leading-relaxed">
+						Our certified nurses provide professional healthcare services in the comfort of your home. From general nursing to specialized care, we deliver compassionate support tailored to your needs.
+					</p>
+				</div>
 
-					<!-- Service Content -->
-					<div class="p-8">
-						<h3 class="mb-4 text-2xl font-bold text-gray-900">{service.name}</h3>
-						<p class="mb-6 text-gray-600 leading-relaxed">{service.description}</p>
-						<div class="space-y-3">
-							<p class="text-sm font-semibold text-gray-900 uppercase tracking-wide">What's included:</p>
-							<ul class="space-y-3">
-								{#each service.features as feature}
-									<li class="flex items-start text-base text-gray-600">
-										<svg class="mr-3 h-5 w-5 shrink-0 text-emerald-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-											<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-										</svg>
-										{feature}
-									</li>
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+					{#each features as feature}
+						<div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-100 hover:border-blue-200 transition-colors">
+							<CheckCircle class="h-8 w-8 text-blue-600 mb-4" />
+							<h3 class="font-bold text-gray-900 mb-2">{feature.title}</h3>
+							<p class="text-sm text-gray-600">{feature.description}</p>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="relative py-28 overflow-hidden bg-gradient-to-b from-white to-gray-50">
+	<div class="absolute top-20 right-10 w-72 h-72 bg-blue-100 rounded-full blur-3xl opacity-20"></div>
+	<div class="absolute bottom-20 left-10 w-96 h-96 bg-cyan-100 rounded-full blur-3xl opacity-20"></div>
+
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+		<div class="mx-auto max-w-3xl">
+			<div class="text-center mb-12">
+				<h2 class="text-4xl font-bold text-gray-900 mb-4">Book Home Care Service</h2>
+				<p class="text-xl text-gray-600">Fill out the form below and we'll contact you to confirm your service</p>
+			</div>
+
+			{#if submitSuccess}
+				<Alert variant="success" title="Appointment Request Submitted!" message="We've received your request. Our team will contact you shortly to confirm your appointment details." class="mb-10" />
+			{/if}
+
+			{#if submitError}
+				<Alert variant="error" title="Submission Error" message={submitError} class="mb-10" />
+			{/if}
+
+			<div class="relative group">
+				<div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+
+				<div class="relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-100/50 p-10">
+					<form onsubmit={handleSubmit} class="space-y-8">
+						<FormField label="Type of Service" id="service-type" icon={HomeIcon} required error={touched.serviceType ? errors.serviceType : ''} valid={touched.serviceType && !errors.serviceType && !!formData.serviceType} showValidIcon>
+							<Select id="service-type" bind:value={formData.serviceType} required error={touched.serviceType && !!errors.serviceType} placeholder="Select the type of service..." onblur={() => handleBlur('serviceType')}>
+								{#each HOME_CARE_SERVICES as service}
+									<option value={service}>{service}</option>
 								{/each}
-							</ul>
+							</Select>
+						</FormField>
+
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<FormField label="Preferred Date" id="date" icon={Calendar} required error={touched.appointmentDate ? errors.appointmentDate : ''} valid={touched.appointmentDate && !errors.appointmentDate && !!formData.appointmentDate} showValidIcon>
+								<Input type="date" id="date" bind:value={formData.appointmentDate} min={today} required error={touched.appointmentDate && !!errors.appointmentDate} onblur={() => handleBlur('appointmentDate')} />
+							</FormField>
+
+							<FormField label="Preferred Time" id="time" icon={Clock} required error={touched.appointmentTime ? errors.appointmentTime : ''} valid={touched.appointmentTime && !errors.appointmentTime && !!formData.appointmentTime} showValidIcon>
+								<Select id="time" bind:value={formData.appointmentTime} required error={touched.appointmentTime && !!errors.appointmentTime} placeholder="Select time..." onblur={() => handleBlur('appointmentTime')}>
+									{#each TIME_SLOTS as slot}
+										<option value={slot}>{slot}</option>
+									{/each}
+								</Select>
+							</FormField>
 						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-</section>
 
-<!-- How It Works -->
-<section class="py-24 bg-gray-50">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-			<p class="text-xl text-gray-600">
-				Getting started is simple and straightforward
-			</p>
-		</div>
+						<div class="space-y-6 pt-6 border-t-2 border-gray-100">
+							<FormField label="Full Name" id="name" icon={User} required error={touched.fullName ? errors.fullName : ''} valid={touched.fullName && !errors.fullName && !!formData.fullName} showValidIcon>
+								<Input id="name" bind:value={formData.fullName} placeholder="John Doe" required autocomplete="name" error={touched.fullName && !!errors.fullName} onblur={() => handleBlur('fullName')} />
+							</FormField>
 
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-3 max-w-5xl mx-auto">
-			<div class="flex gap-4 items-start">
-				<div class="shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
-					1
-				</div>
-				<div>
-					<h3 class="mb-2 text-xl font-bold text-gray-900">Book Online</h3>
-					<p class="text-gray-600 leading-relaxed">
-						Choose your service and select a convenient date and time through our easy-to-use booking system.
-					</p>
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+								<FormField label="Email Address" id="email" icon={Mail} required hint="For appointment confirmation" error={touched.email ? errors.email : ''} valid={touched.email && !errors.email && !!formData.email} showValidIcon>
+									<Input type="email" id="email" bind:value={formData.email} placeholder="john@example.com" required autocomplete="email" error={touched.email && !!errors.email} onblur={() => handleBlur('email')} />
+								</FormField>
+
+								<FormField label="Phone Number" id="phone" icon={Phone} required hint="+233 XXX XXX XXXX" error={touched.phone ? errors.phone : ''} valid={touched.phone && !errors.phone && !!formData.phone} showValidIcon>
+									<Input type="tel" id="phone" bind:value={formData.phone} placeholder="+233 XXX XXX XXXX" required autocomplete="tel" error={touched.phone && !!errors.phone} oninput={handlePhoneInput} onblur={() => handleBlur('phone')} />
+								</FormField>
+							</div>
+
+							<FormField label="Home Address" id="address" icon={MapPin} required hint="Where should we visit?" error={touched.address ? errors.address : ''} valid={touched.address && !errors.address && !!formData.address} showValidIcon>
+								<Textarea id="address" bind:value={formData.address} placeholder="123 Street Name, Area, Accra" required rows={2} error={touched.address && !!errors.address} onblur={() => handleBlur('address')} />
+							</FormField>
+						</div>
+
+						<FormField label="Additional Information" id="notes" icon={FileText} hint="Tell us about your care needs, any allergies, or special requirements">
+							{#snippet children()}
+								<Textarea id="notes" bind:value={formData.notes} placeholder="Please describe your medical history, specific care requirements, mobility concerns, and any other relevant health information..." rows={4} class="bg-gray-50" />
+							{/snippet}
+						</FormField>
+
+						<div class="pt-6">
+							<Button type="submit" variant="primary" size="lg" disabled={isSubmitting} loading={isSubmitting} class="w-full text-lg py-5 shadow-2xl shadow-blue-600/30 hover:shadow-blue-600/50">
+								{#snippet children()}
+									{#if !isSubmitting}
+										<CheckCircle2 class="h-6 w-6" />
+										Request Appointment
+									{:else}
+										Processing...
+									{/if}
+								{/snippet}
+								{#snippet icon()}
+									{#if !isSubmitting}
+										<ArrowRight class="h-6 w-6" />
+									{/if}
+								{/snippet}
+							</Button>
+						</div>
+					</form>
 				</div>
 			</div>
-
-			<div class="flex gap-4 items-start">
-				<div class="shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
-					2
-				</div>
-				<div>
-					<h3 class="mb-2 text-xl font-bold text-gray-900">We Confirm</h3>
-					<p class="text-gray-600 leading-relaxed">
-						Our team will confirm your appointment and send you details about your assigned healthcare professional.
-					</p>
-				</div>
-			</div>
-
-			<div class="flex gap-4 items-start">
-				<div class="shrink-0 rounded-full bg-emerald-600 h-14 w-14 flex items-center justify-center text-white text-xl font-bold">
-					3
-				</div>
-				<div>
-					<h3 class="mb-2 text-xl font-bold text-gray-900">Receive Care</h3>
-					<p class="text-gray-600 leading-relaxed">
-						Your nurse arrives at your home at the scheduled time to provide professional, compassionate care.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- CTA -->
-<section class="bg-emerald-600 py-24">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="mx-auto max-w-3xl text-center">
-			<h2 class="text-4xl font-bold text-white sm:text-5xl mb-6">
-				Ready to Book Home Care?
-			</h2>
-			<p class="text-xl text-emerald-50 mb-10 leading-relaxed">
-				Schedule your home healthcare appointment today and experience quality care delivered with compassion.
-			</p>
-			<a
-				href="/booking"
-				class="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 hover:bg-gray-50 transition-all duration-300 shadow-lg"
-			>
-				Book Home Care Service
-				<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-				</svg>
-			</a>
 		</div>
 	</div>
 </section>
