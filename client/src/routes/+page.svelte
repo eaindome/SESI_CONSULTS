@@ -1,146 +1,319 @@
 <script lang="ts">
-	import { Heart, Clock, Shield, Users, ArrowRight, Sparkles, Award, HeartPulse, Calendar, Phone } from '@lucide/svelte';
+	import { Heart, Clock, Shield, Users, ArrowRight, Sparkles, CheckCircle, Home, Stethoscope, GraduationCap, Package, Phone, Mail, MapPin } from '@lucide/svelte';
 	import { Hero, Button } from '$lib';
 
-	const features = [
+	const services = [
 		{
 			icon: Heart,
-			title: 'Compassionate Care',
-			description: 'Professional nurses who treat you like family, providing personalized attention in the comfort of your home.',
-			color: 'from-pink-500 to-rose-500'
+			title: 'Wound Care',
+			description: 'Professional wound assessment, treatment, and monitoring for optimal healing.',
+			href: '/services/wound-care',
+			color: 'from-rose-500 to-pink-500'
 		},
 		{
-			icon: Clock,
-			title: 'Flexible Scheduling',
-			description: 'Book appointments that fit your schedule. Available 24/7 for urgent care needs.',
+			icon: Home,
+			title: 'Home Care',
+			description: 'Comprehensive nursing care delivered in the comfort of your home.',
+			href: '/services/home-care',
 			color: 'from-blue-500 to-cyan-500'
 		},
 		{
-			icon: Shield,
-			title: 'Licensed & Insured',
-			description: 'All our healthcare professionals are fully licensed, certified, and background-checked for your safety.',
+			icon: Stethoscope,
+			title: 'Consultations',
+			description: 'Expert medical consultations with qualified healthcare professionals.',
+			href: '/services/consultations',
 			color: 'from-emerald-500 to-teal-500'
 		},
 		{
-			icon: Users,
-			title: 'Family-Centered',
-			description: 'We involve your loved ones in the care process, ensuring everyone feels supported and informed.',
+			icon: GraduationCap,
+			title: 'Training',
+			description: 'Professional healthcare training programs for caregivers and professionals.',
+			href: '/services/training',
 			color: 'from-violet-500 to-purple-500'
 		}
 	];
 
-	const stats = [
-		{ value: '500+', label: 'Patients Served', icon: HeartPulse },
-		{ value: '50+', label: 'Healthcare Professionals', icon: Users },
-		{ value: '24/7', label: 'Support Available', icon: Clock },
-		{ value: '100%', label: 'Satisfaction Rate', icon: Award }
+	const values = [
+		{
+			icon: Heart,
+			title: 'Compassionate Care',
+			description: 'Every patient receives personalized attention with empathy and respect'
+		},
+		{
+			icon: Shield,
+			title: 'Safety First',
+			description: 'Licensed professionals with rigorous background checks and certifications'
+		},
+		{
+			icon: Clock,
+			title: 'Always Available',
+			description: 'Flexible scheduling with 24/7 support for urgent care needs'
+		},
+		{
+			icon: Users,
+			title: 'Family Centered',
+			description: 'We involve your loved ones in every step of the care journey'
+		}
+	];
+
+	const steps = [
+		{
+			number: '01',
+			title: 'Choose Your Service',
+			description: 'Select from our range of healthcare services tailored to your needs'
+		},
+		{
+			number: '02',
+			title: 'Book Appointment',
+			description: 'Pick a convenient time and date that works for your schedule'
+		},
+		{
+			number: '03',
+			title: 'Receive Care',
+			description: 'Meet our qualified healthcare professionals and get the care you deserve'
+		}
 	];
 </script>
 
 <svelte:head>
-	<title>SESI Healthcare - Home Nursing Services</title>
-	<meta name="description" content="Professional home healthcare services delivered with compassion. Book trusted nurses for in-home care." />
+	<title>SESI Healthcare - Professional Home Nursing & Medical Services in Ghana</title>
+	<meta name="description" content="Quality healthcare services delivered to your home. Professional nurses, wound care, consultations, and medical training in Accra, Ghana." />
 </svelte:head>
 
-<Hero
-	title="Quality Healthcare in the <span class='text-emerald-400'>Comfort of Your Home</span>"
-	subtitle="Professional home nursing and healthcare services delivered with compassion and excellence. Your health and comfort are our priority."
-	variant="image"
-	imageUrl="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=1920&h=1080&fit=crop&q=80"
-	decorative={false}
->
-	<div class="flex flex-col sm:flex-row gap-4 justify-center">
-		<a href="/booking">
-			<Button variant="primary" size="lg" class="shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70">
-				{#snippet children()}
-					<Sparkles class="h-5 w-5" />
-					Book an Appointment
-				{/snippet}
-				{#snippet icon()}
-					<ArrowRight class="h-5 w-5 transition-transform group-hover:translate-x-1" />
-				{/snippet}
-			</Button>
-		</a>
-		<a href="/services">
-			<Button variant="ghost" size="lg">
-				{#snippet children()}
-					View Services
-				{/snippet}
-			</Button>
-		</a>
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex items-center overflow-hidden">
+	<!-- Background Image -->
+	<div class="absolute inset-0">
+		<img
+			src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1920&h=1080&fit=crop&q=80"
+			alt="Healthcare professional"
+			class="w-full h-full object-cover"
+		/>
+		<!-- Dark overlay for text contrast -->
+		<div class="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/85 to-teal-900/80"></div>
 	</div>
-</Hero>
 
-<!-- Stats Section - NEW -->
-<section class="relative py-20 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 overflow-hidden">
-	<!-- Animated background -->
+	<!-- Animated teal accents -->
 	<div class="absolute inset-0 opacity-10">
-		<div class="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
-		<div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+		<div class="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full blur-3xl animate-pulse"></div>
+		<div class="absolute bottom-20 right-10 w-96 h-96 bg-teal-500 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-400 rounded-full blur-3xl animate-pulse" style="animation-delay: 4s;"></div>
 	</div>
+
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10 py-20">
+		<div class="max-w-5xl mx-auto text-center">
+			<!-- Badge -->
+			<div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal-500/10 backdrop-blur-sm border border-teal-400/20 text-teal-300 font-semibold text-sm mb-8 hover:bg-teal-500/20 transition-colors">
+				<Sparkles class="h-4 w-4" />
+				Professional Healthcare at Your Doorstep
+			</div>
+
+			<!-- Main heading -->
+			<h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+				Quality Healthcare in the
+				<span class="text-teal-400">
+					Comfort of Your Home
+				</span>
+			</h1>
+
+			<!-- Subtitle -->
+			<p class="text-xl sm:text-2xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto">
+				Professional nursing services, medical consultations, and healthcare training delivered with compassion and excellence across Ghana.
+			</p>
+
+			<!-- CTA Buttons -->
+			<div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+				<a href="/services">
+					<Button variant="primary" size="lg" class="bg-teal-500 hover:bg-teal-600 shadow-2xl shadow-teal-900/50 border-0">
+						{#snippet children()}
+							<Heart class="h-5 w-5" />
+							Browse Services
+						{/snippet}
+						{#snippet icon()}
+							<ArrowRight class="h-5 w-5 transition-transform group-hover:translate-x-1" />
+						{/snippet}
+					</Button>
+				</a>
+				<a href="/contact">
+					<Button variant="outline" size="lg" class="border-teal-400/30 text-white hover:bg-teal-500/10">
+						{#snippet children()}
+							<Phone class="h-5 w-5" />
+							Contact Us
+						{/snippet}
+					</Button>
+				</a>
+			</div>
+
+			<!-- Trust indicators -->
+			<div class="flex flex-wrap justify-center items-center gap-8 pt-8 border-t border-gray-700/50">
+				<div class="flex items-center gap-3 text-gray-300">
+					<div class="w-10 h-10 rounded-lg bg-teal-500/20 backdrop-blur-sm flex items-center justify-center">
+						<Shield class="h-5 w-5 text-teal-400" />
+					</div>
+					<span class="font-medium">Licensed & Certified</span>
+				</div>
+				<div class="flex items-center gap-3 text-gray-300">
+					<div class="w-10 h-10 rounded-lg bg-teal-500/20 backdrop-blur-sm flex items-center justify-center">
+						<Clock class="h-5 w-5 text-teal-400" />
+					</div>
+					<span class="font-medium">24/7 Available</span>
+				</div>
+				<div class="flex items-center gap-3 text-gray-300">
+					<div class="w-10 h-10 rounded-lg bg-teal-500/20 backdrop-blur-sm flex items-center justify-center">
+						<Heart class="h-5 w-5 text-teal-400" />
+					</div>
+					<span class="font-medium">Patient Focused</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bottom wave -->
+	<div class="absolute bottom-0 left-0 right-0">
+		<svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+			<path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+		</svg>
+	</div>
+</section>
+
+<!-- Services Grid -->
+<section class="py-24 bg-white relative overflow-hidden">
+	<!-- Decorative elements -->
+	<div class="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-50 rounded-full blur-3xl opacity-40"></div>
+	<div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-100 rounded-full blur-3xl opacity-40"></div>
 
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-		<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-			{#each stats as stat}
-				<div class="text-center group">
-					<div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4 group-hover:scale-110 group-hover:bg-white/20 transition-all duration-300">
-						<svelte:component this={stat.icon} class="h-8 w-8 text-white" />
+		<div class="text-center mb-16">
+			<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-700 font-semibold text-sm mb-6">
+				<Sparkles class="h-4 w-4" />
+				Our Services
+			</div>
+			<h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+				Comprehensive Healthcare
+				<span class="text-teal-600"> Solutions</span>
+			</h2>
+			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+				From wound care to professional training, we offer a complete range of healthcare services tailored to your needs
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+			{#each services as service}
+				<a href={service.href} class="group relative">
+					<!-- Gradient glow effect -->
+					<div class="absolute -inset-0.5 bg-gradient-to-r {service.color} rounded-2xl opacity-0 group-hover:opacity-20 blur-lg transition-all duration-500"></div>
+
+					<div class="relative bg-white rounded-2xl p-8 border-2 border-gray-100 hover:border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
+						<!-- Icon -->
+						<div class="mb-6">
+							<div class="relative inline-block">
+								<div class="absolute inset-0 bg-gradient-to-br {service.color} rounded-xl blur-md opacity-50"></div>
+								<div class="relative bg-gradient-to-br {service.color} rounded-xl p-4 text-white">
+									<svelte:component this={service.icon} class="h-7 w-7" />
+								</div>
+							</div>
+						</div>
+
+						<!-- Content -->
+						<h3 class="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
+						<p class="text-gray-600 leading-relaxed mb-4">{service.description}</p>
+
+						<!-- Arrow -->
+						<div class="flex items-center text-teal-600 font-semibold text-sm group-hover:text-teal-700">
+							Learn More
+							<ArrowRight class="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
+						</div>
 					</div>
-					<div class="text-4xl md:text-5xl font-bold text-white mb-2">{stat.value}</div>
-					<div class="text-emerald-50 font-medium">{stat.label}</div>
-				</div>
+				</a>
 			{/each}
 		</div>
 	</div>
 </section>
 
-<!-- Features Section - Enhanced -->
-<section class="relative py-32 bg-white overflow-hidden">
-	<!-- Decorative background elements -->
-	<div class="absolute top-20 right-0 w-[500px] h-[500px] bg-emerald-100 rounded-full blur-3xl opacity-20"></div>
-	<div class="absolute bottom-20 left-0 w-[500px] h-[500px] bg-teal-100 rounded-full blur-3xl opacity-20"></div>
-
+<!-- How It Works -->
+<section class="py-24 bg-gray-50 relative overflow-hidden">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-		<div class="text-center mb-20">
-			<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-sm mb-6">
-				<Sparkles class="h-4 w-4" />
-				Why Choose Us
+		<div class="text-center mb-16">
+			<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-700 font-semibold text-sm mb-6">
+				<CheckCircle class="h-4 w-4" />
+				Simple Process
 			</div>
-			<h2 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-				Healthcare That
-				<span class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> Puts You First</span>
+			<h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+				How It Works
 			</h2>
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
-				Experience exceptional care with a personal touch, right in the comfort of your own home
+				Getting started with quality healthcare is easy. Just three simple steps.
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-			{#each features as feature, index}
-				<div class="group relative">
-					<!-- Animated gradient background -->
-					<div class="absolute -inset-0.5 bg-gradient-to-r {feature.color} rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500"></div>
+		<div class="max-w-5xl mx-auto">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				{#each steps as step, index}
+					<div class="relative">
+						<!-- Connecting line -->
+						{#if index < steps.length - 1}
+							<div class="hidden md:block absolute top-24 left-[60%] w-[80%] h-0.5 bg-teal-300"></div>
+						{/if}
 
-					<div class="relative bg-white rounded-3xl p-8 border-2 border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
-						<div class="flex gap-6">
-							<!-- Icon with gradient -->
+						<div class="relative text-center">
+							<!-- Number badge -->
+							<div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-teal-500 text-white font-bold text-2xl mb-6 shadow-xl">
+								{step.number}
+							</div>
+
+							<h3 class="text-2xl font-bold text-gray-900 mb-4">{step.title}</h3>
+							<p class="text-gray-600 leading-relaxed">{step.description}</p>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-24 bg-white relative overflow-hidden">
+	<div class="absolute top-20 left-0 w-[500px] h-[500px] bg-teal-50 rounded-full blur-3xl opacity-30"></div>
+	<div class="absolute bottom-20 right-0 w-[600px] h-[600px] bg-teal-100 rounded-full blur-3xl opacity-30"></div>
+
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+		<div class="text-center mb-16">
+			<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-50 text-teal-700 font-semibold text-sm mb-6">
+				<Heart class="h-4 w-4" />
+				Why Choose SESI
+			</div>
+			<h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+				Healthcare That
+				<span class="text-teal-600"> Puts You First</span>
+			</h2>
+			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+				We're committed to providing exceptional care with a personal touch
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+			{#each values as value}
+				<div class="group relative">
+					<div class="absolute -inset-0.5 bg-teal-500 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-all duration-500"></div>
+
+					<div class="relative bg-white rounded-3xl p-8 border-2 border-gray-100 hover:border-teal-200 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+						<div class="flex gap-5">
+							<!-- Icon -->
 							<div class="shrink-0">
 								<div class="relative">
-									<div class="absolute inset-0 bg-gradient-to-br {feature.color} rounded-2xl blur-md opacity-50"></div>
-									<div class="relative bg-gradient-to-br {feature.color} rounded-2xl p-5 text-white group-hover:scale-110 transition-transform duration-300 shadow-xl">
-										<svelte:component this={feature.icon} class="h-8 w-8" />
+									<div class="absolute inset-0 bg-teal-500 rounded-xl blur-md opacity-30"></div>
+									<div class="relative bg-teal-500 rounded-xl p-4 text-white">
+										<svelte:component this={value.icon} class="h-6 w-6" />
 									</div>
 								</div>
 							</div>
 
+							<!-- Content -->
 							<div class="flex-1">
-								<h3 class="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-								<p class="text-gray-600 leading-relaxed">{feature.description}</p>
+								<h3 class="text-xl font-bold text-gray-900 mb-3">{value.title}</h3>
+								<p class="text-gray-600 leading-relaxed">{value.description}</p>
 							</div>
 						</div>
-
-						<!-- Decorative corner accent -->
-						<div class="absolute top-8 right-8 w-20 h-20 bg-gradient-to-br {feature.color} rounded-full blur-2xl opacity-10"></div>
 					</div>
 				</div>
 			{/each}
@@ -148,133 +321,86 @@
 	</div>
 </section>
 
-<!-- Testimonial Section - NEW -->
-<section class="py-24 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-	<div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-		<div class="max-w-4xl mx-auto">
-			<div class="text-center mb-16">
-				<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-sm mb-6">
-					<Heart class="h-4 w-4" />
-					Trusted by Families
-				</div>
-				<h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Our Patients Say</h2>
-			</div>
-
-			<div class="relative bg-white rounded-3xl shadow-2xl p-10 md:p-12 border border-gray-100">
-				<!-- Quote mark decoration -->
-				<div class="absolute top-8 left-8 text-8xl text-emerald-100 font-serif leading-none">"</div>
-
-				<div class="relative">
-					<p class="text-xl md:text-2xl text-gray-700 leading-relaxed mb-8 italic">
-						The care and attention we received from SESI Healthcare was exceptional. The nurses were professional, compassionate, and made my mother feel comfortable throughout her recovery. I highly recommend their services.
-					</p>
-
-					<div class="flex items-center gap-4">
-						<div class="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold text-xl">
-							A.M
-						</div>
-						<div>
-							<div class="font-bold text-gray-900">Akosua Mensah</div>
-							<div class="text-gray-600">Patient Family Member</div>
-						</div>
-					</div>
-
-					<!-- 5-star rating -->
-					<div class="flex gap-1 mt-6">
-						{#each Array(5) as _}
-							<svg class="h-6 w-6 text-amber-400 fill-current" viewBox="0 0 20 20">
-								<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-							</svg>
-						{/each}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- CTA Section - Enhanced -->
-<section class="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 py-32 overflow-hidden">
-	<!-- Animated decorative background -->
+<!-- CTA Section -->
+<section class="relative bg-teal-600 py-24 overflow-hidden">
+	<!-- Animated background -->
 	<div class="absolute inset-0 opacity-10">
-		<div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
-		<div class="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
-		<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+		<div class="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
+		<div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
 	</div>
 
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
-		<div class="mx-auto max-w-4xl">
-			<div class="text-center mb-12">
-				<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white font-semibold text-sm mb-8">
-					<Sparkles class="h-4 w-4" />
-					Get Started Today
-				</div>
-				<h2 class="text-5xl md:text-6xl font-bold text-white mb-6">
-					Ready to Experience
-					<br />
-					Quality Care at Home?
-				</h2>
-				<p class="text-xl md:text-2xl text-emerald-50 mb-12 leading-relaxed max-w-2xl mx-auto">
-					Book your appointment today and let our professional team provide the compassionate care you deserve.
-				</p>
-
-				<div class="flex flex-col sm:flex-row gap-5 justify-center">
-					<a href="/booking">
-						<Button variant="secondary" size="lg" class="shadow-2xl hover:scale-105 transition-transform">
-							{#snippet children()}
-								<Calendar class="h-5 w-5" />
-								Book an Appointment
-							{/snippet}
-							{#snippet icon()}
-								<ArrowRight class="h-5 w-5 transition-transform group-hover:translate-x-1" />
-							{/snippet}
-						</Button>
-					</a>
-					<a href="/contact">
-						<Button variant="ghost" size="lg" class="hover:bg-white/20">
-							{#snippet children()}
-								<Phone class="h-5 w-5" />
-								Contact Us
-							{/snippet}
-						</Button>
-					</a>
-				</div>
+		<div class="max-w-4xl mx-auto text-center">
+			<div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm text-white font-semibold text-sm mb-8">
+				<Sparkles class="h-4 w-4" />
+				Ready to Get Started?
 			</div>
 
-			<!-- Trust badges -->
-			<div class="flex flex-wrap justify-center items-center gap-8 pt-12 border-t border-white/20">
-				<div class="flex items-center gap-3 text-white">
+			<h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+				Experience Quality Care
+				<br />
+				in the Comfort of Your Home
+			</h2>
+
+			<p class="text-xl text-white/90 mb-12 leading-relaxed max-w-2xl mx-auto">
+				Book your appointment today and let our team of qualified healthcare professionals provide the compassionate care you deserve.
+			</p>
+
+			<div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+				<a href="/services">
+					<Button variant="secondary" size="lg" class="shadow-2xl hover:scale-105 transition-transform bg-white text-teal-700 hover:bg-gray-50">
+						{#snippet children()}
+							<Heart class="h-5 w-5" />
+							View All Services
+						{/snippet}
+						{#snippet icon()}
+							<ArrowRight class="h-5 w-5 transition-transform group-hover:translate-x-1" />
+						{/snippet}
+					</Button>
+				</a>
+				<a href="/contact">
+					<Button variant="ghost" size="lg" class="border-white/30 text-white hover:bg-white/10">
+						{#snippet children()}
+							<Phone class="h-5 w-5" />
+							Get in Touch
+						{/snippet}
+					</Button>
+				</a>
+			</div>
+
+			<!-- Contact info -->
+			<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 border-t border-white/20">
+				<div class="flex flex-col items-center gap-3 text-white">
 					<div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-						<Shield class="h-6 w-6" />
+						<Phone class="h-6 w-6" />
 					</div>
-					<div class="text-left">
-						<div class="font-bold">Licensed</div>
-						<div class="text-emerald-100 text-sm">Certified Professionals</div>
+					<div class="text-center">
+						<div class="font-semibold mb-1">Call Us</div>
+						<div class="text-white/80 text-sm">+233 XX XXX XXXX</div>
 					</div>
 				</div>
 
-				<div class="flex items-center gap-3 text-white">
+				<div class="flex flex-col items-center gap-3 text-white">
 					<div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-						<HeartPulse class="h-6 w-6" />
+						<Mail class="h-6 w-6" />
 					</div>
-					<div class="text-left">
-						<div class="font-bold">Trusted</div>
-						<div class="text-emerald-100 text-sm">By 500+ Patients</div>
+					<div class="text-center">
+						<div class="font-semibold mb-1">Email Us</div>
+						<div class="text-white/80 text-sm">info@sesihealthcare.com</div>
 					</div>
 				</div>
 
-				<div class="flex items-center gap-3 text-white">
+				<div class="flex flex-col items-center gap-3 text-white">
 					<div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-						<Award class="h-6 w-6" />
+						<MapPin class="h-6 w-6" />
 					</div>
-					<div class="text-left">
-						<div class="font-bold">Top Rated</div>
-						<div class="text-emerald-100 text-sm">5-Star Reviews</div>
+					<div class="text-center">
+						<div class="font-semibold mb-1">Visit Us</div>
+						<div class="text-white/80 text-sm">Accra, Ghana</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
