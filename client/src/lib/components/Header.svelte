@@ -143,6 +143,9 @@
 		(isScrolled && isOnColoredSection) || (!isScrolled && defaultNavColor === 'white')
 			? 'white'
 			: '#1a5f4a';
+
+	$: isWhiteNav =
+		(isScrolled && isOnColoredSection) || (!isScrolled && defaultNavColor === 'white');
 </script>
 
 <!-- Desktop Navbar - Floating Pill (matches TMT exactly) -->
@@ -163,24 +166,12 @@
 		on:focus={() => resetAutoHideTimer()}
 	>
 		<div class="flex items-center gap-8">
-			<!-- Logo: healthcare cross icon (like TMT's moon/pill icon) -->
-			<a href="/" class="transition-transform duration-300 hover:scale-110" aria-label="SESI Healthcare Home">
-				<div class="rounded-full {logoBg} p-2 transition-colors duration-300">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke={logoColor}
-						class="h-6 w-6"
-					>
-						<!-- Healthcare cross / plus -->
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-						/>
-					</svg>
+			<!-- Logo -->
+			<a href="/" class="flex items-center space-x-2.5 transition-transform duration-300 hover:scale-105" aria-label="SESI Homecare Home">
+				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SESI Homecare" class="h-10 w-10 object-contain rounded-lg transition-all duration-300" />
+				<div class="flex flex-col leading-tight">
+					<span class="font-bold text-lg leading-none transition-colors duration-300">SESI Homecare</span>
+					<span class="text-xs font-medium tracking-wide transition-colors duration-300 opacity-80">Medical Supplies &amp; Services</span>
 				</div>
 			</a>
 
@@ -210,19 +201,11 @@
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<a href="/" class="flex items-center space-x-2">
-				<div class="h-8 w-8 rounded-full {logoBg} flex items-center justify-center transition-colors duration-300 shrink-0">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="2"
-						stroke={logoColor}
-						class="h-4 w-4"
-					>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-					</svg>
+				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SESI Homecare" class="h-9 w-9 object-contain shrink-0 rounded-lg transition-all duration-300" />
+				<div class="flex flex-col leading-tight">
+					<span class="font-bold text-base leading-none transition-colors duration-300">SESI Homecare</span>
+					<span class="text-xs font-medium tracking-wide transition-colors duration-300 opacity-80">Medical Supplies &amp; Services</span>
 				</div>
-				<span class="font-bold text-base transition-colors duration-300">SESI Healthcare</span>
 			</a>
 
 			<!-- Mobile menu toggle -->

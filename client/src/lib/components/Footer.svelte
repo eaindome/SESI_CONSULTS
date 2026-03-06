@@ -23,7 +23,7 @@
 			<!-- Brand -->
 			<div class="lg:col-span-2">
 				<div class="flex items-center space-x-3 mb-6">
-					<img src="/images/logo/logo_gray_background.png" alt="SESI Homecare logo" class="h-12 w-12 rounded-xl object-contain" />
+					<img src="/images/logo/logo_trans_background.png" alt="SESI Homecare logo" class="h-12 w-12 rounded-xl object-contain" />
 					<div class="flex flex-col leading-tight">
 						<span class="font-bold text-2xl text-gray-900 leading-none">SESI Homecare</span>
 						<span class="text-sm text-[#1a5f4a] font-medium tracking-wide">Medical Supplies &amp; Services</span>
