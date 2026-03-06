@@ -44,7 +44,7 @@
 					</div>
 					<div class="flex items-center space-x-3">
 						<Mail class="h-5 w-5 text-[#1a5f4a] shrink-0" />
-						<span class="text-gray-700">seshomecareandmedicalsupplies@gmail.com</span>
+						<span class="text-gray-700 break-all">seshomecareandmedicalsupplies@gmail.com</span>
 					</div>
 				</div>
 			</div>

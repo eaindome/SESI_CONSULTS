@@ -131,8 +131,8 @@
 				<div in:fly={{ y: 20, duration: 600, delay: 0 }} class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
 					Our Story
 				</div>
-				<h1 in:fly={{ y: 30, duration: 700, delay: 200 }} class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
-					Compassionate Care,<br/>Exceptional Service
+				<h1 in:fly={{ y: 30, duration: 700, delay: 200 }} class="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl mb-6">
+					Compassionate Care, Exceptional Service
 				</h1>
 				<p in:fly={{ y: 20, duration: 600, delay: 400 }} class="text-xl text-white/90 leading-relaxed">
 					Dedicated to bringing professional healthcare to the comfort of your home
@@ -150,12 +150,12 @@
 </section>
 
 <!-- Story Section -->
-<section class="py-24 bg-white">
+<section class="py-16 md:py-24 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-6xl">
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 				<div>
-					<h2 class="text-4xl font-bold text-gray-900 mb-8">Our Story</h2>
+					<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
 					<div class="space-y-6 text-lg text-gray-600 leading-relaxed">
 						<p>
 							SESI Healthcare was founded with a simple yet powerful mission: to provide professional,
@@ -186,7 +186,7 @@
 </section>
 
 <!-- Mission & Vision -->
-<section class="py-24 bg-linear-to-br from-[#1a5f4a] to-[#0d3d2d]">
+<section class="py-16 md:py-24 bg-linear-to-br from-[#1a5f4a] to-[#0d3d2d]">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-white/20">
 			<!-- Mission -->
@@ -220,11 +220,11 @@
 </section>
 
 <!-- Our Values -->
-<section class="py-24 bg-[#f0f7f5]">
+<section class="py-16 md:py-24 bg-[#f0f7f5]">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-6xl">
 			<div class="text-center mb-16">
-				<h2 class="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
+				<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
 				<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 					The principles that guide everything we do
 				</p>
@@ -245,13 +245,13 @@
 </section>
 
 <!-- Meet Our Team -->
-<section id="team" class="py-24 bg-gray-50">
+<section id="team" class="py-16 md:py-24 bg-gray-50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="text-center mb-16">
 			<div class="inline-block px-4 py-1.5 bg-[#1a5f4a]/10 text-[#1a5f4a] text-sm font-semibold rounded-full mb-4">
 				Our People
 			</div>
-			<h2 class="text-4xl font-bold text-gray-900 mb-4">Meet the Professionals Behind Your Care</h2>
+			<h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet the Professionals Behind Your Care</h2>
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 				Experienced, licensed professionals dedicated to your health and well-being
 			</p>

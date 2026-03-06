@@ -149,7 +149,7 @@
 </script>
 
 <!-- Desktop Navbar - Floating Pill (matches TMT exactly) -->
-<div class="fixed top-0 right-0 left-0 z-50 flex justify-center">
+<div class="fixed top-0 right-0 left-0 z-50 hidden md:flex justify-center">
 	<nav
 		bind:this={navbarElement}
 		style={navStyle}

@@ -156,8 +156,8 @@
 			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
 				Book Now
 			</div>
-			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
-				Schedule Your <br/>Home Care Visit
+			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl mb-6 animate-fade-in-up">
+				Schedule Your Home Care Visit
 			</h1>
 			<p class="text-xl text-white/90 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
 				Choose a convenient time for professional healthcare delivered to your doorstep
@@ -174,7 +174,7 @@
 </section>
 
 <!-- Booking Form -->
-<section class="py-24 bg-linear-to-b from-white to-gray-50/50">
+<section class="py-16 md:py-24 bg-linear-to-b from-white to-gray-50/50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-2xl">
 			<!-- Section title -->
@@ -182,7 +182,7 @@
 				<div class="inline-block px-4 py-1.5 bg-[#1a5f4a]/10 text-[#1a5f4a] text-sm font-semibold rounded-full mb-4">
 					Appointment Request
 				</div>
-				<h2 class="text-4xl font-bold text-gray-900 mb-4">Book Your Home Visit</h2>
+				<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Book Your Home Visit</h2>
 				<p class="text-lg text-gray-600">
 					Fill in the details below and we'll confirm your appointment within a few hours.
 				</p>

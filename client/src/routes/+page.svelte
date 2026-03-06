@@ -356,7 +356,7 @@
 					</div> -->
 
 					<h1 in:fly={{ y: 20, duration: 700, delay: 350 }}
-						class="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight mb-6">
+					class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl leading-tight mb-6">
 						Quality Care in the
 						<span class="text-[#4caf50]">Comfort of Your Home</span>
 					</h1>
@@ -531,10 +531,10 @@
 </section>
 
 <!-- Features Section -->
-<section class="py-32 bg-white">
+<section class="py-20 md:py-32 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="text-center mb-20">
-			<h2 class="text-4xl font-bold text-gray-900 sm:text-5xl mb-6">Why Choose SESI Healthcare</h2>
+		<div class="text-center mb-12 md:mb-20">
+			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-5">Why Choose SESI Healthcare</h2>
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 				We provide exceptional care that puts your needs first
 			</p>
@@ -561,14 +561,14 @@
 </section>
 
 <!-- How It Works Section -->
-<section class="py-32 bg-[#f0f7f5] relative overflow-hidden" bind:this={hiwSectionEl}>
+<section class="py-20 md:py-32 bg-[#f0f7f5] relative overflow-hidden" bind:this={hiwSectionEl}>
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 
-		<div class="text-center mb-16">
+		<div class="text-center mb-10 md:mb-16">
 			<div class="inline-block px-4 py-1.5 bg-[#1a5f4a]/10 text-[#1a5f4a] text-sm font-semibold rounded-full mb-4">
 				How It Works
 			</div>
-			<h2 class="text-4xl font-bold text-gray-900 sm:text-5xl mb-6">From Booking to Bedside</h2>
+			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-5">From Booking to Bedside</h2>
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 				Three simple steps to professional care at your door
 			</p>
@@ -645,7 +645,7 @@
 </section>
 
 <!-- Services Preview Section -->
-<section class="py-32 bg-white">
+<section class="py-20 md:py-32 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 
 		<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
@@ -653,7 +653,7 @@
 				<div class="inline-block px-4 py-1.5 bg-[#1a5f4a]/10 text-[#1a5f4a] text-sm font-semibold rounded-full mb-4">
 					Our Services
 				</div>
-				<h2 class="text-4xl font-bold text-gray-900 sm:text-5xl mb-4">What We Offer</h2>
+				<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-4">What We Offer</h2>
 				<p class="text-xl text-gray-600 max-w-lg">
 					Professional nursing services designed around your needs
 				</p>
@@ -715,13 +715,13 @@
 </section>
 
 <!-- Testimonials Section -->
-<section class="py-24 bg-white overflow-hidden">
-	<div class="container mx-auto px-6 sm:px-8 lg:px-12 mb-14">
+<section class="py-16 md:py-24 bg-white overflow-hidden">
+	<div class="container mx-auto px-6 sm:px-8 lg:px-12 mb-10 md:mb-14">
 		<div class="text-center">
 			<div class="inline-block px-4 py-1.5 bg-[#1a5f4a]/10 text-[#1a5f4a] text-sm font-semibold rounded-full mb-4">
 				Patient Stories
 			</div>
-			<h2 class="text-4xl font-bold text-gray-900 sm:text-5xl mb-4">What Our Patients Say</h2>
+			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-4">What Our Patients Say</h2>
 			<p class="text-xl text-gray-500 max-w-xl mx-auto">
 				Real experiences from families who trust SESI Healthcare
 			</p>
@@ -788,10 +788,10 @@
 </section>
 
 <!-- CTA Section -->
-<section class="bg-linear-to-br from-[#1a5f4a] to-[#0d3d2d] py-24">
+<section class="bg-linear-to-br from-[#1a5f4a] to-[#0d3d2d] py-16 md:py-24">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
-			<h2 class="text-4xl font-bold text-white sm:text-5xl mb-6">
+			<h2 class="text-3xl font-bold text-white sm:text-4xl md:text-5xl mb-5">
 				Ready to Get Started?
 			</h2>
 			<p class="text-xl text-white/90 mb-10 leading-relaxed">

@@ -156,8 +156,8 @@
 				<div in:fly={{ y: 20, duration: 600, delay: 0 }} class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
 					Our Services
 				</div>
-				<h1 in:fly={{ y: 30, duration: 700, delay: 200 }} class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
-					Professional Healthcare <br/>Services at Home
+				<h1 in:fly={{ y: 30, duration: 700, delay: 200 }} class="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl mb-6">
+					Professional Healthcare Services at Home
 				</h1>
 				<p in:fly={{ y: 20, duration: 600, delay: 400 }} class="text-xl text-white/90 leading-relaxed">
 					Tailored care delivered with compassion and expertise, right where you feel most comfortable.
@@ -175,7 +175,7 @@
 </section>
 
 <!-- Services Grid -->
-<section class="py-24 bg-white">
+<section class="py-16 md:py-24 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="grid grid-cols-1 gap-12 lg:grid-cols-2 max-w-7xl mx-auto">
 			{#each services as service, i (i)}
@@ -198,7 +198,7 @@
 						</div>
 
 						<!-- Service Content -->
-						<div class="p-8">
+						<div class="p-5 sm:p-8">
 							<h3 class="mb-4 text-2xl font-bold text-gray-900">{service.name}</h3>
 							<p class="mb-6 text-gray-600 leading-relaxed">{service.description}</p>
 							<div class="space-y-3">
@@ -221,7 +221,7 @@
 </section>
 
 <!-- How It Works -->
-<section class="py-24 bg-gray-50">
+<section class="py-16 md:py-24 bg-gray-50">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="text-center mb-16">
 			<h2 class="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
