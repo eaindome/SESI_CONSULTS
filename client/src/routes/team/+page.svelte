@@ -78,7 +78,7 @@
 </script>
 
 <svelte:head>
-	<title>Meet Our Team - SESI Healthcare</title>
+	<title>Meet Our Team - SESI Homecare & Medical Supplies</title>
 	<meta name="description" content="Meet our team of experienced, licensed healthcare professionals dedicated to providing quality home care." />
 </svelte:head>
 

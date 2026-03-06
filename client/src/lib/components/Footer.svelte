@@ -86,7 +86,7 @@
 
 		<div class="mt-16 border-t border-gray-200 pt-8">
 			<p class="text-sm text-gray-500 text-center">
-				&copy; {currentYear} SESI Healthcare. All rights reserved.
+				&copy; {currentYear} SESI Homecare & Medical Supplies. All rights reserved.
 			</p>
 		</div>
 	</div>

@@ -120,7 +120,7 @@
 </script>
 
 <svelte:head>
-	<title>Our Services - SESI Healthcare</title>
+	<title>Our Services - SESI Homecare & Medical Supplies</title>
 	<meta name="description" content="Comprehensive home healthcare services including nursing care, injections, post-operative care, and more." />
 </svelte:head>
 

@@ -95,8 +95,8 @@
 </script>
 
 <svelte:head>
-	<title>About Us - SESI Healthcare</title>
-	<meta name="description" content="Learn about SESI Healthcare's mission to provide quality home healthcare services with compassion and excellence." />
+	<title>About Us - SESI Homecare & Medical Supplies</title>
+	<meta name="description" content="Learn about SESI Homecare & Medical Supplies's mission to provide quality home healthcare services with compassion and excellence." />
 </svelte:head>
 
 <!-- Hero Section -->
@@ -158,7 +158,7 @@
 					<h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
 					<div class="space-y-6 text-lg text-gray-600 leading-relaxed">
 						<p>
-							SESI Healthcare was founded with a simple yet powerful mission: to provide professional,
+							SESI Homecare & Medical Supplies was founded with a simple yet powerful mission: to provide professional,
 							compassionate healthcare services in the comfort and safety of patients' homes.
 						</p>
 						<p>
@@ -372,7 +372,7 @@
 				Experience Our Commitment to Care
 			</h2>
 			<p class="text-xl text-white/90 mb-10 leading-relaxed">
-				Join the families who trust SESI Healthcare for their home healthcare needs.
+				Join the families who trust SESI Homecare & Medical Supplies for their home healthcare needs.
 			</p>
 			<div class="flex flex-col sm:flex-row gap-4 justify-center">
 				<Button variant="inverse" size="lg" href="/booking" elevation>

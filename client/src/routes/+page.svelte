@@ -92,7 +92,7 @@
 			name: 'Yaw D.',
 			location: 'Adenta, Accra',
 			stars: 5,
-			text: 'From booking to care delivery the whole experience was flawless. I will absolutely be using SESI Healthcare again.',
+			text: 'From booking to care delivery the whole experience was flawless. I will absolutely be using SESI Homecare & Medical Supplies again.',
 			color: '#0d3d2d',
 			service: 'Injection Services'
 		}
@@ -295,7 +295,7 @@
 </script>
 
 <svelte:head>
-	<title>SESI Healthcare - Home Nursing Services</title>
+	<title>SESI Homecare & Medical Supplies - Home Nursing Services</title>
 	<meta name="description" content="Professional home healthcare services delivered with compassion. Book trusted nurses for in-home care." />
 </svelte:head>
 
@@ -534,7 +534,7 @@
 <section class="py-20 md:py-32 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="text-center mb-12 md:mb-20">
-			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-5">Why Choose SESI Healthcare</h2>
+			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-5">Why Choose SESI Homecare?</h2>
 			<p class="text-xl text-gray-600 max-w-2xl mx-auto">
 				We provide exceptional care that puts your needs first
 			</p>
@@ -723,7 +723,7 @@
 			</div>
 			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl mb-4">What Our Patients Say</h2>
 			<p class="text-xl text-gray-500 max-w-xl mx-auto">
-				Real experiences from families who trust SESI Healthcare
+				Real experiences from families who trust SESI Homecare & Medical Supplies
 			</p>
 		</div>
 	</div>

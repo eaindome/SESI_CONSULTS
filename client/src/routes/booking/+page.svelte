@@ -131,7 +131,7 @@
 </script>
 
 <svelte:head>
-	<title>Book an Appointment - SESI Healthcare</title>
+	<title>Book an Appointment - SESI Homecare & Medical Supplies</title>
 	<meta name="description" content="Schedule your home healthcare appointment online. Choose your service, date, and time." />
 </svelte:head>
 

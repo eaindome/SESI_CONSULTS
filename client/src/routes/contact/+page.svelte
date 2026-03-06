@@ -47,8 +47,8 @@
 </script>
 
 <svelte:head>
-	<title>Contact Us - SESI Healthcare</title>
-	<meta name="description" content="Get in touch with SESI Healthcare. We're here to answer your questions and help you book home healthcare services." />
+	<title>Contact Us - SESI Homecare & Medical Supplies</title>
+	<meta name="description" content="Get in touch with SESI Homecare & Medical Supplies. We're here to answer your questions and help you book home healthcare services." />
 </svelte:head>
 
 <!-- Hero Section -->
