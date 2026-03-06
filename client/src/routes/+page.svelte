@@ -322,20 +322,20 @@
 	</div>
 
 	<!-- Heartbeat pulse orb + emanating rings -->
-	<div class="absolute right-[22%] top-1/2 -translate-y-1/2 z-1 hidden lg:block pointer-events-none">
-		<!-- Focal orb — the heartbeat centre -->
+	<!-- <div class="absolute right-[22%] top-1/2 -translate-y-1/2 z-1 hidden lg:block pointer-events-none">
+		Focal orb — the heartbeat centre
 		<div class="pulse-orb">
 			<svg class="h-6 w-6" viewBox="0 0 24 24" fill="none"
 				stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<!-- Medical cross -->
+				Medical cross
 				<path d="M12 5v14M5 12h14" />
 			</svg>
 		</div>
-		<!-- Concentric ripple rings -->
+		Concentric ripple rings
 		<div class="pulse-ring pulse-ring-1"></div>
 		<div class="pulse-ring pulse-ring-2"></div>
 		<div class="pulse-ring pulse-ring-3"></div>
-	</div>
+	</div> -->
 
 	<!-- Ambient blobs -->
 	<div class="absolute -top-24 -left-24 w-96 h-96 bg-[#1a5f4a]/15 rounded-full blur-3xl z-1"></div>
@@ -349,11 +349,11 @@
 				<div class="lg:w-[52%] max-w-2xl" in:fly={{ y: 30, duration: 800, delay: 0 }}>
 
 					<!-- Live badge -->
-					<div in:fly={{ y: 20, duration: 600, delay: 200 }}
+					<!-- <div in:fly={{ y: 20, duration: 600, delay: 200 }}
 						class="inline-flex items-center gap-2 px-4 py-2 bg-[#4caf50]/20 backdrop-blur-sm border border-[#4caf50]/30 rounded-full text-[#4caf50] text-sm font-semibold mb-8">
 						<span class="w-2 h-2 rounded-full bg-[#4caf50] animate-pulse"></span>
 						Professional Home Healthcare · Accra, Ghana
-					</div>
+					</div> -->
 
 					<h1 in:fly={{ y: 20, duration: 700, delay: 350 }}
 						class="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl leading-tight mb-6">
@@ -404,14 +404,14 @@
 			{/if}
 
 			<!-- RIGHT: Appointment dashboard card + floating micro-cards -->
-			<div class="lg:w-[48%] relative hidden lg:flex items-center justify-center min-h-135">
+			<!-- <div class="lg:w-[48%] relative hidden lg:flex items-center justify-center min-h-135">
 				{#if showCards}
 
-					<!-- Main appointment card -->
+					Main appointment card
 					<div class="relative z-10 w-full max-w-sm" in:fly={{ y: 50, duration: 800, delay: 0 }}>
 						<div class="bg-white rounded-3xl shadow-2xl p-7 card-bob">
 
-							<!-- Card header -->
+							Card header
 							<div class="flex items-center justify-between mb-6">
 								<div>
 									<p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-0.5">Today's Appointment</p>
@@ -423,7 +423,7 @@
 								</span>
 							</div>
 
-							<!-- Nurse info -->
+							Nurse info
 							<div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
 								<div class="relative shrink-0">
 									<img
@@ -449,7 +449,7 @@
 								</div>
 							</div>
 
-							<!-- Appointment details -->
+							Appointment details
 							<div class="space-y-3 mb-7">
 								<div class="flex items-center gap-3 text-sm text-gray-600">
 									<div class="w-8 h-8 rounded-xl bg-[#1a5f4a]/10 flex items-center justify-center shrink-0">
@@ -471,7 +471,7 @@
 								</div>
 							</div>
 
-							<!-- Book CTA -->
+							Book CTA
 							<a href="/booking"
 								class="flex items-center justify-center w-full py-3 px-5 bg-[#1a5f4a] hover:bg-[#0d3d2d] text-white text-sm font-semibold rounded-xl transition-colors duration-200">
 								Book Your Appointment
@@ -482,7 +482,7 @@
 						</div>
 					</div>
 
-					<!-- Micro-card 1: Nurse en route (top-left) -->
+					Micro-card 1: Nurse en route (top-left)
 					<div class="absolute top-6 -left-12 z-20" in:fly={{ x: -40, y: -20, duration: 700, delay: 300 }}>
 						<div class="bg-white rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 w-56 card-bob-slow">
 							<span class="relative flex h-3 w-3 shrink-0">
@@ -496,7 +496,7 @@
 						</div>
 					</div>
 
-					<!-- Micro-card 2: Star rating (bottom-right) -->
+					Micro-card 2: Star rating (bottom-right)
 					<div class="absolute -bottom-2 -right-10 z-20" in:fly={{ x: 40, y: 30, duration: 700, delay: 500 }}>
 						<div class="bg-white rounded-2xl shadow-xl px-4 py-3 w-52 card-bob-delayed">
 							<div class="flex items-center gap-2 mb-1">
@@ -511,7 +511,7 @@
 						</div>
 					</div>
 
-					<!-- Micro-card 3: Verified badge (far left, mid) -->
+					Micro-card 3: Verified badge (far left, mid)
 					<div class="absolute top-1/2 -translate-y-1/2 -left-16 z-20" in:fly={{ x: -50, duration: 700, delay: 700 }}>
 						<div class="bg-[#1a5f4a] rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3 w-52 card-bob">
 							<div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center shrink-0">
@@ -525,8 +525,7 @@
 					</div>
 
 				{/if}
-			</div>
-
+			</div> -->
 		</div>
 	</div>
 </section>
