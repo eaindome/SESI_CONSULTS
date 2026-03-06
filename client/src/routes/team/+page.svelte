@@ -1,4 +1,10 @@
-<script lang="ts">
+﻿<script lang="ts">
+	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import Card from '$lib/components/ui/Card.svelte';
+	import Badge from '$lib/components/ui/Badge.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+
 	const team = [
 		{
 			name: 'Sister Adebayo',
@@ -37,6 +43,38 @@
 			image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop&q=80'
 		}
 	];
+
+	// Animation state
+	let isHeroVisible = $state(false);
+	let cardElements: HTMLElement[] = [];
+	let isCardVisible = $state(Array(team.length).fill(false));
+
+	onMount(() => {
+		// Trigger hero animations
+		setTimeout(() => isHeroVisible = true, 100);
+
+		// Setup staggered team card animations
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const index = cardElements.indexOf(entry.target as HTMLElement);
+					if (index !== -1) {
+						setTimeout(() => {
+							isCardVisible[index] = true;
+						}, index * 150); // Staggered delay
+					}
+					observer.unobserve(entry.target);
+				}
+			});
+		}, { threshold: 0.15 });
+
+		cardElements.forEach(el => observer.observe(el));
+
+		return () => {
+			cardElements.forEach(el => observer.unobserve(el));
+			observer.disconnect();
+		};
+	});
 </script>
 
 <svelte:head>
@@ -45,33 +83,45 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 py-24 sm:py-32">
+<section class="relative overflow-hidden bg-gradient-to-br from-[#1a5f4a] to-[#0d3d2d] py-24 sm:py-32">
+	<!-- SVG Pattern Overlay -->
+	<div class="absolute inset-0 opacity-5 pointer-events-none">
+		<svg width="100%" height="100%">
+			<pattern id="team-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+				<circle cx="3" cy="3" r="1.5" fill="currentColor" class="text-white" />
+			</pattern>
+			<rect width="100%" height="100%" fill="url(#team-dots)" />
+		</svg>
+	</div>
+
 	<!-- Decorative circles - varied sizes and positions -->
 	<div class="absolute top-10 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-	<div class="absolute top-40 right-40 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-40 right-40 w-64 h-64 bg-[#4caf50]/10 rounded-full blur-3xl"></div>
 	<div class="absolute bottom-10 left-20 w-80 h-80 bg-white/8 rounded-full blur-3xl"></div>
-	<div class="absolute bottom-32 left-40 w-56 h-56 bg-emerald-300/10 rounded-full blur-3xl"></div>
-	<div class="absolute top-1/2 left-10 w-72 h-72 bg-teal-300/8 rounded-full blur-3xl"></div>
+	<div class="absolute bottom-32 left-40 w-56 h-56 bg-[#4caf50]/10 rounded-full blur-3xl"></div>
+	<div class="absolute top-1/2 left-10 w-72 h-72 bg-[#4caf50]/8 rounded-full blur-3xl"></div>
 	<div class="absolute top-1/3 right-1/2 w-48 h-48 bg-white/12 rounded-full blur-3xl"></div>
 
 	<!-- Small accent dots -->
 	<div class="absolute top-1/4 right-1/4 w-3 h-3 bg-white/40 rounded-full"></div>
-	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-emerald-300/50 rounded-full"></div>
+	<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-[#4caf50]/50 rounded-full"></div>
 	<div class="absolute top-2/3 right-1/3 w-2.5 h-2.5 bg-white/30 rounded-full"></div>
-	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-teal-200/40 rounded-full"></div>
+	<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-[#4caf50]/40 rounded-full"></div>
 
 	<div class="relative container mx-auto px-6 sm:px-8 lg:px-12">
-		<div class="mx-auto max-w-3xl text-center">
-			<div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6 animate-fade-in">
-				Our Team
+		{#if isHeroVisible}
+			<div class="mx-auto max-w-3xl text-center">
+				<div in:fly={{ y: 20, duration: 600, delay: 0 }} class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-6">
+					Our Team
+				</div>
+				<h1 in:fly={{ y: 30, duration: 700, delay: 200 }} class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
+					Meet the Professionals <br/>Behind Your Care
+				</h1>
+				<p in:fly={{ y: 20, duration: 600, delay: 400 }} class="text-xl text-white/90 leading-relaxed">
+					Experienced, licensed professionals dedicated to your health and well-being
+				</p>
 			</div>
-			<h1 class="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6 animate-fade-in-up">
-				Meet the Professionals <br/>Behind Your Care
-			</h1>
-			<p class="text-xl text-emerald-50 leading-relaxed animate-fade-in" style="animation-delay: 0.2s;">
-				Experienced, licensed professionals dedicated to your health and well-being
-			</p>
-		</div>
+		{/if}
 	</div>
 
 	<!-- Bottom wave separator -->
@@ -86,45 +136,48 @@
 <section class="py-24 bg-white">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="grid grid-cols-1 gap-10 md:grid-cols-2 max-w-6xl mx-auto">
-			{#each team as member}
-				<div class="rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100">
-					<!-- Team Member Image -->
-					{#if member.image}
-						<div class="h-80 overflow-hidden bg-gray-100">
-							<img
-								src={member.image}
-								alt={member.name}
-								class="w-full h-full object-cover"
-							/>
-						</div>
-					{:else}
-						<div class="h-80 bg-emerald-600 flex items-center justify-center">
-							<span class="text-8xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
-						</div>
-					{/if}
+			{#each team as member, i}
+				<div
+					bind:this={cardElements[i]}
+					class="transition-all duration-700 {isCardVisible[i] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}"
+				>
+					<Card hoverable padding="none" class="group overflow-hidden">
+						<!-- Team Member Image -->
+						{#if member.image}
+							<div class="h-80 overflow-hidden bg-gray-100">
+								<img
+									src={member.image}
+									alt={member.name}
+									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+								/>
+							</div>
+						{:else}
+							<div class="h-80 bg-[#1a5f4a] flex items-center justify-center">
+								<span class="text-8xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
+							</div>
+						{/if}
 
-					<!-- Team Member Info -->
-					<div class="p-8">
-						<div class="mb-6">
-							<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-							<p class="text-emerald-600 font-semibold mb-1">{member.role}</p>
-							<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
-							<p class="text-sm text-gray-500">{member.experience}</p>
-						</div>
+						<!-- Team Member Info -->
+						<div class="p-8">
+							<div class="mb-6">
+								<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
+								<p class="text-[#1a5f4a] font-semibold mb-1">{member.role}</p>
+								<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
+								<p class="text-sm text-gray-500">{member.experience}</p>
+							</div>
 
-						<p class="text-gray-600 mb-6 leading-relaxed">{member.description}</p>
+							<p class="text-gray-600 mb-6 leading-relaxed">{member.description}</p>
 
-						<div>
-							<p class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">Specialties</p>
-							<div class="flex flex-wrap gap-2">
-								{#each member.specialties as specialty}
-									<span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-										{specialty}
-									</span>
-								{/each}
+							<div>
+								<p class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">Specialties</p>
+								<div class="flex flex-wrap gap-2">
+									{#each member.specialties as specialty}
+										<Badge status="safe" size="md">{specialty}</Badge>
+									{/each}
+								</div>
 							</div>
 						</div>
-					</div>
+					</Card>
 				</div>
 			{/each}
 		</div>
@@ -144,7 +197,7 @@
 			</div>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 				<div class="flex gap-4 items-start bg-white rounded-2xl p-6 shadow-sm">
-					<div class="flex-shrink-0 rounded-xl bg-emerald-100 p-3 text-emerald-600">
+					<div class="flex-shrink-0 rounded-xl bg-[#1a5f4a]/10 p-3 text-[#1a5f4a]">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 						</svg>
@@ -158,7 +211,7 @@
 				</div>
 
 				<div class="flex gap-4 items-start bg-white rounded-2xl p-6 shadow-sm">
-					<div class="flex-shrink-0 rounded-xl bg-emerald-100 p-3 text-emerald-600">
+					<div class="flex-shrink-0 rounded-xl bg-[#1a5f4a]/10 p-3 text-[#1a5f4a]">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 						</svg>
@@ -172,7 +225,7 @@
 				</div>
 
 				<div class="flex gap-4 items-start bg-white rounded-2xl p-6 shadow-sm">
-					<div class="flex-shrink-0 rounded-xl bg-emerald-100 p-3 text-emerald-600">
+					<div class="flex-shrink-0 rounded-xl bg-[#1a5f4a]/10 p-3 text-[#1a5f4a]">
 						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
 						</svg>
@@ -190,24 +243,21 @@
 </section>
 
 <!-- CTA -->
-<section class="bg-emerald-600 py-24">
+<section class="bg-gradient-to-br from-[#1a5f4a] to-[#0d3d2d] py-24">
 	<div class="container mx-auto px-6 sm:px-8 lg:px-12">
 		<div class="mx-auto max-w-3xl text-center">
 			<h2 class="text-4xl font-bold text-white sm:text-5xl mb-6">
 				Ready to Experience Quality Care?
 			</h2>
-			<p class="text-xl text-emerald-50 mb-10 leading-relaxed">
+			<p class="text-xl text-white/90 mb-10 leading-relaxed">
 				Book an appointment with our professional team today.
 			</p>
-			<a
-				href="/booking"
-				class="group inline-flex items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-semibold text-emerald-600 hover:bg-gray-50 transition-all duration-300 shadow-lg"
-			>
+			<Button variant="inverse" size="lg" href="/booking" elevation>
 				Book an Appointment
-				<svg class="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<svg slot="icon" class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
 				</svg>
-			</a>
+			</Button>
 		</div>
 	</div>
 </section>
