@@ -1,8 +1,6 @@
 import { json } from '@sveltejs/kit';
+import { BACKEND_API_URL } from '$env/static/private';
 import type { RequestHandler } from './$types';
-
-// Replace with your actual backend API URL
-const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
