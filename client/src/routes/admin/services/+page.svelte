@@ -9,7 +9,7 @@
 		id: string;
 		name: string;
 		description: string;
-		price: string;
+		price?: string;
 		features: string[];
 		enabled: boolean;
 		displayOrder: number;
@@ -27,7 +27,6 @@
 	let form = $state({
 		name: '',
 		description: '',
-		price: '',
 		features: [''],
 		enabled: true,
 		displayOrder: 0
@@ -61,7 +60,6 @@
 		form = {
 			name: '',
 			description: '',
-			price: '',
 			features: [''],
 			enabled: true,
 			displayOrder: services.length + 1
@@ -74,7 +72,6 @@
 		form = {
 			name: service.name,
 			description: service.description,
-			price: service.price,
 			features: service.features.length > 0 ? [...service.features] : [''],
 			enabled: service.enabled,
 			displayOrder: service.displayOrder
@@ -99,7 +96,6 @@
 		const data = {
 			name: form.name,
 			description: form.description,
-			price: form.price,
 			features,
 			enabled: form.enabled,
 			displayOrder: form.displayOrder
@@ -284,9 +280,6 @@
 							</div>
 
 							<h3 class="text-lg font-bold text-gray-900 mb-2">{service.name}</h3>
-							<div class="inline-flex items-center px-3 py-1 bg-[#1a5f4a]/10 text-[#1a5f4a] rounded-full text-sm font-semibold mb-4">
-								{service.price}
-							</div>
 						</div>
 
 						<!-- Description -->
@@ -376,21 +369,6 @@
 						placeholder="Detailed description of the service..."
 						class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20 resize-none"
 					></textarea>
-				</div>
-
-				<!-- Price -->
-				<div>
-					<label for="price" class="block text-sm font-semibold text-gray-900 mb-2">
-						Price
-					</label>
-					<input
-						type="text"
-						id="price"
-						bind:value={form.price}
-						required
-						placeholder="e.g., GHS 50-100 or Contact for pricing"
-						class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
-					/>
 				</div>
 
 				<!-- Features -->

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Search, Filter, Calendar, User, Mail, Phone, MapPin, Trash2, Check, X, Clock } from '@lucide/svelte';
+	import { Search, Filter, Calendar, User, Mail, Phone, MapPin, X, MoreVertical, Eye, Check, Clock, Trash2 } from '@lucide/svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { toasts } from '$lib/stores/toasts';
@@ -28,6 +28,7 @@
 	let selectedBooking = $state<Booking | null>(null);
 	let showDetails = $state(false);
 	let useDummyData = $state(false);
+	let openMenuId = $state<string | null>(null);
 
 	const limit = 15;
 
@@ -114,7 +115,6 @@
 	async function loadBookings() {
 		if (useDummyData) {
 			isLoading = true;
-			// Simulate loading delay
 			await new Promise(resolve => setTimeout(resolve, 500));
 
 			let filtered = [...dummyBookings];
@@ -239,9 +239,20 @@
 		return 'success';
 	}
 
+	function toggleMenu(id: string) {
+		openMenuId = openMenuId === id ? null : id;
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+		if (!target.closest('.menu-container')) {
+			openMenuId = null;
+		}
+	}
+
 	const totalPages = $derived(Math.ceil(total / limit));
 
-	function handleSearch(e: Event) {
+	function handleSearch() {
 		currentPage = 0;
 		loadBookings();
 	}
@@ -255,6 +266,8 @@
 <svelte:head>
 	<title>Bookings Management - SESI Admin</title>
 </svelte:head>
+
+<svelte:window onclick={handleClickOutside} />
 
 <div class="space-y-6">
 	<!-- Header -->
@@ -337,27 +350,79 @@
 				<table class="w-full">
 					<thead class="bg-gray-50 border-b border-gray-200">
 						<tr>
+							<th class="px-4 py-4 w-12"></th>
 							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Patient</th>
 							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Service</th>
 							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Date & Time</th>
 							<th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-							<th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase">Actions</th>
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-gray-200">
 						{#each bookings as booking (booking.id)}
 							<tr class="hover:bg-gray-50 transition-colors">
+								<!-- Kebab Menu -->
+								<td class="px-4 py-4">
+									<div class="relative menu-container">
+										<button
+											onclick={(e) => { e.stopPropagation(); toggleMenu(booking.id); }}
+											class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+											aria-label="Actions"
+										>
+											<MoreVertical class="h-4 w-4 text-gray-500" />
+										</button>
+
+										{#if openMenuId === booking.id}
+											<div class="absolute left-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
+												<div class="py-1">
+													<button
+														onclick={() => { selectedBooking = booking; showDetails = true; openMenuId = null; }}
+														class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+													>
+														<Eye class="h-4 w-4" />
+														View Details
+													</button>
+
+													{#if booking.status === 'PENDING'}
+														<button
+															onclick={() => { updateStatus(booking, 'CONFIRMED'); openMenuId = null; }}
+															class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-green-700"
+														>
+															<Check class="h-4 w-4" />
+															Confirm
+														</button>
+													{/if}
+
+													{#if booking.status === 'CONFIRMED'}
+														<button
+															onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+															class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-blue-700"
+														>
+															<Clock class="h-4 w-4" />
+															Mark Complete
+														</button>
+													{/if}
+
+													<hr class="my-1 border-gray-100" />
+
+													<button
+														onclick={() => { deleteBooking(booking); openMenuId = null; }}
+														class="w-full px-4 py-2 text-left text-sm hover:bg-red-50 flex items-center gap-3 text-red-600"
+													>
+														<Trash2 class="h-4 w-4" />
+														Delete
+													</button>
+												</div>
+											</div>
+										{/if}
+									</div>
+								</td>
+
 								<td class="px-6 py-4">
-									<button
-										onclick={() => { selectedBooking = booking; showDetails = true; }}
-										class="text-left hover:text-[#1a5f4a]"
-									>
-										<div class="font-medium text-gray-900">{booking.name}</div>
-										<div class="text-sm text-gray-500 flex items-center gap-1">
-											<Phone class="h-3 w-3" />
-											{booking.phone}
-										</div>
-									</button>
+									<div class="font-medium text-gray-900">{booking.name}</div>
+									<div class="text-sm text-gray-500 flex items-center gap-1">
+										<Phone class="h-3 w-3" />
+										{booking.phone}
+									</div>
 								</td>
 								<td class="px-6 py-4">
 									<div class="text-sm text-gray-900">{booking.service}</div>
@@ -369,35 +434,6 @@
 									<Badge variant={getStatusColor(booking.status)}>
 										{booking.status}
 									</Badge>
-								</td>
-								<td class="px-6 py-4">
-									<div class="flex items-center justify-end gap-2">
-										{#if booking.status === 'PENDING'}
-											<button
-												onclick={() => updateStatus(booking, 'CONFIRMED')}
-												class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-												title="Confirm"
-											>
-												<Check class="h-4 w-4" />
-											</button>
-										{/if}
-										{#if booking.status === 'CONFIRMED'}
-											<button
-												onclick={() => updateStatus(booking, 'COMPLETED')}
-												class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-												title="Complete"
-											>
-												<Clock class="h-4 w-4" />
-											</button>
-										{/if}
-										<button
-											onclick={() => deleteBooking(booking)}
-											class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-											title="Delete"
-										>
-											<Trash2 class="h-4 w-4" />
-										</button>
-									</div>
 								</td>
 							</tr>
 						{/each}
@@ -411,37 +447,70 @@
 					<div class="p-4 space-y-3">
 						<div class="flex justify-between items-start">
 							<div>
-								<button
-									onclick={() => { selectedBooking = booking; showDetails = true; }}
-									class="font-medium text-gray-900 hover:text-[#1a5f4a] text-left"
-								>
-									{booking.name}
-								</button>
+								<div class="font-medium text-gray-900">{booking.name}</div>
 								<div class="text-sm text-gray-500">{booking.service}</div>
 							</div>
-							<Badge variant={getStatusColor(booking.status)}>
-								{booking.status}
-							</Badge>
+							<div class="flex items-center gap-2">
+								<Badge variant={getStatusColor(booking.status)}>
+									{booking.status}
+								</Badge>
+								<!-- Mobile kebab -->
+								<div class="relative menu-container">
+									<button
+										onclick={(e) => { e.stopPropagation(); toggleMenu(booking.id + '-mobile'); }}
+										class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+										aria-label="Actions"
+									>
+										<MoreVertical class="h-4 w-4 text-gray-500" />
+									</button>
+
+									{#if openMenuId === booking.id + '-mobile'}
+										<div class="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
+											<div class="py-1">
+												<button
+													onclick={() => { selectedBooking = booking; showDetails = true; openMenuId = null; }}
+													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+												>
+													<Eye class="h-4 w-4" />
+													View Details
+												</button>
+
+												{#if booking.status === 'PENDING'}
+													<button
+														onclick={() => { updateStatus(booking, 'CONFIRMED'); openMenuId = null; }}
+														class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-green-700"
+													>
+														<Check class="h-4 w-4" />
+														Confirm
+													</button>
+												{/if}
+
+												{#if booking.status === 'CONFIRMED'}
+													<button
+														onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+														class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-blue-700"
+													>
+														<Clock class="h-4 w-4" />
+														Mark Complete
+													</button>
+												{/if}
+
+												<hr class="my-1 border-gray-100" />
+
+												<button
+													onclick={() => { deleteBooking(booking); openMenuId = null; }}
+													class="w-full px-4 py-2 text-left text-sm hover:bg-red-50 flex items-center gap-3 text-red-600"
+												>
+													<Trash2 class="h-4 w-4" />
+													Delete
+												</button>
+											</div>
+										</div>
+									{/if}
+								</div>
+							</div>
 						</div>
 						<div class="text-sm text-gray-600">{formatDate(booking.dateTime)}</div>
-						<div class="flex items-center gap-2">
-							{#if booking.status === 'PENDING'}
-								<Button size="sm" variant="secondary" onclick={() => updateStatus(booking, 'CONFIRMED')}>
-									Confirm
-								</Button>
-							{/if}
-							{#if booking.status === 'CONFIRMED'}
-								<Button size="sm" variant="secondary" onclick={() => updateStatus(booking, 'COMPLETED')}>
-									Complete
-								</Button>
-							{/if}
-							<button
-								onclick={() => deleteBooking(booking)}
-								class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-							>
-								<Trash2 class="h-4 w-4" />
-							</button>
-						</div>
 					</div>
 				{/each}
 			</div>

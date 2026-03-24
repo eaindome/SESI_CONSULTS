@@ -46,3 +46,13 @@ enum BookingStatus {
   CONFIRMED
   COMPLETED
 }
+
+model Feedback {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  rating    Int
+  message   String
+  service   String?
+  createdAt DateTime @default(now())
+}

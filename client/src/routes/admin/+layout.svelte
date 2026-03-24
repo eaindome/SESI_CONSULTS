@@ -5,6 +5,7 @@
 		LayoutDashboard,
 		Calendar,
 		Settings,
+		MessageSquare,
 		LogOut,
 		Menu,
 		X,
@@ -22,6 +23,7 @@
 		{ name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
 		{ name: 'Bookings', href: '/admin/bookings', icon: Calendar },
 		{ name: 'Services', href: '/admin/services', icon: Settings },
+		{ name: 'Feedback', href: '/admin/feedback', icon: MessageSquare },
 	];
 
 	async function handleLogout() {
@@ -102,7 +104,7 @@
 			<div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
 				<div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 mb-2">
 					<img
-						src="https://api.dicebear.com/7.x/open-peeps/svg?seed={data.admin?.email || 'admin'}"
+						src="https://api.dicebear.com/7.x/adventurer/svg?seed={data.admin?.email || 'admin'}"
 						alt="Avatar"
 						class="w-10 h-10 rounded-full bg-white"
 					/>
