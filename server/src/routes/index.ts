@@ -5,6 +5,7 @@ import servicesRoutes from './services.js'
 
 const routes: FastifyPluginAsync = async (app) => {
   app.get('/health', async () => ({ status: 'ok' }))
+  app.get('/', async () => ({ status: 'Welcome to SESI server'}) )
 
   app.register(authRoutes, { prefix: '/auth' })
   app.register(bookingsRoutes, { prefix: '/bookings' })
