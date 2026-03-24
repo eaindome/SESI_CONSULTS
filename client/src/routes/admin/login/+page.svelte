@@ -116,7 +116,7 @@
 
 			<div class="mt-6 text-center">
 				<a href="/" class="text-sm text-gray-600 hover:text-[#1a5f4a] transition-colors">
-					← Back to website
+					Back to website
 				</a>
 			</div>
 		</div>
