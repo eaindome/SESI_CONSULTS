@@ -39,9 +39,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json(data);
 	} catch (error) {
 		console.error('Login API error:', error);
-		return json(
-			{ success: false, message: 'An error occurred during login' },
-			{ status: 500 }
-		);
+		const message = error instanceof Error ? error.message : 'An error occurred during login';
+		return json({ success: false, message }, { status: 500 });
 	}
 };

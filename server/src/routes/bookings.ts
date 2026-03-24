@@ -12,7 +12,24 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
   )
 
   // Admin endpoints - require authentication
-  app.get('/', { preHandler: authMiddleware }, async (request) => {
+  app.get('/', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Bookings'],
+      summary: 'List bookings',
+      description: 'Returns paginated bookings. Supports filtering by status and keyword search.',
+      security: [{ cookieAuth: [] }],
+      querystring: {
+        type: 'object',
+        properties: {
+          status: { type: 'string', enum: ['PENDING', 'CONFIRMED', 'COMPLETED'] },
+          search: { type: 'string' },
+          limit:  { type: 'string', default: '50' },
+          offset: { type: 'string', default: '0' }
+        }
+      }
+    }
+  }, async (request) => {
     const { status, search, limit = '50', offset = '0' } = request.query as any
 
     const where: any = {}
@@ -42,7 +59,18 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
     return { bookings, total, limit: parseInt(limit), offset: parseInt(offset) }
   })
 
-  app.get('/:id', { preHandler: authMiddleware }, async (request) => {
+  app.get('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Bookings'],
+      summary: 'Get booking by ID',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      }
+    }
+  }, async (request) => {
     const { id } = request.params as { id: string }
 
     const booking = await app.prisma.booking.findUnique({
@@ -56,7 +84,25 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
     return booking
   })
 
-  app.patch('/:id', { preHandler: authMiddleware }, async (request, reply) => {
+  app.patch('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Bookings'],
+      summary: 'Update booking status / notes',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      },
+      body: {
+        type: 'object',
+        properties: {
+          status: { type: 'string', enum: ['PENDING', 'CONFIRMED', 'COMPLETED'] },
+          notes:  { type: 'string' }
+        }
+      }
+    }
+  }, async (request, reply) => {
     const { id } = request.params as { id: string }
     const data = request.body as any
 
@@ -71,7 +117,18 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
     return booking
   })
 
-  app.delete('/:id', { preHandler: authMiddleware }, async (request, reply) => {
+  app.delete('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Bookings'],
+      summary: 'Delete a booking',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      }
+    }
+  }, async (request, reply) => {
     const { id } = request.params as { id: string }
 
     await app.prisma.booking.delete({

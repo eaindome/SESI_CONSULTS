@@ -5,9 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "node --env-file=.env --import tsx/esm --watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node --env-file=.env dist/server.js",
     "postinstall": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +20,9 @@
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.2.0",
+    "@fastify/swagger": "^9.7.0",
     "@prisma/client": "^6.19.2",
+    "@scalar/fastify-api-reference": "^1.49.3",
     "bcrypt": "^6.0.0",
     "fastify": "^5.7.2",
     "fastify-plugin": "^5.1.0",

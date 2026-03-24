@@ -12,18 +12,45 @@ const SERVICES = [
 
 const servicesRoutes: FastifyPluginAsync = async (app) => {
   // Public endpoint - returns hardcoded service names for booking form
-  app.get('/public', async () => {
+  app.get('/public', {
+    schema: {
+      tags: ['Services'],
+      summary: 'List public services',
+      description: 'Returns available service names for the booking form. No auth required.',
+      response: {
+        200: { type: 'array', items: { type: 'string' } }
+      }
+    }
+  }, async () => {
     return SERVICES
   })
 
   // Admin endpoints - manage services in database
-  app.get('/', { preHandler: authMiddleware }, async () => {
+  app.get('/', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Services'],
+      summary: 'List all services (admin)',
+      security: [{ cookieAuth: [] }]
+    }
+  }, async () => {
     return app.prisma.service.findMany({
       orderBy: { displayOrder: 'asc' }
     })
   })
 
-  app.get('/:id', { preHandler: authMiddleware }, async (request) => {
+  app.get('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Services'],
+      summary: 'Get service by ID',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      }
+    }
+  }, async (request) => {
     const { id } = request.params as { id: string }
 
     const service = await app.prisma.service.findUnique({
@@ -37,7 +64,26 @@ const servicesRoutes: FastifyPluginAsync = async (app) => {
     return service
   })
 
-  app.post('/', { preHandler: authMiddleware }, async (request) => {
+  app.post('/', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Services'],
+      summary: 'Create a service',
+      security: [{ cookieAuth: [] }],
+      body: {
+        type: 'object',
+        required: ['name', 'description'],
+        properties: {
+          name:         { type: 'string' },
+          description:  { type: 'string' },
+          price:        { type: 'string' },
+          features:     { type: 'array', items: { type: 'string' } },
+          enabled:      { type: 'boolean' },
+          displayOrder: { type: 'number' }
+        }
+      }
+    }
+  }, async (request) => {
     const data = request.body as any
 
     const service = await app.prisma.service.create({
@@ -54,7 +100,29 @@ const servicesRoutes: FastifyPluginAsync = async (app) => {
     return service
   })
 
-  app.patch('/:id', { preHandler: authMiddleware }, async (request) => {
+  app.patch('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Services'],
+      summary: 'Update a service',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      },
+      body: {
+        type: 'object',
+        properties: {
+          name:         { type: 'string' },
+          description:  { type: 'string' },
+          price:        { type: 'string' },
+          features:     { type: 'array', items: { type: 'string' } },
+          enabled:      { type: 'boolean' },
+          displayOrder: { type: 'number' }
+        }
+      }
+    }
+  }, async (request) => {
     const { id } = request.params as { id: string }
     const data = request.body as any
 
@@ -73,7 +141,18 @@ const servicesRoutes: FastifyPluginAsync = async (app) => {
     return service
   })
 
-  app.delete('/:id', { preHandler: authMiddleware }, async (request) => {
+  app.delete('/:id', {
+    preHandler: authMiddleware,
+    schema: {
+      tags: ['Services'],
+      summary: 'Delete a service',
+      security: [{ cookieAuth: [] }],
+      params: {
+        type: 'object',
+        properties: { id: { type: 'string' } }
+      }
+    }
+  }, async (request) => {
     const { id } = request.params as { id: string }
 
     await app.prisma.service.delete({
