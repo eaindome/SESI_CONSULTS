@@ -23,7 +23,7 @@ export async function createBooking(
       email:    data.contactDetails.email,
       phone:    data.contactDetails.phone,
       address:  data.contactDetails.address,
-      notes:    data.notes,
+      notes:    data.notes ?? null,
       status:   'PENDING'
     }
   })
