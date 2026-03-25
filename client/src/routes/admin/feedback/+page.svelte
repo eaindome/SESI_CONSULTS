@@ -171,7 +171,7 @@
 		</div>
 		<div class="flex flex-wrap items-center gap-3">
 			<!-- Dummy Data Toggle -->
-			<label class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+			<!-- <label class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
 				<input
 					type="checkbox"
 					bind:checked={useDummyData}
@@ -179,7 +179,7 @@
 					class="w-4 h-4 text-[#1a5f4a] rounded focus:ring-2 focus:ring-[#1a5f4a]/20"
 				/>
 				<span class="text-sm font-medium text-gray-700">Preview with dummy data</span>
-			</label>
+			</label> -->
 
 			<div class="flex items-center gap-3 text-sm text-gray-600">
 				<div class="flex items-center gap-1 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200">
