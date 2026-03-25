@@ -97,8 +97,12 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
       body: {
         type: 'object',
         properties: {
-          status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'CONFIRMED', 'COMPLETED'] },
-          notes:  { type: 'string' }
+          status:   { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'CONFIRMED', 'COMPLETED'] },
+          notes:    { type: 'string' },
+          service:  { type: 'string' },
+          dateTime: { type: 'string' },
+          phone:    { type: 'string' },
+          address:  { type: 'string' }
         }
       }
     }
@@ -106,12 +110,17 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
     const { id } = request.params as { id: string }
     const data = request.body as any
 
+    const updateData: Record<string, unknown> = {}
+    if (data.status   !== undefined) updateData.status   = data.status
+    if (data.notes    !== undefined) updateData.notes    = data.notes
+    if (data.service  !== undefined) updateData.service  = data.service
+    if (data.dateTime !== undefined) updateData.dateTime = data.dateTime
+    if (data.phone    !== undefined) updateData.phone    = data.phone
+    if (data.address  !== undefined) updateData.address  = data.address
+
     const booking = await app.prisma.booking.update({
       where: { id },
-      data: {
-        status: data.status,
-        notes: data.notes
-      }
+      data: updateData
     })
 
     return booking
