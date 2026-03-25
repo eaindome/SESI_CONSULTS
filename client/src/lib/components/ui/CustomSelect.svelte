@@ -86,7 +86,7 @@
 			role="listbox"
 			class="absolute z-50 mt-1.5 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
 		>
-			<div class="max-h-64 overflow-y-auto py-1.5">
+			<div class="max-h-64 overflow-y-auto py-1.5 no-scrollbar">
 				<!-- Placeholder / clear option -->
 				<button
 					type="button"
@@ -127,3 +127,13 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.no-scrollbar {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
+	}
+	.no-scrollbar::-webkit-scrollbar {
+		display: none; /* Chrome/Safari/Opera */
+	}
+</style>
