@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Star, MessageSquare } from '@lucide/svelte';
+	import { Star, MessageSquare, X } from '@lucide/svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { toasts } from '$lib/stores/toasts';
@@ -20,12 +20,95 @@
 	let isLoading = $state(false);
 	let currentPage = $state(0);
 	let selectedItem = $state<FeedbackItem | null>(null);
+	let useDummyData = $state(false);
 
-	const limit = 20;
+	const limit = 15;
+
+	const dummyFeedback: FeedbackItem[] = [
+		{
+			id: '1',
+			name: 'Ama Owusu',
+			email: 'ama.owusu@example.com',
+			rating: 5,
+			message: 'The nurse was incredibly professional and caring. I felt very comfortable throughout the entire session. Will definitely be booking again!',
+			service: 'General Nursing Care',
+			createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '2',
+			name: 'Kwame Asante',
+			email: 'kwame.asante@example.com',
+			rating: 4,
+			message: 'Very good service overall. The nurse arrived on time and was well-prepared. Minor delay in setting up but handled everything smoothly.',
+			service: 'Post-Operative Care',
+			createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '3',
+			name: 'Akosua Mensah',
+			rating: 5,
+			message: 'Exceptional care for my elderly mother. The caregiver was patient, kind and very thorough. I cannot recommend SESI enough to anyone who needs home care!',
+			service: 'Elderly Care',
+			createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '4',
+			name: 'Kofi Boateng',
+			email: 'kofi.boateng@example.com',
+			rating: 3,
+			message: 'Service was decent. The nurse was knowledgeable but communication could be improved. Overall a satisfactory experience.',
+			service: 'Injection Services',
+			createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '5',
+			name: 'Abena Adjei',
+			email: 'abena.adjei@example.com',
+			rating: 5,
+			message: 'The postnatal care team was wonderful! They made the whole process stress-free. My baby and I are both doing great thanks to their continued support.',
+			service: 'Maternal & Child Care',
+			createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '6',
+			name: 'Yaw Mensah',
+			rating: 4,
+			message: 'Good chronic disease management sessions. The nurse provided very helpful diet and medication advice. Very happy with the ongoing professional support.',
+			service: 'Chronic Disease Management',
+			createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '7',
+			name: 'Efua Darko',
+			email: 'efua.darko@example.com',
+			rating: 2,
+			message: 'The nurse was late by over an hour with no prior notice. The actual care provided was fine but the punctuality needs serious improvement.',
+			service: 'General Nursing Care',
+			createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString()
+		},
+		{
+			id: '8',
+			name: 'Nana Osei',
+			email: 'nana.osei@example.com',
+			rating: 5,
+			message: 'Absolutely outstanding. The care team went above and beyond for my father. They treated him with such dignity and respect. Truly grateful for SESI.',
+			service: 'Elderly Care',
+			createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+		}
+	];
 
 	onMount(() => loadFeedback());
 
 	async function loadFeedback() {
+		if (useDummyData) {
+			isLoading = true;
+			await new Promise(resolve => setTimeout(resolve, 400));
+			feedback = [...dummyFeedback];
+			total = dummyFeedback.length;
+			isLoading = false;
+			return;
+		}
+
 		isLoading = true;
 		try {
 			const params = new URLSearchParams({
@@ -60,9 +143,9 @@
 		return ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][rating] ?? '';
 	}
 
-	function ratingVariant(rating: number): 'default' | 'warning' | 'success' {
-		if (rating >= 4) return 'success';
-		if (rating === 3) return 'default';
+	function ratingVariant(rating: number): 'safe' | 'warning' | 'neutral' {
+		if (rating >= 4) return 'safe';
+		if (rating === 3) return 'neutral';
 		return 'warning';
 	}
 
@@ -86,14 +169,27 @@
 			<h2 class="text-2xl font-bold text-gray-900">Customer Feedback</h2>
 			<p class="text-gray-600">Reviews submitted by patients</p>
 		</div>
-		<div class="flex items-center gap-4 text-sm text-gray-600">
-			<div class="flex items-center gap-1 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200">
-				<Star class="h-4 w-4 fill-yellow-400 text-yellow-400" />
-				<span class="font-semibold">{avgRating}</span>
-				<span class="text-gray-400">avg</span>
-			</div>
-			<div class="px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200">
-				<span class="font-semibold">{total}</span> review{total !== 1 ? 's' : ''}
+		<div class="flex flex-wrap items-center gap-3">
+			<!-- Dummy Data Toggle -->
+			<label class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+				<input
+					type="checkbox"
+					bind:checked={useDummyData}
+					onchange={() => loadFeedback()}
+					class="w-4 h-4 text-[#1a5f4a] rounded focus:ring-2 focus:ring-[#1a5f4a]/20"
+				/>
+				<span class="text-sm font-medium text-gray-700">Preview with dummy data</span>
+			</label>
+
+			<div class="flex items-center gap-3 text-sm text-gray-600">
+				<div class="flex items-center gap-1 px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200">
+					<Star class="h-4 w-4 fill-yellow-400 text-yellow-400" />
+					<span class="font-semibold">{avgRating}</span>
+					<span class="text-gray-400">avg</span>
+				</div>
+				<div class="px-3 py-2 bg-white rounded-xl shadow-sm border border-gray-200">
+					<span class="font-semibold">{total}</span> review{total !== 1 ? 's' : ''}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -143,7 +239,7 @@
 												<Star class="h-3.5 w-3.5 {s <= item.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}" />
 											{/each}
 										</div>
-										<Badge variant={ratingVariant(item.rating)}>
+										<Badge status={ratingVariant(item.rating)}>
 											{ratingLabel(item.rating)}
 										</Badge>
 									</div>
@@ -240,7 +336,7 @@
 					class="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500"
 					aria-label="Close"
 				>
-					✕
+					<X class="h-4 w-4" />
 				</button>
 			</div>
 			<div class="p-6 space-y-4">
@@ -251,6 +347,9 @@
 						{/each}
 					</div>
 					<span class="font-semibold text-gray-700">{ratingLabel(selectedItem.rating)}</span>
+					<Badge status={ratingVariant(selectedItem.rating)}>
+						{selectedItem.rating}/5
+					</Badge>
 				</div>
 				{#if selectedItem.service}
 					<div>

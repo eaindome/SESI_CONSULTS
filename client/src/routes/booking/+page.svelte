@@ -3,6 +3,7 @@
 	import { bookingSchema } from '$lib/utils/validation';
 	import { toasts } from '$lib/stores/toasts';
 	import Button from '$lib/components/ui/Button.svelte';
+	import CustomSelect from '$lib/components/ui/CustomSelect.svelte';
 
 	// Form state
 	let selectedService = $state('');
@@ -164,13 +165,6 @@
 			</p>
 		</div>
 	</div>
-
-	<!-- Bottom wave separator -->
-	<!-- <div class="absolute bottom-0 left-0 right-0">
-		<svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-			<path d="M0 0L60 8C120 16 240 32 360 37.3C480 43 600 37 720 32C840 27 960 21 1080 21.3C1200 21 1320 27 1380 29.3L1440 32V80H1380C1320 80 1200 80 1080 80C960 80 840 80 720 80C600 80 480 80 360 80C240 80 120 80 60 80H0V0Z" fill="white"/>
-		</svg>
-	</div> -->
 </section>
 
 <!-- Booking Form -->
@@ -198,18 +192,12 @@
 							</div>
 							Select Service
 						</label>
-						<select
+						<CustomSelect
 							id="service"
 							bind:value={selectedService}
-							required
-							class="w-full rounded-2xl {errors.service ? 'bg-red-50 shadow-red-100' : 'bg-gray-50 hover:bg-gray-100 focus:bg-white'} px-5 py-4 text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg border-0 appearance-none cursor-pointer"
-							style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; padding-right: 3rem;"
-						>
-							<option value="">Choose a service...</option>
-							{#each services as service (service)}
-								<option value={service}>{service}</option>
-							{/each}
-						</select>
+							options={services}
+							placeholder="Choose a service..."
+						/>
 						{#if errors.service}
 							<p class="mt-2 text-sm text-red-600 flex items-center">
 								<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -246,18 +234,12 @@
 								</div>
 								Time
 							</label>
-							<select
+							<CustomSelect
 								id="time"
 								bind:value={appointmentTime}
-								required
-								class="w-full rounded-2xl bg-gray-50 hover:bg-gray-100 focus:bg-white px-5 py-4 text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg border-0 appearance-none cursor-pointer"
-								style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; padding-right: 3rem;"
-							>
-								<option value="">Select time...</option>
-								{#each timeSlots as slot (slot)}
-									<option value={slot}>{slot}</option>
-								{/each}
-							</select>
+								options={timeSlots}
+								placeholder="Select time..."
+							/>
 						</div>
 					</div>
 

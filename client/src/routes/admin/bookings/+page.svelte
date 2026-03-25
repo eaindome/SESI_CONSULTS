@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { Search, Filter, Calendar, User, Mail, Phone, MapPin, X, MoreVertical, Eye, Check, Clock, Trash2 } from '@lucide/svelte';
+	import { Search, Calendar, User, Mail, Phone, MapPin, X, MoreVertical, Eye, Check, Clock, Trash2 } from '@lucide/svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { toasts } from '$lib/stores/toasts';
+	import { fly, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 
-	type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED';
+	type BookingStatus = 'PENDING' | 'IN_PROGRESS' | 'CONFIRMED' | 'COMPLETED';
 
 	interface Booking {
 		id: string;
@@ -14,7 +16,7 @@
 		email: string;
 		phone: string;
 		address: string;
-		notes?: string;
+		notes?: string | null;
 		status: BookingStatus;
 		createdAt: string;
 	}
@@ -31,6 +33,14 @@
 	let openMenuId = $state<string | null>(null);
 
 	const limit = 15;
+
+	const statusTabs: { value: BookingStatus | ''; label: string }[] = [
+		{ value: '', label: 'All' },
+		{ value: 'PENDING', label: 'Pending' },
+		{ value: 'IN_PROGRESS', label: 'In Progress' },
+		{ value: 'CONFIRMED', label: 'Confirmed' },
+		{ value: 'COMPLETED', label: 'Completed' }
+	];
 
 	// Dummy data for preview
 	const dummyBookings: Booking[] = [
@@ -79,7 +89,7 @@
 			phone: '+233 27 345 6789',
 			address: '12 East Legon, Accra',
 			notes: 'Diabetes patient, needs regular monitoring',
-			status: 'CONFIRMED',
+			status: 'IN_PROGRESS',
 			createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
 		},
 		{
@@ -118,17 +128,13 @@
 			await new Promise(resolve => setTimeout(resolve, 500));
 
 			let filtered = [...dummyBookings];
-
-			if (statusFilter) {
-				filtered = filtered.filter(b => b.status === statusFilter);
-			}
-
+			if (statusFilter) filtered = filtered.filter(b => b.status === statusFilter);
 			if (searchQuery) {
-				const query = searchQuery.toLowerCase();
+				const q = searchQuery.toLowerCase();
 				filtered = filtered.filter(b =>
-					b.name.toLowerCase().includes(query) ||
-					b.email.toLowerCase().includes(query) ||
-					b.phone.includes(query)
+					b.name.toLowerCase().includes(q) ||
+					b.email.toLowerCase().includes(q) ||
+					b.phone.includes(q)
 				);
 			}
 
@@ -139,13 +145,11 @@
 		}
 
 		isLoading = true;
-
 		try {
 			const params = new URLSearchParams({
 				limit: String(limit),
 				offset: String(currentPage * limit)
 			});
-
 			if (statusFilter) params.set('status', statusFilter);
 			if (searchQuery) params.set('search', searchQuery);
 
@@ -158,7 +162,7 @@
 			} else {
 				toasts.error('Failed to load bookings');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error loading bookings');
 		} finally {
 			isLoading = false;
@@ -171,8 +175,9 @@
 			if (index !== -1) {
 				bookings[index].status = newStatus;
 				bookings = [...bookings];
+				if (selectedBooking?.id === booking.id) selectedBooking = { ...bookings[index] };
 			}
-			toasts.success(`Booking ${newStatus.toLowerCase()}`);
+			toasts.success(`Status updated to ${newStatus.replace('_', ' ').toLowerCase()}`);
 			return;
 		}
 
@@ -184,12 +189,12 @@
 			});
 
 			if (response.ok) {
-				toasts.success(`Booking ${newStatus.toLowerCase()}`);
+				toasts.success(`Status updated`);
 				loadBookings();
 			} else {
 				toasts.error('Failed to update booking');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error updating booking');
 		}
 	}
@@ -217,14 +222,13 @@
 			} else {
 				toasts.error('Failed to delete booking');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error deleting booking');
 		}
 	}
 
 	function formatDate(dateString: string): string {
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-GB', {
+		return new Date(dateString).toLocaleDateString('en-GB', {
 			day: '2-digit',
 			month: 'short',
 			year: 'numeric',
@@ -233,10 +237,15 @@
 		});
 	}
 
-	function getStatusColor(status: BookingStatus): 'default' | 'warning' | 'success' {
+	function getStatusBadge(status: BookingStatus): 'neutral' | 'warning' | 'info' | 'safe' {
 		if (status === 'PENDING') return 'warning';
-		if (status === 'CONFIRMED') return 'default';
-		return 'success';
+		if (status === 'IN_PROGRESS') return 'info';
+		if (status === 'CONFIRMED') return 'neutral';
+		return 'safe';
+	}
+
+	function statusLabel(status: BookingStatus): string {
+		return status === 'IN_PROGRESS' ? 'In Progress' : status.charAt(0) + status.slice(1).toLowerCase();
 	}
 
 	function toggleMenu(id: string) {
@@ -245,9 +254,7 @@
 
 	function handleClickOutside(event: MouseEvent) {
 		const target = event.target as HTMLElement;
-		if (!target.closest('.menu-container')) {
-			openMenuId = null;
-		}
+		if (!target.closest('.menu-container')) openMenuId = null;
 	}
 
 	const totalPages = $derived(Math.ceil(total / limit));
@@ -257,7 +264,8 @@
 		loadBookings();
 	}
 
-	function handleFilterChange() {
+	function handleTabChange(val: BookingStatus | '') {
+		statusFilter = val;
 		currentPage = 0;
 		loadBookings();
 	}
@@ -296,39 +304,36 @@
 	</div>
 
 	<!-- Filters -->
-	<div class="bg-white rounded-2xl shadow-sm p-4 space-y-4">
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			<!-- Search -->
-			<div class="relative">
-				<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-					<Search class="h-5 w-5 text-gray-400" />
-				</div>
-				<input
-					type="text"
-					bind:value={searchQuery}
-					oninput={handleSearch}
-					placeholder="Search by name, email, or phone..."
-					class="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
-				/>
+	<div class="bg-white rounded-2xl shadow-sm p-4 space-y-3">
+		<!-- Search -->
+		<div class="relative">
+			<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+				<Search class="h-5 w-5 text-gray-400" />
 			</div>
+			<input
+				type="text"
+				bind:value={searchQuery}
+				oninput={handleSearch}
+				placeholder="Search by name, email, or phone..."
+				class="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
+			/>
+		</div>
 
-			<!-- Status Filter -->
-			<div class="relative">
-				<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-					<Filter class="h-5 w-5 text-gray-400" />
-				</div>
-				<select
-					bind:value={statusFilter}
-					onchange={handleFilterChange}
-					class="w-full pl-11 pr-4 py-3 bg-gray-50 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20 appearance-none cursor-pointer"
-					style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em;"
+		<!-- Status Tabs -->
+		<div class="flex overflow-x-auto gap-1 bg-gray-100 rounded-xl p-1 no-scrollbar">
+			{#each statusTabs as tab}
+				<button
+					type="button"
+					onclick={() => handleTabChange(tab.value)}
+					class="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap {
+						statusFilter === tab.value
+							? 'bg-white text-[#1a5f4a] shadow-sm'
+							: 'text-gray-600 hover:text-gray-900'
+					}"
 				>
-					<option value="">All Statuses</option>
-					<option value="PENDING">Pending</option>
-					<option value="CONFIRMED">Confirmed</option>
-					<option value="COMPLETED">Completed</option>
-				</select>
-			</div>
+					{tab.label}
+				</button>
+			{/each}
 		</div>
 	</div>
 
@@ -372,7 +377,7 @@
 										</button>
 
 										{#if openMenuId === booking.id}
-											<div class="absolute left-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
+											<div class="absolute left-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
 												<div class="py-1">
 													<button
 														onclick={() => { selectedBooking = booking; showDetails = true; openMenuId = null; }}
@@ -394,10 +399,20 @@
 
 													{#if booking.status === 'CONFIRMED'}
 														<button
-															onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+															onclick={() => { updateStatus(booking, 'IN_PROGRESS'); openMenuId = null; }}
 															class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-blue-700"
 														>
 															<Clock class="h-4 w-4" />
+															Mark In Progress
+														</button>
+													{/if}
+
+													{#if booking.status === 'IN_PROGRESS'}
+														<button
+															onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+															class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-green-700"
+														>
+															<Check class="h-4 w-4" />
 															Mark Complete
 														</button>
 													{/if}
@@ -431,8 +446,8 @@
 									<div class="text-sm text-gray-900">{formatDate(booking.dateTime)}</div>
 								</td>
 								<td class="px-6 py-4">
-									<Badge variant={getStatusColor(booking.status)}>
-										{booking.status}
+									<Badge status={getStatusBadge(booking.status)}>
+										{statusLabel(booking.status)}
 									</Badge>
 								</td>
 							</tr>
@@ -451,8 +466,8 @@
 								<div class="text-sm text-gray-500">{booking.service}</div>
 							</div>
 							<div class="flex items-center gap-2">
-								<Badge variant={getStatusColor(booking.status)}>
-									{booking.status}
+								<Badge status={getStatusBadge(booking.status)}>
+									{statusLabel(booking.status)}
 								</Badge>
 								<!-- Mobile kebab -->
 								<div class="relative menu-container">
@@ -465,7 +480,7 @@
 									</button>
 
 									{#if openMenuId === booking.id + '-mobile'}
-										<div class="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
+										<div class="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-20">
 											<div class="py-1">
 												<button
 													onclick={() => { selectedBooking = booking; showDetails = true; openMenuId = null; }}
@@ -487,10 +502,20 @@
 
 												{#if booking.status === 'CONFIRMED'}
 													<button
-														onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+														onclick={() => { updateStatus(booking, 'IN_PROGRESS'); openMenuId = null; }}
 														class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-blue-700"
 													>
 														<Clock class="h-4 w-4" />
+														Mark In Progress
+													</button>
+												{/if}
+
+												{#if booking.status === 'IN_PROGRESS'}
+													<button
+														onclick={() => { updateStatus(booking, 'COMPLETED'); openMenuId = null; }}
+														class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-green-700"
+													>
+														<Check class="h-4 w-4" />
 														Mark Complete
 													</button>
 												{/if}
@@ -519,7 +544,7 @@
 
 	<!-- Pagination -->
 	{#if totalPages > 1}
-		<div class="flex justify-center gap-2">
+		<div class="flex items-center justify-center gap-3">
 			<Button
 				size="sm"
 				variant="secondary"
@@ -528,8 +553,8 @@
 			>
 				Previous
 			</Button>
-			<span class="px-4 py-2 text-sm text-gray-600">
-				Page {currentPage + 1} of {totalPages}
+			<span class="text-sm text-gray-600">
+				Page <span class="font-semibold">{currentPage + 1}</span> / <span class="font-semibold">{totalPages}</span>
 			</span>
 			<Button
 				size="sm"
@@ -543,97 +568,115 @@
 	{/if}
 </div>
 
-<!-- Booking Details Modal -->
+<!-- Booking Details Drawer -->
 {#if showDetails && selectedBooking}
+	<!-- Backdrop -->
 	<div
-		class="fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center p-4"
+		transition:fade={{ duration: 200 }}
+		class="fixed inset-0 bg-gray-900/50 z-[60]"
 		onclick={() => showDetails = false}
+		onkeydown={(e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				showDetails = false;
+			}
+		}}
 		role="button"
 		tabindex="0"
+	></div>
+
+	<!-- Drawer -->
+	<div
+		transition:fly={{ x: 400, duration: 300, easing: cubicOut }}
+		class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-[70] flex flex-col"
 	>
-		<div
-			class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-			onclick={(e) => e.stopPropagation()}
-			role="presentation"
-		>
-			<div class="p-6 border-b border-gray-200 flex justify-between items-start">
-				<div>
-					<h3 class="text-xl font-bold text-gray-900">Booking Details</h3>
-					<p class="text-sm text-gray-600 mt-1">ID: {selectedBooking.id}</p>
+		<!-- Drawer header -->
+		<div class="p-6 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+			<div>
+				<h3 class="text-xl font-bold text-gray-900">Booking Details</h3>
+				<div class="mt-1.5">
+					<Badge status={getStatusBadge(selectedBooking.status)}>
+						{statusLabel(selectedBooking.status)}
+					</Badge>
 				</div>
-				<button
-					onclick={() => showDetails = false}
-					class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-				>
-					<X class="h-5 w-5" />
-				</button>
 			</div>
+			<button
+				onclick={() => showDetails = false}
+				class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+				aria-label="Close"
+			>
+				<X class="h-5 w-5" />
+			</button>
+		</div>
 
-			<div class="p-6 space-y-6">
-				<div>
-					<h4 class="text-sm font-semibold text-gray-600 uppercase mb-3">Patient Information</h4>
-					<div class="space-y-3">
-						<div class="flex items-start gap-3">
-							<User class="h-5 w-5 text-gray-400 mt-0.5" />
-							<div>
-								<div class="text-sm text-gray-600">Name</div>
-								<div class="font-medium text-gray-900">{selectedBooking.name}</div>
-							</div>
+		<!-- Drawer content -->
+		<div class="flex-1 overflow-y-auto p-6 space-y-6">
+			<div>
+				<h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Patient Information</h4>
+				<div class="space-y-4">
+					<div class="flex items-start gap-3">
+						<div class="p-2 rounded-xl bg-gray-100 flex-shrink-0">
+							<User class="h-4 w-4 text-gray-500" />
 						</div>
-						<div class="flex items-start gap-3">
-							<Mail class="h-5 w-5 text-gray-400 mt-0.5" />
-							<div>
-								<div class="text-sm text-gray-600">Email</div>
-								<div class="font-medium text-gray-900">{selectedBooking.email}</div>
-							</div>
-						</div>
-						<div class="flex items-start gap-3">
-							<Phone class="h-5 w-5 text-gray-400 mt-0.5" />
-							<div>
-								<div class="text-sm text-gray-600">Phone</div>
-								<div class="font-medium text-gray-900">{selectedBooking.phone}</div>
-							</div>
-						</div>
-						<div class="flex items-start gap-3">
-							<MapPin class="h-5 w-5 text-gray-400 mt-0.5" />
-							<div>
-								<div class="text-sm text-gray-600">Address</div>
-								<div class="font-medium text-gray-900">{selectedBooking.address}</div>
-							</div>
+						<div>
+							<div class="text-xs text-gray-500">Name</div>
+							<div class="font-medium text-gray-900">{selectedBooking.name}</div>
 						</div>
 					</div>
-				</div>
-
-				<div>
-					<h4 class="text-sm font-semibold text-gray-600 uppercase mb-3">Appointment Details</h4>
-					<div class="space-y-3">
-						<div>
-							<div class="text-sm text-gray-600">Service</div>
-							<div class="font-medium text-gray-900">{selectedBooking.service}</div>
+					<div class="flex items-start gap-3">
+						<div class="p-2 rounded-xl bg-gray-100 flex-shrink-0">
+							<Mail class="h-4 w-4 text-gray-500" />
 						</div>
 						<div>
-							<div class="text-sm text-gray-600">Date & Time</div>
-							<div class="font-medium text-gray-900">{formatDate(selectedBooking.dateTime)}</div>
+							<div class="text-xs text-gray-500">Email</div>
+							<div class="font-medium text-gray-900">{selectedBooking.email}</div>
+						</div>
+					</div>
+					<div class="flex items-start gap-3">
+						<div class="p-2 rounded-xl bg-gray-100 flex-shrink-0">
+							<Phone class="h-4 w-4 text-gray-500" />
 						</div>
 						<div>
-							<div class="text-sm text-gray-600">Status</div>
-							<div class="mt-1">
-								<Badge variant={getStatusColor(selectedBooking.status)}>
-									{selectedBooking.status}
-								</Badge>
-							</div>
+							<div class="text-xs text-gray-500">Phone</div>
+							<div class="font-medium text-gray-900">{selectedBooking.phone}</div>
 						</div>
-						{#if selectedBooking.notes}
-							<div>
-								<div class="text-sm text-gray-600">Notes</div>
-								<div class="mt-1 p-3 bg-gray-50 rounded-lg text-gray-900">{selectedBooking.notes}</div>
-							</div>
-						{/if}
+					</div>
+					<div class="flex items-start gap-3">
+						<div class="p-2 rounded-xl bg-gray-100 flex-shrink-0">
+							<MapPin class="h-4 w-4 text-gray-500" />
+						</div>
+						<div>
+							<div class="text-xs text-gray-500">Address</div>
+							<div class="font-medium text-gray-900">{selectedBooking.address}</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="p-6 border-t border-gray-200 flex gap-3">
+			<div class="border-t border-gray-100 pt-6">
+				<h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Appointment Details</h4>
+				<div class="space-y-4">
+					<div>
+						<div class="text-xs text-gray-500">Service</div>
+						<div class="font-medium text-gray-900 mt-0.5">{selectedBooking.service}</div>
+					</div>
+					<div>
+						<div class="text-xs text-gray-500">Date & Time</div>
+						<div class="font-medium text-gray-900 mt-0.5">{formatDate(selectedBooking.dateTime)}</div>
+					</div>
+					{#if selectedBooking.notes}
+						<div>
+							<div class="text-xs text-gray-500">Notes</div>
+							<div class="mt-1.5 p-3 bg-gray-50 rounded-xl text-sm text-gray-800 leading-relaxed">{selectedBooking.notes}</div>
+						</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+
+		<!-- Drawer footer — only shown when there's an action to take -->
+		{#if selectedBooking.status !== 'COMPLETED'}
+			<div class="p-6 border-t border-gray-200 flex-shrink-0">
 				{#if selectedBooking.status === 'PENDING'}
 					<Button
 						variant="primary"
@@ -646,18 +689,20 @@
 					<Button
 						variant="primary"
 						fullWidth
+						onclick={() => { updateStatus(selectedBooking!, 'IN_PROGRESS'); showDetails = false; }}
+					>
+						Mark In Progress
+					</Button>
+				{:else if selectedBooking.status === 'IN_PROGRESS'}
+					<Button
+						variant="primary"
+						fullWidth
 						onclick={() => { updateStatus(selectedBooking!, 'COMPLETED'); showDetails = false; }}
 					>
 						Mark as Completed
 					</Button>
 				{/if}
-				<Button
-					variant="secondary"
-					onclick={() => showDetails = false}
-				>
-					Close
-				</Button>
 			</div>
-		</div>
+		{/if}
 	</div>
 {/if}

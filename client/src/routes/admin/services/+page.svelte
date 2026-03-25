@@ -4,6 +4,8 @@
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import { toasts } from '$lib/stores/toasts';
 	import { onMount } from 'svelte';
+	import { fly, fade } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 
 	interface Service {
 		id: string;
@@ -17,11 +19,18 @@
 		updatedAt: string;
 	}
 
-	let services = $state<Service[]>([]);
+	let allServices = $state<Service[]>([]);
 	let isLoading = $state(false);
-	let showModal = $state(false);
+	let showDrawer = $state(false);
 	let editingService = $state<Service | null>(null);
 	let openMenuId = $state<string | null>(null);
+	let currentPage = $state(0);
+
+	const limit = 15;
+
+	const pagedServices = $derived(allServices.slice(currentPage * limit, (currentPage + 1) * limit));
+	const total = $derived(allServices.length);
+	const totalPages = $derived(Math.ceil(total / limit));
 
 	// Form state
 	let form = $state({
@@ -44,30 +53,30 @@
 			const data = await response.json();
 
 			if (response.ok) {
-				services = data;
+				allServices = data;
 			} else {
 				toasts.error('Failed to load services');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error loading services');
 		} finally {
 			isLoading = false;
 		}
 	}
 
-	function openCreateModal() {
+	function openCreateDrawer() {
 		editingService = null;
 		form = {
 			name: '',
 			description: '',
 			features: [''],
 			enabled: true,
-			displayOrder: services.length + 1
+			displayOrder: allServices.length + 1
 		};
-		showModal = true;
+		showDrawer = true;
 	}
 
-	function openEditModal(service: Service) {
+	function openEditDrawer(service: Service) {
 		editingService = service;
 		form = {
 			name: service.name,
@@ -76,7 +85,7 @@
 			enabled: service.enabled,
 			displayOrder: service.displayOrder
 		};
-		showModal = true;
+		showDrawer = true;
 	}
 
 	function addFeature() {
@@ -90,7 +99,6 @@
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 
-		// Filter out empty features
 		const features = form.features.filter(f => f.trim() !== '');
 
 		const data = {
@@ -120,12 +128,12 @@
 
 			if (response.ok) {
 				toasts.success(editingService ? 'Service updated' : 'Service created');
-				showModal = false;
+				showDrawer = false;
 				loadServices();
 			} else {
 				toasts.error('Failed to save service');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error saving service');
 		}
 	}
@@ -144,7 +152,7 @@
 			} else {
 				toasts.error('Failed to update service');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error updating service');
 		}
 	}
@@ -165,7 +173,7 @@
 			} else {
 				toasts.error('Failed to delete service');
 			}
-		} catch (error) {
+		} catch {
 			toasts.error('Error deleting service');
 		}
 		openMenuId = null;
@@ -175,12 +183,9 @@
 		openMenuId = openMenuId === serviceId ? null : serviceId;
 	}
 
-	// Close menu when clicking outside
 	function handleClickOutside(event: MouseEvent) {
 		const target = event.target as HTMLElement;
-		if (!target.closest('.menu-container')) {
-			openMenuId = null;
-		}
+		if (!target.closest('.menu-container')) openMenuId = null;
 	}
 </script>
 
@@ -198,7 +203,7 @@
 			<p class="text-gray-600">Manage your home care service offerings</p>
 		</div>
 		<button
-			onclick={openCreateModal}
+			onclick={openCreateDrawer}
 			class="inline-flex items-center gap-2 px-6 py-3 bg-[#1a5f4a] hover:bg-[#0d3d2d] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
 		>
 			<Plus class="h-5 w-5" />
@@ -206,30 +211,28 @@
 		</button>
 	</div>
 
-	<!-- Services List -->
+	<!-- Services Grid -->
 	<div class="bg-white rounded-2xl shadow-sm overflow-hidden">
 		{#if isLoading}
 			<div class="p-12 text-center">
 				<div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#1a5f4a] border-r-transparent"></div>
 				<p class="mt-4 text-gray-600">Loading services...</p>
 			</div>
-		{:else if services.length === 0}
+		{:else if allServices.length === 0}
 			<div class="p-12 text-center">
 				<Settings class="h-12 w-12 text-gray-300 mx-auto mb-4" />
 				<p class="text-gray-600">No services found</p>
-				<Button variant="secondary" size="sm" onclick={openCreateModal} class="mt-4">
+				<Button variant="secondary" size="sm" onclick={openCreateDrawer} class="mt-4">
 					Create your first service
 				</Button>
 			</div>
 		{:else}
-			<!-- Grid View -->
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-				{#each services as service (service.id)}
+				{#each pagedServices as service (service.id)}
 					<div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
-						<!-- Header with badge and menu -->
 						<div class="p-6 pb-4">
 							<div class="flex items-start justify-between mb-3">
-								<Badge variant={service.enabled ? 'success' : 'default'}>
+								<Badge status={service.enabled ? 'safe' : 'neutral'}>
 									{service.enabled ? 'Active' : 'Disabled'}
 								</Badge>
 
@@ -259,7 +262,7 @@
 													{/if}
 												</button>
 												<button
-													onclick={() => { openEditModal(service); openMenuId = null; }}
+													onclick={() => { openEditDrawer(service); openMenuId = null; }}
 													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3"
 												>
 													<Edit2 class="h-4 w-4 text-gray-600" />
@@ -282,12 +285,10 @@
 							<h3 class="text-lg font-bold text-gray-900 mb-2">{service.name}</h3>
 						</div>
 
-						<!-- Description -->
 						<div class="px-6 pb-4">
 							<p class="text-sm text-gray-600 line-clamp-3">{service.description}</p>
 						</div>
 
-						<!-- Features -->
 						{#if service.features.length > 0}
 							<div class="px-6 pb-6">
 								<div class="space-y-2">
@@ -306,41 +307,73 @@
 					</div>
 				{/each}
 			</div>
+
+			<!-- Pagination -->
+			{#if totalPages > 1}
+				<div class="flex items-center justify-center gap-3 px-6 pb-6">
+					<Button
+						size="sm"
+						variant="secondary"
+						disabled={currentPage === 0}
+						onclick={() => currentPage--}
+					>
+						Previous
+					</Button>
+					<span class="text-sm text-gray-600">
+						Page <span class="font-semibold">{currentPage + 1}</span> / <span class="font-semibold">{totalPages}</span>
+					</span>
+					<Button
+						size="sm"
+						variant="secondary"
+						disabled={currentPage >= totalPages - 1}
+						onclick={() => currentPage++}
+					>
+						Next
+					</Button>
+				</div>
+			{/if}
 		{/if}
 	</div>
 </div>
 
-<!-- Service Modal -->
-{#if showModal}
+<!-- Service Drawer -->
+{#if showDrawer}
+	<!-- Backdrop -->
 	<div
-		class="fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center p-4"
-		onclick={() => showModal = false}
+		transition:fade={{ duration: 200 }}
+		class="fixed inset-0 bg-gray-900/50 z-[60]"
+		onclick={() => showDrawer = false}
 		role="button"
 		tabindex="0"
-	>
-		<div
-			class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-			onclick={(e) => e.stopPropagation()}
-			role="presentation"
-		>
-			<div class="p-6 border-b border-gray-200 flex justify-between items-start">
-				<div>
-					<h3 class="text-xl font-bold text-gray-900">
-						{editingService ? 'Edit Service' : 'New Service'}
-					</h3>
-					<p class="text-sm text-gray-600 mt-1">
-						{editingService ? 'Update service details' : 'Add a new home care service'}
-					</p>
-				</div>
-				<button
-					onclick={() => showModal = false}
-					class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-				>
-					<X class="h-5 w-5" />
-				</button>
-			</div>
+	></div>
 
-			<form onsubmit={handleSubmit} class="p-6 space-y-6">
+	<!-- Drawer -->
+	<div
+		transition:fly={{ x: 400, duration: 300, easing: cubicOut }}
+		class="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] flex flex-col"
+	>
+		<!-- Drawer header -->
+		<div class="p-6 border-b border-gray-200 flex justify-between items-start flex-shrink-0">
+			<div>
+				<h3 class="text-xl font-bold text-gray-900">
+					{editingService ? 'Edit Service' : 'New Service'}
+				</h3>
+				<p class="text-sm text-gray-500 mt-0.5">
+					{editingService ? 'Update service details' : 'Add a new home care service'}
+				</p>
+			</div>
+			<button
+				onclick={() => showDrawer = false}
+				class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+				aria-label="Close"
+			>
+				<X class="h-5 w-5" />
+			</button>
+		</div>
+
+		<!-- Drawer content -->
+		<div class="flex-1 overflow-y-auto">
+			<form onsubmit={handleSubmit} class="p-6 space-y-6" id="service-form">
 				<!-- Name -->
 				<div>
 					<label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
@@ -403,7 +436,7 @@
 					</div>
 				</div>
 
-				<!-- Display Order & Enabled -->
+				<!-- Display Order & Status -->
 				<div class="grid grid-cols-2 gap-4">
 					<div>
 						<label for="displayOrder" class="block text-sm font-semibold text-gray-900 mb-2">
@@ -435,17 +468,17 @@
 						</label>
 					</div>
 				</div>
-
-				<!-- Actions -->
-				<div class="flex gap-3 pt-4">
-					<Button type="submit" variant="primary" fullWidth>
-						{editingService ? 'Update Service' : 'Create Service'}
-					</Button>
-					<Button type="button" variant="secondary" onclick={() => showModal = false}>
-						Cancel
-					</Button>
-				</div>
 			</form>
+		</div>
+
+		<!-- Drawer footer -->
+		<div class="p-6 border-t border-gray-200 flex gap-3 flex-shrink-0">
+			<Button type="submit" form="service-form" variant="primary" fullWidth>
+				{editingService ? 'Update Service' : 'Create Service'}
+			</Button>
+			<Button type="button" variant="secondary" onclick={() => showDrawer = false}>
+				Cancel
+			</Button>
 		</div>
 	</div>
 {/if}

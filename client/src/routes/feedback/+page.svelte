@@ -2,6 +2,7 @@
 	import { User, Mail, FileText, Star, MessageSquare } from '@lucide/svelte';
 	import { toasts } from '$lib/stores/toasts';
 	import Button from '$lib/components/ui/Button.svelte';
+	import CustomSelect from '$lib/components/ui/CustomSelect.svelte';
 
 	const services = [
 		'General Nursing Care',
@@ -188,17 +189,12 @@
 							</div>
 							Service Received <span class="text-gray-500 font-normal ml-1">(Optional)</span>
 						</label>
-						<select
-							id="service"
-							bind:value={selectedService}
-							class="w-full rounded-2xl bg-gray-50 hover:bg-gray-100 focus:bg-white px-5 py-4 text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg border-0 appearance-none cursor-pointer"
-							style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6 9 12 15 18 9\'%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; padding-right: 3rem;"
-						>
-							<option value="">Select a service...</option>
-							{#each services as s (s)}
-								<option value={s}>{s}</option>
-							{/each}
-						</select>
+						<CustomSelect
+						id="service"
+						bind:value={selectedService}
+						options={services}
+						placeholder="Select a service..."
+					/>
 					</div>
 
 					<!-- Contact Details Section -->

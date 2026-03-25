@@ -49,10 +49,8 @@
 	<div class="relative w-full max-w-md">
 		<!-- Logo/Brand -->
 		<div class="text-center mb-8">
-			<div class="inline-block p-4 bg-white/20 backdrop-blur-sm rounded-2xl mb-4">
-				<div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-					<Lock class="h-6 w-6 text-[#1a5f4a]" />
-				</div>
+			<div class="inline-block p-4 bg-white/20 backdrop-blur-sm rounded-4xl mb-4">
+				<img src="/images/logo/logo_transparent.png" alt="SESI Homecare logo" class="h-12 w-12 rounded-xl object-contain" />
 			</div>
 			<h1 class="text-3xl font-bold text-white mb-2">Admin Portal</h1>
 			<p class="text-white/80">Sign in to manage your homecare services</p>

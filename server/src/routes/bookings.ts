@@ -22,7 +22,7 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
       querystring: {
         type: 'object',
         properties: {
-          status: { type: 'string', enum: ['PENDING', 'CONFIRMED', 'COMPLETED'] },
+          status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'CONFIRMED', 'COMPLETED'] },
           search: { type: 'string' },
           limit:  { type: 'string', default: '50' },
           offset: { type: 'string', default: '0' }
@@ -97,7 +97,7 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
       body: {
         type: 'object',
         properties: {
-          status: { type: 'string', enum: ['PENDING', 'CONFIRMED', 'COMPLETED'] },
+          status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'CONFIRMED', 'COMPLETED'] },
           notes:  { type: 'string' }
         }
       }

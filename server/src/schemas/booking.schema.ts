@@ -34,7 +34,7 @@ export const createBookingSchema = {
         phone: { type: 'string' },
         address: { type: 'string' },
         notes: { type: 'string', nullable: true },
-        status: { type: 'string', enum: ['PENDING', 'CONFIRMED', 'COMPLETED'] },
+        status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'CONFIRMED', 'COMPLETED'] },
         createdAt: { type: 'string' }
       }
     }
