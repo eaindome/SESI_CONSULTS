@@ -12,6 +12,7 @@
 		support: [
 			{ label: 'Contact Us', href: '/contact' },
 			{ label: 'Book Appointment', href: '/booking' },
+			{ label: 'Leave a Review', href: '/feedback' },
 			{ label: 'FAQs', href: '/contact#faqs' }
 		]
 	};
