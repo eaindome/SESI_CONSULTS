@@ -2,6 +2,8 @@
 	import { Search, Calendar, User, Mail, Phone, MapPin, X, MoreVertical, Eye, Check, Clock, Trash2, Edit2 } from '@lucide/svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import CustomSelect from '$lib/components/ui/CustomSelect.svelte';
+	import DatePicker from '$lib/components/ui/DatePicker.svelte';
 	import { toasts } from '$lib/stores/toasts';
 	import { fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -35,8 +37,22 @@
 	// Edit drawer
 	let editingBooking = $state<Booking | null>(null);
 	let showEditDrawer = $state(false);
-	let editForm = $state({ service: '', dateTime: '', phone: '', address: '', notes: '' });
+	let editForm = $state({ service: '', date: '', time: '', phone: '', address: '', notes: '' });
 	let isSubmitting = $state(false);
+
+	const services = [
+		'General Nursing Care',
+		'Injection Services',
+		'Post-Operative Care',
+		'Chronic Disease Management',
+		'Elderly Care',
+		'Maternal & Child Care'
+	];
+	const timeSlots = [
+		'08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
+		'12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM',
+		'04:00 PM', '05:00 PM', '06:00 PM'
+	];
 
 	let useDummyData = $state(false);
 	let openMenuId = $state<string | null>(null);
@@ -164,7 +180,8 @@
 		editingBooking = booking;
 		editForm = {
 			service: booking.service,
-			dateTime: toDatetimeLocal(booking.dateTime),
+			date: new Date(booking.dateTime).toISOString().split('T')[0],
+			time: toTimeSlot(booking.dateTime),
 			phone: booking.phone,
 			address: booking.address,
 			notes: booking.notes ?? ''
@@ -180,7 +197,7 @@
 		const payload = {
 			id: editingBooking.id,
 			service: editForm.service,
-			dateTime: new Date(editForm.dateTime).toISOString(),
+			dateTime: new Date(`${editForm.date}T${convertTo24Hour(editForm.time)}`).toISOString(),
 			phone: editForm.phone,
 			address: editForm.address,
 			notes: editForm.notes
@@ -230,10 +247,22 @@
 		} catch { toasts.error('Error deleting booking'); }
 	}
 
-	function toDatetimeLocal(iso: string): string {
+	function toTimeSlot(iso: string): string {
 		const d = new Date(iso);
-		const p = (n: number) => String(n).padStart(2, '0');
-		return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+		let h = d.getHours();
+		if (d.getMinutes() >= 30) h = Math.min(h + 1, 18);
+		const period = h >= 12 ? 'PM' : 'AM';
+		const h12 = h % 12 === 0 ? 12 : h % 12;
+		const slot = `${String(h12).padStart(2, '0')}:00 ${period}`;
+		return timeSlots.includes(slot) ? slot : '';
+	}
+
+	function convertTo24Hour(time12: string): string {
+		const [time, period] = time12.split(' ');
+		let [hours, minutes] = time.split(':');
+		if (period === 'PM' && hours !== '12') hours = String(Number(hours) + 12);
+		else if (period === 'AM' && hours === '12') hours = '00';
+		return `${hours.padStart(2, '0')}:${minutes}:00`;
 	}
 
 	function formatDate(dateString: string): string {
@@ -516,11 +545,34 @@
 			<form onsubmit={handleEditSubmit} class="p-6 space-y-5" id="edit-booking-form">
 				<div>
 					<label for="edit-service" class="block text-sm font-semibold text-gray-900 mb-2">Service</label>
-					<input type="text" id="edit-service" bind:value={editForm.service} required class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20" />
+					<CustomSelect
+						id="edit-service"
+						bind:value={editForm.service}
+						options={services}
+						variant="filter"
+						placeholder="Choose a service..."
+					/>
 				</div>
-				<div>
-					<label for="edit-datetime" class="block text-sm font-semibold text-gray-900 mb-2">Date & Time</label>
-					<input type="datetime-local" id="edit-datetime" bind:value={editForm.dateTime} required class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20" />
+				<div class="grid grid-cols-2 gap-4">
+					<div>
+						<label for="edit-date" class="block text-sm font-semibold text-gray-900 mb-2">Date</label>
+						<DatePicker
+							id="edit-date"
+							bind:value={editForm.date}
+							variant="filter"
+							placeholder="Choose date..."
+						/>
+					</div>
+					<div>
+						<label for="edit-time" class="block text-sm font-semibold text-gray-900 mb-2">Time</label>
+						<CustomSelect
+							id="edit-time"
+							bind:value={editForm.time}
+							options={timeSlots}
+							variant="filter"
+							placeholder="Select time..."
+						/>
+					</div>
 				</div>
 				<div>
 					<label for="edit-phone" class="block text-sm font-semibold text-gray-900 mb-2">Phone</label>
