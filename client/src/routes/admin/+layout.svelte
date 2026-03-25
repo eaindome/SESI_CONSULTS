@@ -18,6 +18,7 @@
 
 	let sidebarOpen = $state(false);
 	let isLoggingOut = $state(false);
+	let showLogoutConfirm = $state(false);
 
 	const navigation = [
 		{ name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -26,16 +27,20 @@
 		{ name: 'Feedback', href: '/admin/feedback', icon: MessageSquare },
 	];
 
-	async function handleLogout() {
-		if (isLoggingOut) return;
+	function handleLogout() {
+		showLogoutConfirm = true;
+	}
 
+	async function confirmLogout() {
+		if (isLoggingOut) return;
 		isLoggingOut = true;
+		showLogoutConfirm = false;
 
 		try {
 			await fetch('/api/auth/logout', { method: 'POST' });
 			toasts.success('Logged out successfully');
 			goto('/admin/login');
-		} catch (error) {
+		} catch {
 			toasts.error('Logout failed');
 		} finally {
 			isLoggingOut = false;
@@ -154,4 +159,45 @@
 	</div>
 
 	<ToastContainer />
+
+	<!-- Logout Confirmation Modal -->
+	{#if showLogoutConfirm}
+		<div
+			class="fixed inset-0 bg-gray-900/50 z-[80] flex items-center justify-center p-4"
+			onclick={() => showLogoutConfirm = false}
+			role="button"
+			tabindex="0"
+		>
+			<div
+				class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6"
+				onclick={(e) => e.stopPropagation()}
+				role="presentation"
+			>
+				<div class="flex items-center gap-3 mb-4">
+					<div class="p-2.5 rounded-xl bg-red-100 flex-shrink-0">
+						<LogOut class="h-5 w-5 text-red-600" />
+					</div>
+					<div>
+						<h3 class="text-lg font-bold text-gray-900">Log out?</h3>
+						<p class="text-sm text-gray-500">You'll need to sign in again to access the admin portal.</p>
+					</div>
+				</div>
+				<div class="flex gap-3 mt-6">
+					<button
+						onclick={confirmLogout}
+						disabled={isLoggingOut}
+						class="flex-1 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50"
+					>
+						{isLoggingOut ? 'Logging out...' : 'Yes, log out'}
+					</button>
+					<button
+						onclick={() => showLogoutConfirm = false}
+						class="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors"
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 {/if}

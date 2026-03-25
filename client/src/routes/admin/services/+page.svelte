@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Settings, Plus, Edit2, Trash2, X, Check, MoreVertical, Eye, EyeOff } from '@lucide/svelte';
+	import { Settings, Plus, Edit2, Trash2, X, Check, MoreVertical, Eye, ToggleLeft, ToggleRight } from '@lucide/svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import { toasts } from '$lib/stores/toasts';
@@ -19,10 +19,13 @@
 		updatedAt: string;
 	}
 
+	type DrawerMode = 'create' | 'edit' | 'view';
+
 	let allServices = $state<Service[]>([]);
 	let isLoading = $state(false);
 	let showDrawer = $state(false);
-	let editingService = $state<Service | null>(null);
+	let drawerMode = $state<DrawerMode>('create');
+	let activeService = $state<Service | null>(null);
 	let openMenuId = $state<string | null>(null);
 	let currentPage = $state(0);
 
@@ -41,17 +44,13 @@
 		displayOrder: 0
 	});
 
-	onMount(() => {
-		loadServices();
-	});
+	onMount(() => loadServices());
 
 	async function loadServices() {
 		isLoading = true;
-
 		try {
 			const response = await fetch('/api/admin/services');
 			const data = await response.json();
-
 			if (response.ok) {
 				allServices = data;
 			} else {
@@ -65,19 +64,15 @@
 	}
 
 	function openCreateDrawer() {
-		editingService = null;
-		form = {
-			name: '',
-			description: '',
-			features: [''],
-			enabled: true,
-			displayOrder: allServices.length + 1
-		};
+		drawerMode = 'create';
+		activeService = null;
+		form = { name: '', description: '', features: [''], enabled: true, displayOrder: allServices.length + 1 };
 		showDrawer = true;
 	}
 
 	function openEditDrawer(service: Service) {
-		editingService = service;
+		drawerMode = 'edit';
+		activeService = service;
 		form = {
 			name: service.name,
 			description: service.description,
@@ -85,6 +80,12 @@
 			enabled: service.enabled,
 			displayOrder: service.displayOrder
 		};
+		showDrawer = true;
+	}
+
+	function openViewDrawer(service: Service) {
+		drawerMode = 'view';
+		activeService = service;
 		showDrawer = true;
 	}
 
@@ -100,7 +101,6 @@
 		e.preventDefault();
 
 		const features = form.features.filter(f => f.trim() !== '');
-
 		const data = {
 			name: form.name,
 			description: form.description,
@@ -111,12 +111,11 @@
 
 		try {
 			let response;
-
-			if (editingService) {
+			if (drawerMode === 'edit' && activeService) {
 				response = await fetch('/api/admin/services', {
 					method: 'PATCH',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ id: editingService.id, ...data })
+					body: JSON.stringify({ id: activeService.id, ...data })
 				});
 			} else {
 				response = await fetch('/api/admin/services', {
@@ -127,7 +126,7 @@
 			}
 
 			if (response.ok) {
-				toasts.success(editingService ? 'Service updated' : 'Service created');
+				toasts.success(drawerMode === 'edit' ? 'Service updated' : 'Service created');
 				showDrawer = false;
 				loadServices();
 			} else {
@@ -187,6 +186,12 @@
 		const target = event.target as HTMLElement;
 		if (!target.closest('.menu-container')) openMenuId = null;
 	}
+
+	const drawerTitle = $derived(
+		drawerMode === 'create' ? 'New Service'
+		: drawerMode === 'edit' ? 'Edit Service'
+		: (activeService?.name ?? 'Service Details')
+	);
 </script>
 
 <svelte:head>
@@ -250,23 +255,30 @@
 										<div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
 											<div class="py-2">
 												<button
-													onclick={() => { toggleEnabled(service); openMenuId = null; }}
-													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3"
+													onclick={() => { openViewDrawer(service); openMenuId = null; }}
+													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
 												>
-													{#if service.enabled}
-														<EyeOff class="h-4 w-4 text-gray-600" />
-														<span>Disable</span>
-													{:else}
-														<Eye class="h-4 w-4 text-gray-600" />
-														<span>Enable</span>
-													{/if}
+													<Eye class="h-4 w-4" />
+													<span>View</span>
 												</button>
 												<button
 													onclick={() => { openEditDrawer(service); openMenuId = null; }}
-													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3"
+													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
 												>
-													<Edit2 class="h-4 w-4 text-gray-600" />
+													<Edit2 class="h-4 w-4" />
 													<span>Edit</span>
+												</button>
+												<button
+													onclick={() => { toggleEnabled(service); openMenuId = null; }}
+													class="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-3 text-gray-700"
+												>
+													{#if service.enabled}
+														<ToggleLeft class="h-4 w-4" />
+														<span>Disable</span>
+													{:else}
+														<ToggleRight class="h-4 w-4" />
+														<span>Enable</span>
+													{/if}
 												</button>
 												<hr class="my-2 border-gray-200" />
 												<button
@@ -311,23 +323,13 @@
 			<!-- Pagination -->
 			{#if totalPages > 1}
 				<div class="flex items-center justify-center gap-3 px-6 pb-6">
-					<Button
-						size="sm"
-						variant="secondary"
-						disabled={currentPage === 0}
-						onclick={() => currentPage--}
-					>
+					<Button size="sm" variant="secondary" disabled={currentPage === 0} onclick={() => currentPage--}>
 						Previous
 					</Button>
 					<span class="text-sm text-gray-600">
 						Page <span class="font-semibold">{currentPage + 1}</span> / <span class="font-semibold">{totalPages}</span>
 					</span>
-					<Button
-						size="sm"
-						variant="secondary"
-						disabled={currentPage >= totalPages - 1}
-						onclick={() => currentPage++}
-					>
+					<Button size="sm" variant="secondary" disabled={currentPage >= totalPages - 1} onclick={() => currentPage++}>
 						Next
 					</Button>
 				</div>
@@ -355,12 +357,16 @@
 		<!-- Drawer header -->
 		<div class="p-6 border-b border-gray-200 flex justify-between items-start flex-shrink-0">
 			<div>
-				<h3 class="text-xl font-bold text-gray-900">
-					{editingService ? 'Edit Service' : 'New Service'}
-				</h3>
-				<p class="text-sm text-gray-500 mt-0.5">
-					{editingService ? 'Update service details' : 'Add a new home care service'}
-				</p>
+				<h3 class="text-xl font-bold text-gray-900">{drawerTitle}</h3>
+				{#if drawerMode !== 'create' && activeService}
+					<div class="mt-1.5">
+						<Badge status={activeService.enabled ? 'safe' : 'neutral'}>
+							{activeService.enabled ? 'Active' : 'Disabled'}
+						</Badge>
+					</div>
+				{:else}
+					<p class="text-sm text-gray-500 mt-0.5">Add a new home care service</p>
+				{/if}
 			</div>
 			<button
 				onclick={() => showDrawer = false}
@@ -373,112 +379,165 @@
 
 		<!-- Drawer content -->
 		<div class="flex-1 overflow-y-auto">
-			<form onsubmit={handleSubmit} class="p-6 space-y-6" id="service-form">
-				<!-- Name -->
-				<div>
-					<label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
-						Service Name
-					</label>
-					<input
-						type="text"
-						id="name"
-						bind:value={form.name}
-						required
-						placeholder="e.g., General Nursing Care"
-						class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
-					/>
-				</div>
+			{#if drawerMode === 'view' && activeService}
+				<!-- View-only content -->
+				<div class="p-6 space-y-6">
+					<div>
+						<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Service Name</div>
+						<div class="text-lg font-bold text-gray-900">{activeService.name}</div>
+					</div>
 
-				<!-- Description -->
-				<div>
-					<label for="description" class="block text-sm font-semibold text-gray-900 mb-2">
-						Description
-					</label>
-					<textarea
-						id="description"
-						bind:value={form.description}
-						required
-						rows="3"
-						placeholder="Detailed description of the service..."
-						class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20 resize-none"
-					></textarea>
-				</div>
+					<div>
+						<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Description</div>
+						<p class="text-gray-700 leading-relaxed">{activeService.description}</p>
+					</div>
 
-				<!-- Features -->
-				<div>
-					<label class="block text-sm font-semibold text-gray-900 mb-2">
-						Features
-					</label>
-					<div class="space-y-3">
-						{#each form.features as feature, index (index)}
-							<div class="flex gap-2">
-								<input
-									type="text"
-									bind:value={form.features[index]}
-									placeholder="Feature description..."
-									class="flex-1 rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
-								/>
-								{#if form.features.length > 1}
-									<button
-										type="button"
-										onclick={() => removeFeature(index)}
-										class="p-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-									>
-										<Trash2 class="h-5 w-5" />
-									</button>
-								{/if}
+					{#if activeService.features.length > 0}
+						<div>
+							<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Features</div>
+							<div class="space-y-2">
+								{#each activeService.features as feature (feature)}
+									<div class="flex items-start gap-2 text-sm text-gray-700">
+										<Check class="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+										<span>{feature}</span>
+									</div>
+								{/each}
 							</div>
-						{/each}
-						<Button type="button" variant="secondary" size="sm" onclick={addFeature}>
-							<Plus class="h-4 w-4 mr-2" />
-							Add Feature
-						</Button>
+						</div>
+					{/if}
+
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Display Order</div>
+							<div class="text-gray-900 font-medium">{activeService.displayOrder}</div>
+						</div>
+						<div>
+							<div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status</div>
+							<Badge status={activeService.enabled ? 'safe' : 'neutral'}>
+								{activeService.enabled ? 'Active' : 'Disabled'}
+							</Badge>
+						</div>
 					</div>
 				</div>
-
-				<!-- Display Order & Status -->
-				<div class="grid grid-cols-2 gap-4">
+			{:else}
+				<!-- Create / Edit form -->
+				<form onsubmit={handleSubmit} class="p-6 space-y-6" id="service-form">
+					<!-- Name -->
 					<div>
-						<label for="displayOrder" class="block text-sm font-semibold text-gray-900 mb-2">
-							Display Order
-						</label>
+						<label for="name" class="block text-sm font-semibold text-gray-900 mb-2">Service Name</label>
 						<input
-							type="number"
-							id="displayOrder"
-							bind:value={form.displayOrder}
+							type="text"
+							id="name"
+							bind:value={form.name}
 							required
-							min="0"
+							placeholder="e.g., General Nursing Care"
 							class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
 						/>
 					</div>
 
+					<!-- Description -->
 					<div>
-						<label class="block text-sm font-semibold text-gray-900 mb-2">
-							Status
-						</label>
-						<label class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
-							<input
-								type="checkbox"
-								bind:checked={form.enabled}
-								class="w-5 h-5 text-[#1a5f4a] rounded focus:ring-2 focus:ring-[#1a5f4a]/20"
-							/>
-							<span class="text-sm font-medium text-gray-900">
-								{form.enabled ? 'Active' : 'Disabled'}
-							</span>
-						</label>
+						<label for="description" class="block text-sm font-semibold text-gray-900 mb-2">Description</label>
+						<textarea
+							id="description"
+							bind:value={form.description}
+							required
+							rows="3"
+							placeholder="Detailed description of the service..."
+							class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20 resize-none"
+						></textarea>
 					</div>
-				</div>
-			</form>
+
+					<!-- Features -->
+					<div>
+						<label class="block text-sm font-semibold text-gray-900 mb-2">Features</label>
+						<div class="space-y-3">
+							{#each form.features as feature, index (index)}
+								<div class="flex gap-2">
+									<input
+										type="text"
+										bind:value={form.features[index]}
+										placeholder="Feature description..."
+										class="flex-1 rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
+									/>
+									{#if form.features.length > 1}
+										<button
+											type="button"
+											onclick={() => removeFeature(index)}
+											class="p-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+										>
+											<Trash2 class="h-5 w-5" />
+										</button>
+									{/if}
+								</div>
+							{/each}
+							<!-- Add Feature button — raw <button> to ensure icon + text stay inline -->
+							<button
+								type="button"
+								onclick={addFeature}
+								class="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-xl transition-colors"
+							>
+								<Plus class="h-4 w-4" />
+								Add Feature
+							</button>
+						</div>
+					</div>
+
+					<!-- Display Order & Status -->
+					<div class="grid grid-cols-2 gap-4">
+						<div>
+							<label for="displayOrder" class="block text-sm font-semibold text-gray-900 mb-2">Display Order</label>
+							<input
+								type="number"
+								id="displayOrder"
+								bind:value={form.displayOrder}
+								required
+								min="0"
+								class="w-full rounded-xl bg-gray-50 px-4 py-3 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-[#1a5f4a]/20"
+							/>
+						</div>
+
+						<div>
+							<label class="block text-sm font-semibold text-gray-900 mb-2">Status</label>
+							<label class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+								<input
+									type="checkbox"
+									bind:checked={form.enabled}
+									class="w-5 h-5 text-[#1a5f4a] rounded focus:ring-2 focus:ring-[#1a5f4a]/20"
+								/>
+								<span class="text-sm font-medium text-gray-900">
+									{form.enabled ? 'Active' : 'Disabled'}
+								</span>
+							</label>
+						</div>
+					</div>
+				</form>
+			{/if}
 		</div>
 
 		<!-- Drawer footer -->
-		<div class="p-6 border-t border-gray-200 flex gap-3 flex-shrink-0">
-			<Button type="submit" form="service-form" variant="primary" fullWidth>
-				{editingService ? 'Update Service' : 'Create Service'}
-			</Button>
-			<Button type="button" variant="secondary" onclick={() => showDrawer = false}>
-				Cancel
-			</Button>
-		</div>
+		{#if drawerMode === 'view'}
+			<div class="p-6 border-t border-gray-200 flex-shrink-0">
+				<Button
+					variant="primary"
+					fullWidth
+					onclick={() => { openEditDrawer(activeService!); }}
+				>
+					<span class="flex items-center gap-2">
+						<Edit2 class="h-4 w-4" />
+						Edit Service
+					</span>
+				</Button>
+			</div>
+		{:else}
+			<div class="p-6 border-t border-gray-200 flex gap-3 flex-shrink-0">
+				<Button type="submit" form="service-form" variant="primary" fullWidth>
+					{drawerMode === 'edit' ? 'Update Service' : 'Create Service'}
+				</Button>
+				<Button type="button" variant="secondary" onclick={() => showDrawer = false}>
+					Cancel
+				</Button>
+			</div>
+		{/if}
 	</div>
 {/if}
