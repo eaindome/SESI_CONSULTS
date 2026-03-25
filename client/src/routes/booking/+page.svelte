@@ -4,6 +4,7 @@
 	import { toasts } from '$lib/stores/toasts';
 	import Button from '$lib/components/ui/Button.svelte';
 	import CustomSelect from '$lib/components/ui/CustomSelect.svelte';
+	import DatePicker from '$lib/components/ui/DatePicker.svelte';
 
 	// Form state
 	let selectedService = $state('');
@@ -56,7 +57,7 @@
 		const validation = bookingSchema.safeParse(formData);
 
 		if (!validation.success) {
-			validation.error.errors.forEach(err => {
+			validation.error.issues.forEach(err => {
 				const field = err.path[0] as string;
 				errors[field] = err.message;
 			});
@@ -217,13 +218,11 @@
 								</div>
 								Date
 							</label>
-							<input
-								type="date"
+							<DatePicker
 								id="date"
 								bind:value={appointmentDate}
 								min={today}
-								required
-								class="w-full rounded-2xl bg-gray-50 hover:bg-gray-100 focus:bg-white px-5 py-4 text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg border-0"
+								placeholder="Choose a date..."
 							/>
 						</div>
 
