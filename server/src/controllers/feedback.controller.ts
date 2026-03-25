@@ -16,10 +16,10 @@ export async function submitFeedbackHandler(
 
     const feedback = await createFeedback(req.server.prisma, {
       name,
-      email,
+      ...(email !== undefined && { email }),
       rating,
       message,
-      service
+      ...(service !== undefined && { service })
     })
 
     reply.code(201).send({ success: true, feedback })

@@ -1,4 +1,4 @@
-import Fastify from 'fastify'
+import Fastify, { type FastifyError } from 'fastify'
 import cookie from '@fastify/cookie'
 import swagger from '@fastify/swagger'
 import scalarReference from '@scalar/fastify-api-reference'
@@ -47,7 +47,7 @@ export async function buildApp() {
   await app.register(prisma)
   await app.register(routes)
 
-  app.setErrorHandler((error, _req, reply) => {
+  app.setErrorHandler((error: FastifyError, _req, reply) => {
     app.log.error(error)
     const statusCode = error.statusCode ?? 500
     reply.code(statusCode).send({
