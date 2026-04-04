@@ -26,31 +26,31 @@
 
 	const team = [
 		{
-			name: 'Sister Adebayo',
-			role: 'Senior Registered Nurse',
-			credentials: 'RN, BSN',
+			name: 'Dr. Salifu Nyagse',
+			role: 'Medical Doctor',
+			credentials: 'MD, PhD',
 			experience: '12+ years experience',
-			specialties: ['General Nursing', 'Chronic Disease Management', 'Post-Operative Care'],
-			description: 'Dedicated healthcare professional with extensive experience in home healthcare and patient-centered care.',
-			image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=600&h=600&fit=crop&q=80'
+			specialties: ['General Medicine', 'Chronic Disease Management', 'Post-Operative Care'],
+			description: 'A highly experienced physician dedicated to delivering evidence-based, patient-centered care in the home setting. Dr. Nyagse brings academic rigor and clinical depth to every patient he serves.',
+			image: '/images/profiles/dr.salifu.webp'
 		},
 		{
-			name: 'Nurse Chukwu',
-			role: 'Registered Nurse',
-			credentials: 'RN',
+			name: 'Dr. Vera Turkson',
+			role: 'Medical Doctor',
+			credentials: 'MD',
 			experience: '8+ years experience',
 			specialties: ['Maternal Care', 'Newborn Care', 'Elderly Care'],
-			description: 'Compassionate nurse specializing in maternal and child health with a gentle approach to care.',
-			image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=600&fit=crop&q=80'
+			description: 'A compassionate physician with a special focus on maternal and child health. Dr. Turkson brings warmth and clinical excellence to every home visit, ensuring both mother and child receive the highest standard of care.',
+			image: '/images/profiles/dr.vera.webp'
 		},
 		{
-			name: 'Sister Okafor',
+			name: 'Ebenezer Takyi',
 			role: 'Registered Nurse',
 			credentials: 'RN, Certified Wound Care Specialist',
 			experience: '10+ years experience',
 			specialties: ['Wound Care', 'Post-Surgical Care', 'IV Therapy'],
-			description: 'Expert in wound management and post-surgical care with a focus on promoting healing and comfort.',
-			image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=600&h=600&fit=crop&q=80'
+			description: 'An expert in wound management and post-surgical recovery, Ebenezer combines technical skill with genuine compassion. His dedication to promoting healing and patient comfort makes him an invaluable part of our team.',
+			image: '/images/profiles/ebenezer.takyi.webp'
 		},
 		{
 			name: 'Nurse Mohammed',
