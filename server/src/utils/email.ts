@@ -23,12 +23,11 @@ function loadTemplate(filename: string, vars: Record<string, string>): string {
 
 const SMTP_PORT = Number(process.env.SMTP_PORT) || 465
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const smtpOptions: any = {
   host: process.env.SMTP_HOST,
   port: SMTP_PORT,
-  secure: SMTP_PORT === 465, // SSL on 465, STARTTLS on 587
-  family: 4, // force IPv4 — prevents ENETUNREACH on IPv6-only resolvers
+  secure: SMTP_PORT === 465,
+  family: 4,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
