@@ -40,6 +40,10 @@
 	let editForm = $state({ service: '', date: '', time: '', phone: '', address: '', notes: '' });
 	let isSubmitting = $state(false);
 
+	// Delete confirmation modal
+	let bookingToDelete = $state<Booking | null>(null);
+	let isDeleting = $state(false);
+
 	const services = [
 		'General Nursing Care',
 		'Injection Services',
@@ -228,23 +232,30 @@
 		finally { isSubmitting = false; }
 	}
 
-	async function deleteBooking(booking: Booking) {
-		if (!confirm(`Delete booking for ${booking.name}?`)) return;
-		if (useDummyData) {
-			bookings = bookings.filter(b => b.id !== booking.id);
-			total = bookings.length;
-			toasts.success('Booking deleted');
-			return;
-		}
+	function deleteBooking(booking: Booking) {
+		bookingToDelete = booking;
+	}
+
+	async function confirmDelete() {
+		if (!bookingToDelete) return;
+		const booking = bookingToDelete;
+		isDeleting = true;
 		try {
-			const response = await fetch('/api/admin/bookings', {
-				method: 'DELETE',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: booking.id })
-			});
-			if (response.ok) { toasts.success('Booking deleted'); loadBookings(); }
-			else toasts.error('Failed to delete booking');
+			if (useDummyData) {
+				bookings = bookings.filter(b => b.id !== booking.id);
+				total = bookings.length;
+				toasts.success('Booking deleted');
+			} else {
+				const response = await fetch('/api/admin/bookings', {
+					method: 'DELETE',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id: booking.id })
+				});
+				if (response.ok) { toasts.success('Booking deleted'); loadBookings(); }
+				else toasts.error('Failed to delete booking');
+			}
 		} catch { toasts.error('Error deleting booking'); }
+		finally { isDeleting = false; bookingToDelete = null; }
 	}
 
 	function toTimeSlot(iso: string): string {
@@ -592,6 +603,38 @@
 		<div class="p-6 border-t border-gray-200 flex gap-3 flex-shrink-0">
 			<Button type="submit" form="edit-booking-form" variant="primary" fullWidth loading={isSubmitting} loadingText="Saving...">Save Changes</Button>
 			<Button type="button" variant="secondary" onclick={() => showEditDrawer = false}>Cancel</Button>
+		</div>
+	</div>
+{/if}
+
+<!-- ─── Delete Confirmation Modal ─── -->
+{#if bookingToDelete}
+	<div transition:fade={{ duration: 150 }} class="fixed inset-0 bg-gray-900/60 z-[80] flex items-center justify-center p-4">
+		<div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+			<div class="flex items-center gap-4 mb-4">
+				<div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+					<Trash2 class="h-6 w-6 text-red-600" />
+				</div>
+				<div>
+					<h3 class="text-lg font-bold text-gray-900">Delete Booking</h3>
+					<p class="text-sm text-gray-500">This action cannot be undone</p>
+				</div>
+			</div>
+			<p class="text-sm text-gray-700 mb-6">
+				Are you sure you want to delete the booking for
+				<span class="font-semibold text-gray-900">{bookingToDelete.name}</span>
+				(<span class="text-gray-600">{bookingToDelete.service}</span>)?
+			</p>
+			<div class="flex gap-3">
+				<Button variant="secondary" fullWidth onclick={() => bookingToDelete = null} disabled={isDeleting}>Cancel</Button>
+				<button
+					onclick={confirmDelete}
+					disabled={isDeleting}
+					class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
+				>
+					{isDeleting ? 'Deleting…' : 'Delete'}
+				</button>
+			</div>
 		</div>
 	</div>
 {/if}

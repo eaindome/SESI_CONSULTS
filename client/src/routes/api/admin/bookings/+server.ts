@@ -66,10 +66,11 @@ export const PATCH: RequestHandler = async ({ request, cookies }) => {
 export const DELETE: RequestHandler = async ({ request, cookies }) => {
 	try {
 		const { id } = await request.json();
+		const token = cookies.get('auth_token');
 
 		const response = await fetch(`${BACKEND_API_URL}/bookings/${id}`, {
 			method: 'DELETE',
-			headers: getAuthHeaders(cookies)
+			headers: { Cookie: `auth_token=${token}` } // no Content-Type — no body
 		});
 
 		if (!response.ok) {
