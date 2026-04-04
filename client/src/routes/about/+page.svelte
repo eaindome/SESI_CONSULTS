@@ -26,40 +26,58 @@
 
 	const team = [
 		{
-			name: 'Dr. Salifu Nyagse',
-			role: 'Medical Doctor',
-			credentials: 'MD, PhD',
-			experience: '12+ years experience',
-			specialties: ['General Medicine', 'Chronic Disease Management', 'Post-Operative Care'],
-			description: 'A highly experienced physician dedicated to delivering evidence-based, patient-centered care in the home setting. Dr. Nyagse brings academic rigor and clinical depth to every patient he serves.',
-			image: '/images/profiles/dr.salifu.webp'
-		},
-		{
 			name: 'Dr. Vera Turkson',
 			role: 'Medical Doctor',
 			credentials: 'MD',
-			experience: '8+ years experience',
+			experience: '5+ years experience',
 			specialties: ['Maternal Care', 'Newborn Care', 'Elderly Care'],
 			description: 'A compassionate physician with a special focus on maternal and child health. Dr. Turkson brings warmth and clinical excellence to every home visit, ensuring both mother and child receive the highest standard of care.',
 			image: '/images/profiles/dr.vera.webp'
 		},
 		{
+			name: 'Dr. Nyagse Salifu',
+			role: 'Medical Doctor',
+			credentials: 'MD',
+			experience: '5+ years experience',
+			specialties: ['General Medicine', 'Chronic Disease Management', 'Post-Operative Care'],
+			description: 'A dedicated physician committed to delivering evidence-based, patient-centered care in the home setting. Dr. Salifu brings clinical depth and a methodical approach to every patient he serves.',
+			image: '/images/profiles/dr.salifu.webp'
+		},
+		{
 			name: 'Ebenezer Takyi',
 			role: 'Registered Nurse',
 			credentials: 'RN, Certified Wound Care Specialist',
-			experience: '10+ years experience',
+			experience: '5+ years experience',
 			specialties: ['Wound Care', 'Post-Surgical Care', 'IV Therapy'],
 			description: 'An expert in wound management and post-surgical recovery, Ebenezer combines technical skill with genuine compassion. His dedication to promoting healing and patient comfort makes him an invaluable part of our team.',
 			image: '/images/profiles/ebenezer.takyi.webp'
 		},
 		{
-			name: 'Nurse Mohammed',
+			name: 'Stephen Etornam Salu',
 			role: 'Registered Nurse',
-			credentials: 'RN, Diabetes Educator',
-			experience: '7+ years experience',
-			specialties: ['Diabetes Management', 'Health Education', 'Medication Management'],
-			description: 'Skilled in chronic disease management and patient education, helping patients achieve better health outcomes.',
-			image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop&q=80'
+			credentials: 'RN',
+			experience: '6+ years experience',
+			specialties: ['Critical Care', 'Medication Management', 'Patient Monitoring'],
+			description: 'With over six years of nursing experience, Stephen brings a calm and methodical approach to patient care. His clinical instincts and commitment to patient safety make him a trusted presence in every home he visits.',
+			image: null
+		},
+		{
+			name: 'Mame Esi Kesewah Eshun',
+			role: 'Registered Nurse',
+			credentials: 'RN',
+			experience: '5+ years experience',
+			specialties: ['Home Health Care', 'Health Education', 'Patient Support'],
+			description: 'Mame Esi is a dedicated nurse who prioritizes patient dignity and comfort in every interaction. She brings empathy, professionalism, and a strong commitment to holistic, home-based care.',
+			image: null
+		},
+		{
+			name: 'Esi Yacoba Ghartey',
+			role: 'Registered Nurse',
+			credentials: 'RN',
+			experience: '3+ years experience',
+			specialties: ['Chronic Care', 'Vital Sign Monitoring', 'Patient Education'],
+			description: 'An enthusiastic and detail-oriented nurse, Esi Yacoba brings energy and a strong clinical foundation to patient care. Her commitment to continuous learning ensures she delivers care that meets the highest standards.',
+			image: null
 		}
 	];
 
@@ -263,43 +281,43 @@
 					bind:this={teamCardElements[i]}
 					class="h-full transition-all duration-700 {isTeamCardVisible[i] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}"
 				>
-					<Card hoverable padding="none" class="group overflow-hidden h-full flex flex-col">
-						<!-- Team Member Image -->
-						{#if member.image}
-							<div class="h-80 overflow-hidden bg-gray-100">
-								<img
-									src={member.image}
-									alt={member.name}
-									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-								/>
-							</div>
-						{:else}
-							<div class="h-80 bg-[#1a5f4a] flex items-center justify-center">
-								<span class="text-8xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
-							</div>
-						{/if}
-
-						<!-- Team Member Info -->
-					<div class="p-8 flex flex-col flex-1">
-							<div class="mb-6">
-								<h3 class="text-2xl font-bold text-gray-900 mb-2">{member.name}</h3>
-								<p class="text-[#1a5f4a] font-semibold mb-1">{member.role}</p>
-								<p class="text-sm text-gray-600 mb-1">{member.credentials}</p>
-								<p class="text-sm text-gray-500">{member.experience}</p>
-							</div>
-
-							<p class="text-gray-600 mb-6 leading-relaxed">{member.description}</p>
-
-							<div>
-								<p class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">Specialties</p>
-								<div class="flex flex-wrap gap-2">
-									{#each member.specialties as specialty (specialty)}
-										<Badge status="safe" size="md">{specialty}</Badge>
-									{/each}
-								</div>
-							</div>
-						</div>
-					</Card>
+					<Card hoverable padding="none" class="group overflow-hidden h-full">
+<div class="flex flex-col sm:flex-row h-full">
+<!-- Square image -->
+<div class="sm:w-52 sm:min-h-full flex-shrink-0 overflow-hidden bg-gray-100">
+{#if member.image}
+<div class="h-56 sm:h-full overflow-hidden">
+<img
+src={member.image}
+alt={member.name}
+class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+/>
+</div>
+{:else}
+<div class="h-56 sm:h-full bg-[#1a5f4a] flex items-center justify-center">
+<span class="text-6xl font-bold text-white">{member.name.split(' ')[1][0]}</span>
+</div>
+{/if}
+</div>
+<!-- Info -->
+<div class="flex flex-col flex-1 p-6">
+<div class="mb-3">
+<h3 class="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
+<p class="text-[#1a5f4a] font-semibold text-sm mb-0.5">{member.role}</p>
+<p class="text-xs text-gray-500">{member.credentials} &middot; {member.experience}</p>
+</div>
+<p class="text-sm text-gray-600 mb-5 leading-relaxed flex-1">{member.description}</p>
+<div>
+<p class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">Specialties</p>
+<div class="flex flex-wrap gap-1.5">
+{#each member.specialties as specialty (specialty)}
+<Badge status="safe" size="sm">{specialty}</Badge>
+{/each}
+</div>
+</div>
+</div>
+</div>
+</Card>
 				</div>
 			{/each}
 		</div>
