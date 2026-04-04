@@ -120,8 +120,8 @@
 		</div>
 
 		<!-- Footer note -->
-		<p class="text-center text-white/60 text-sm mt-6">
+		<!-- <p class="text-center text-white/60 text-sm mt-6">
 			Default credentials: admin@SES.com / admin123
-		</p>
+		</p> -->
 	</div>
 </div>
