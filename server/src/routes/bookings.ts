@@ -125,13 +125,13 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
     })
 
     if (data.status === 'CONFIRMED') {
-      await sendBookingConfirmed({
+      sendBookingConfirmed({
         id:       booking.id,
         name:     booking.name,
         email:    booking.email,
         service:  booking.service,
         dateTime: booking.dateTime,
-      })
+      }).catch((err) => console.error('Booking confirmed email error:', err))
     }
 
     return booking

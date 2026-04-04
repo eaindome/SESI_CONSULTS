@@ -18,13 +18,13 @@ export async function createFeedback(
   const feedback = await prisma.feedback.create({ data })
 
   if (feedback.email) {
-    await sendFeedbackReceiptEmail({
+    sendFeedbackReceiptEmail({
       name: feedback.name,
       email: feedback.email,
       rating: feedback.rating,
       message: feedback.message,
       service: feedback.service,
-    })
+    }).catch((err) => console.error('Feedback email error:', err))
   }
 
   return feedback

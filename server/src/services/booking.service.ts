@@ -28,8 +28,11 @@ export async function createBooking(
     }
   })
 
-  await sendBookingAcknowledgement(booking)
-  await sendAdminBookingNotification(booking)
+  // Fire emails without blocking the booking response
+  Promise.all([
+    sendBookingAcknowledgement(booking),
+    sendAdminBookingNotification(booking),
+  ]).catch((err) => console.error('Booking email error:', err))
 
   return booking
 }

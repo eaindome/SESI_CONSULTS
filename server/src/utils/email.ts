@@ -21,14 +21,18 @@ function loadTemplate(filename: string, vars: Record<string, string>): string {
   return html
 }
 
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 465
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: false, // TLS via STARTTLS on port 587
+  port: SMTP_PORT,
+  secure: SMTP_PORT === 465, // SSL on 465, STARTTLS on 587
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  connectionTimeout: 10_000,
+  socketTimeout: 10_000,
 })
 
 const FROM = `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}>`
