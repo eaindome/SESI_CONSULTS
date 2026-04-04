@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { sendFeedbackReceiptEmail } from '../utils/email.js'
 
 export async function createFeedback(
   prisma: PrismaClient,
@@ -14,7 +15,19 @@ export async function createFeedback(
     throw new Error('Rating must be between 1 and 5')
   }
 
-  return prisma.feedback.create({ data })
+  const feedback = await prisma.feedback.create({ data })
+
+  if (feedback.email) {
+    await sendFeedbackReceiptEmail({
+      name: feedback.name,
+      email: feedback.email,
+      rating: feedback.rating,
+      message: feedback.message,
+      service: feedback.service,
+    })
+  }
+
+  return feedback
 }
 
 export async function listFeedback(

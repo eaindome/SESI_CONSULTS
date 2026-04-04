@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#0d3d2d;padding:28px 40px;text-align:center;">
+              <img src="cid:logo" alt="SES Homecare & Medical Supplies" width="72" height="72" style="display:block;margin:0 auto 12px;" />
+              <p style="margin:0;font-size:13px;color:#a8d5c2;letter-spacing:1px;text-transform:uppercase;">SES Homecare &amp; Medical Supplies</p>
+              <h1 style="margin:8px 0 0;font-size:22px;color:#ffffff;font-weight:700;">Your Booking is Confirmed</h1>
+            </td>
+          </tr>
+
+          <!-- Confirmed Banner -->
+          <tr>
+            <td style="background-color:#1a5f4a;padding:16px 40px;text-align:center;">
+              <p style="margin:0;font-size:15px;color:#ffffff;">&#10003;&nbsp; Your appointment has been confirmed. We look forward to seeing you!</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px;">
+
+              <p style="margin:0 0 16px;font-size:16px;color:#333333;">Dear <strong>{{CLIENT_NAME}}</strong>,</p>
+              <p style="margin:0 0 24px;font-size:15px;color:#555555;line-height:1.6;">
+                We are pleased to confirm your booking with SES Homecare &amp; Medical Supplies. Please find the details of your confirmed appointment below.
+              </p>
+
+              <!-- Appointment Summary -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7f4;border-radius:6px;overflow:hidden;margin-bottom:24px;">
+                <tr>
+                  <td style="background-color:#1a5f4a;padding:12px 20px;">
+                    <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;letter-spacing:0.5px;text-transform:uppercase;">Appointment Details</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:10px 20px;font-size:14px;color:#777777;width:140px;vertical-align:top;">Reference</td>
+                        <td style="padding:10px 20px 10px 0;font-size:14px;color:#333333;font-weight:600;">#{{BOOKING_ID}}</td>
+                      </tr>
+                      <tr style="background-color:#e8f2ee;">
+                        <td style="padding:10px 20px;font-size:14px;color:#777777;vertical-align:top;">Service</td>
+                        <td style="padding:10px 20px 10px 0;font-size:14px;color:#333333;font-weight:600;">{{SERVICE}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:10px 20px;font-size:14px;color:#777777;vertical-align:top;">Date &amp; Time</td>
+                        <td style="padding:10px 20px 10px 0;font-size:15px;color:#1a5f4a;font-weight:700;">{{DATE_TIME}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 8px;font-size:15px;color:#555555;line-height:1.6;">
+                If you need to reschedule or have any questions before your appointment, please contact us as soon as possible.
+              </p>
+              <p style="margin:16px 0 0;font-size:15px;color:#555555;">We look forward to caring for you.</p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#0d3d2d;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:13px;color:#a8d5c2;font-weight:600;">SES Homecare &amp; Medical Supplies</p>
+              <p style="margin:0;font-size:12px;color:#6aab8e;">&copy; {{YEAR}} All rights reserved.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

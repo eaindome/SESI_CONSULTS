@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from 'fastify'
 import { createBookingHandler } from '../controllers/booking.controller.js'
 import { createBookingSchema } from '../schemas/booking.schema.js'
 import { authMiddleware } from '../middleware/auth.middleware.js'
+import { sendBookingConfirmed } from '../utils/email.js'
 
 const bookingsRoutes: FastifyPluginAsync = async (app) => {
   // Public endpoint - create booking
@@ -122,6 +123,16 @@ const bookingsRoutes: FastifyPluginAsync = async (app) => {
       where: { id },
       data: updateData
     })
+
+    if (data.status === 'CONFIRMED') {
+      await sendBookingConfirmed({
+        id:       booking.id,
+        name:     booking.name,
+        email:    booking.email,
+        service:  booking.service,
+        dateTime: booking.dateTime,
+      })
+    }
 
     return booking
   })

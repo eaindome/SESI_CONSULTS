@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { sendConfirmationEmail } from '../utils/email.js'
+import { sendBookingAcknowledgement, sendAdminBookingNotification } from '../utils/email.js'
 
 export async function createBooking(
   prisma: PrismaClient,
@@ -28,7 +28,8 @@ export async function createBooking(
     }
   })
 
-  await sendConfirmationEmail(booking)
+  await sendBookingAcknowledgement(booking)
+  await sendAdminBookingNotification(booking)
 
   return booking
 }
