@@ -146,17 +146,21 @@
 					style="animation-delay: 0.7s;"
 				>
 					{#if is404}
-						<Button variant="primary" size="lg" icon={Home} href="/">
+						<Button variant="primary" size="lg" href="/">
+							<Home class="h-5 w-5" />
 							Return to Home
 						</Button>
-						<Button variant="outline" size="lg" icon={Calendar} href="/booking">
+						<Button variant="outline" size="lg" href="/booking">
+							<Calendar class="h-5 w-5" />
 							Book Appointment
 						</Button>
 					{:else}
-						<Button variant="primary" size="lg" icon={ArrowLeft} href="/">
+						<Button variant="primary" size="lg" href="/">
+							<ArrowLeft class="h-5 w-5" />
 							Go Back Home
 						</Button>
-						<Button variant="outline" size="lg" icon={Phone} href="/contact">
+						<Button variant="outline" size="lg" href="/contact">
+							<Phone class="h-5 w-5" />
 							Contact Support
 						</Button>
 					{/if}
@@ -174,7 +178,8 @@
 								href={link.href}
 								class="group flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition-all duration-300 hover:border-[#1a5f4a] hover:bg-[#1a5f4a]/5 hover:text-[#1a5f4a] hover:shadow-md"
 							>
-								<link.icon
+								<svelte:component
+									this={link.icon}
 									class="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
 								/>
 								{link.label}
