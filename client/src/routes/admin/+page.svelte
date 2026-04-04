@@ -112,7 +112,7 @@
 </script>
 
 <svelte:head>
-	<title>Dashboard - SESI Admin</title>
+	<title>Dashboard - SES Admin</title>
 </svelte:head>
 
 <div class="space-y-6">

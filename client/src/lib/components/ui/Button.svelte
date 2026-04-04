@@ -61,7 +61,7 @@
 	let isPressed = $state(false);
 	let isHovered = $state(false);
 
-	// Base variant classes with SESI emerald/teal colors
+	// Base variant classes with SES emerald/teal colors
 	const variantClasses: Record<Variant, string> = {
 		primary: 'bg-[#1a5f4a] hover:bg-[#0d3d2d] active:bg-[#0a2e1e] text-white',
 		secondary: 'bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-white',

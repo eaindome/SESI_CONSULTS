@@ -195,7 +195,7 @@
 </script>
 
 <svelte:head>
-	<title>Services Management - SESI Admin</title>
+	<title>Services Management - SES Admin</title>
 </svelte:head>
 
 <svelte:window onclick={handleClickOutside} />

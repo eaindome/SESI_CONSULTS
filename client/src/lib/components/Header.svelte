@@ -34,7 +34,7 @@
 		--cautionYellow: #f4b400;
 	`;
 
-	// Page-specific configurations (matching TMT's pageConfig pattern for SESI's routes)
+	// Page-specific configurations (matching TMT's pageConfig pattern for SES's routes)
 	const pageConfig: Record<string, {
 		defaultNavColor: string;
 		heroHeight: number;
@@ -167,10 +167,10 @@
 	>
 		<div class="flex items-center gap-8">
 			<!-- Logo -->
-			<a href="/" class="flex items-center space-x-2.5 transition-transform duration-300 hover:scale-105" aria-label="SESI Homecare Home">
-				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SESI Homecare" class="h-10 w-10 object-contain rounded-lg transition-all duration-300" />
+			<a href="/" class="flex items-center space-x-2.5 transition-transform duration-300 hover:scale-105" aria-label="SES Homecare Home">
+				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SES Homecare" class="h-10 w-10 object-contain rounded-lg transition-all duration-300" />
 				<div class="flex flex-col leading-tight">
-					<span class="font-bold text-lg leading-none transition-colors duration-300">SESI Homecare</span>
+					<span class="font-bold text-lg leading-none transition-colors duration-300">SES Homecare</span>
 					<span class="text-xs font-medium tracking-wide transition-colors duration-300 opacity-80">Medical Supplies &amp; Services</span>
 				</div>
 			</a>
@@ -201,9 +201,9 @@
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<a href="/" class="flex items-center space-x-2">
-				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SESI Homecare" class="h-9 w-9 object-contain shrink-0 rounded-lg transition-all duration-300" />
+				<img src={isWhiteNav ? '/images/logo/logo_trans_background.png' : '/images/logo/logo_transparent.png'} alt="SES Homecare" class="h-9 w-9 object-contain shrink-0 rounded-lg transition-all duration-300" />
 				<div class="flex flex-col leading-tight">
-					<span class="font-bold text-base leading-none transition-colors duration-300">SESI Homecare</span>
+					<span class="font-bold text-base leading-none transition-colors duration-300">SES Homecare</span>
 					<span class="text-xs font-medium tracking-wide transition-colors duration-300 opacity-80">Medical Supplies &amp; Services</span>
 				</div>
 			</a>

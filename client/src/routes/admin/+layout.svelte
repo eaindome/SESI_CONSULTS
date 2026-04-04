@@ -72,11 +72,11 @@
 				<div class="flex items-center gap-2">
 					<img
 						src="/images/logo/logo_trans_background.png"
-						alt="SESI Logo"
+						alt="SES Logo"
 						class="w-10 h-10 object-contain"
 					/>
 					<div class="flex flex-col leading-tight">
-						<span class="font-bold text-gray-900 text-base">SESI</span>
+						<span class="font-bold text-gray-900 text-base">SES</span>
 						<span class="font-medium text-gray-600 text-xs">Administrator</span>
 					</div>
 				</div>

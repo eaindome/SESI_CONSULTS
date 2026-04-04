@@ -61,7 +61,7 @@
 </script>
 
 <svelte:head>
-	<title>{status} - {is404 ? 'Page Not Found' : 'Error'} | SESI Consults</title>
+	<title>{status} - {is404 ? 'Page Not Found' : 'Error'} | SES Consults</title>
 </svelte:head>
 
 <div class="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

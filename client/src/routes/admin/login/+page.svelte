@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin Login - SESI Homecare</title>
+	<title>Admin Login - SES Homecare</title>
 </svelte:head>
 
 <div class="min-h-screen bg-linear-to-br from-[#1a5f4a] to-[#0d3d2d] flex items-center justify-center p-6">
@@ -50,7 +50,7 @@
 		<!-- Logo/Brand -->
 		<div class="text-center mb-8">
 			<div class="inline-block p-4 bg-white/20 backdrop-blur-sm rounded-4xl mb-4">
-				<img src="/images/logo/logo_transparent.png" alt="SESI Homecare logo" class="h-12 w-12 rounded-xl object-contain" />
+				<img src="/images/logo/logo_transparent.png" alt="SES Homecare logo" class="h-12 w-12 rounded-xl object-contain" />
 			</div>
 			<h1 class="text-3xl font-bold text-white mb-2">Admin Portal</h1>
 			<p class="text-white/80">Sign in to manage your homecare services</p>
@@ -72,7 +72,7 @@
 						id="email"
 						bind:value={email}
 						required
-						placeholder="admin@sesi.com"
+						placeholder="admin@SES.com"
 						class="w-full rounded-2xl bg-gray-50 hover:bg-gray-100 focus:bg-white px-5 py-4 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg border-0"
 					/>
 				</div>
@@ -121,7 +121,7 @@
 
 		<!-- Footer note -->
 		<p class="text-center text-white/60 text-sm mt-6">
-			Default credentials: admin@sesi.com / admin123
+			Default credentials: admin@SES.com / admin123
 		</p>
 	</div>
 </div>

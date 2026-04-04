@@ -86,8 +86,8 @@
 </script>
 
 <svelte:head>
-	<title>Leave Feedback - SESI Homecare & Medical Supplies</title>
-	<meta name="description" content="Share your experience with SESI Homecare. Your feedback helps us provide better care." />
+	<title>Leave Feedback - SES Homecare & Medical Supplies</title>
+	<meta name="description" content="Share your experience with SES Homecare. Your feedback helps us provide better care." />
 </svelte:head>
 
 <!-- Hero Section -->
@@ -272,7 +272,7 @@
 							bind:value={message}
 							required
 							rows="5"
-							placeholder="Tell us about your experience with SESI Homecare..."
+							placeholder="Tell us about your experience with SES Homecare..."
 							class="w-full rounded-2xl {errors.message ? 'bg-red-50' : 'bg-gray-50 hover:bg-gray-100 focus:bg-white'} px-5 py-4 text-gray-900 placeholder:text-gray-400 shadow-sm transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-[#1a5f4a]/20 focus:shadow-lg resize-none border-0"
 						></textarea>
 						{#if errors.message}

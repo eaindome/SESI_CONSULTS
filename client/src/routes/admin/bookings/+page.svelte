@@ -303,7 +303,7 @@
 </script>
 
 <svelte:head>
-	<title>Bookings Management - SESI Admin</title>
+	<title>Bookings Management - SES Admin</title>
 </svelte:head>
 
 <svelte:window onclick={handleClickOutside} onscroll={() => openMenuId = null} />

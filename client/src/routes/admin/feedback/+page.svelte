@@ -47,7 +47,7 @@
 			id: '3',
 			name: 'Akosua Mensah',
 			rating: 5,
-			message: 'Exceptional care for my elderly mother. The caregiver was patient, kind and very thorough. I cannot recommend SESI enough to anyone who needs home care!',
+			message: 'Exceptional care for my elderly mother. The caregiver was patient, kind and very thorough. I cannot recommend SES enough to anyone who needs home care!',
 			service: 'Elderly Care',
 			createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 		},
@@ -91,7 +91,7 @@
 			name: 'Nana Osei',
 			email: 'nana.osei@example.com',
 			rating: 5,
-			message: 'Absolutely outstanding. The care team went above and beyond for my father. They treated him with such dignity and respect. Truly grateful for SESI.',
+			message: 'Absolutely outstanding. The care team went above and beyond for my father. They treated him with such dignity and respect. Truly grateful for SES.',
 			service: 'Elderly Care',
 			createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
 		}
@@ -159,7 +159,7 @@
 </script>
 
 <svelte:head>
-	<title>Feedback - SESI Admin</title>
+	<title>Feedback - SES Admin</title>
 </svelte:head>
 
 <div class="space-y-6">
