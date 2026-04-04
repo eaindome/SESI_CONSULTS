@@ -23,17 +23,21 @@ function loadTemplate(filename: string, vars: Record<string, string>): string {
 
 const SMTP_PORT = Number(process.env.SMTP_PORT) || 465
 
-const transporter = nodemailer.createTransport({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const smtpOptions: any = {
   host: process.env.SMTP_HOST,
   port: SMTP_PORT,
   secure: SMTP_PORT === 465, // SSL on 465, STARTTLS on 587
+  family: 4, // force IPv4 — prevents ENETUNREACH on IPv6-only resolvers
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
   connectionTimeout: 10_000,
   socketTimeout: 10_000,
-})
+}
+
+const transporter = nodemailer.createTransport(smtpOptions)
 
 const FROM = `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}>`
 const ADMIN_EMAIL = process.env.SMTP_USER!
